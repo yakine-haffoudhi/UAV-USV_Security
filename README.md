@@ -585,7 +585,3 @@ print(..., end="", flush=True)
 - `\r` → retour début ligne,
 - `end=""` → pas de saut de ligne,
 - `flush=True` → affichage immédiat.
-
-  - génération dataset,
-  - détection d’anomalies GPS,
-  - cybersécurité UAV/USV.

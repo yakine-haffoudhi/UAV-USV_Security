@@ -1,128 +1,181 @@
-# UAV/USV Security Lab
+# Drone Security Lab — Docker
+ 
+Simulation 3D Gazebo + ArduRover SITL + attaque GPS + détection IA, le tout dans un conteneur Docker accessible via navigateur.
+
+---
 
 ## Structure du projet
 
 ```
-uav-usv-lab/
-├── base/                        ← image commune (Python, MAVProxy, Wireshark)
-│   └── Dockerfile
-├── ardupilot-uav/               ← ArduCopter SITL
-│   └── Dockerfile
-├── ardupilot-usv-gazebo/        ← ArduRover SITL + Gazebo Harmonic
-│   └── Dockerfile
-├── qgroundcontrol/              ← QGroundControl GCS
-│   ├── Dockerfile
-│   └── QGroundControl-x86_64.AppImage   ← à télécharger avant le build
-├── attacker/                    ← GPS Spoof 
-│   └── Dockerfile
-├── shared/
-│   ├── missions/                ← fichiers .txt partagés entre containers
-│   └── scripts/                 ← scripts personnalisés montés dans attacker
-├── captures/                    ← captures pcap (créé automatiquement)
-└── docker-compose.yml
+drone_docker/
+├── Dockerfile            ← image complète (autosuffisante)
+├── docker-compose.yml    ← lancement simplifié
+├── .dockerignore
+├── detect.py             ← détecteur IA BiLSTM (temps réel)
+├── attacks/
+│   └── attaque.py        ← GPS drift spoofer
+└── model/
+    ├── best_model.pt     ← poids PyTorch
+    └── scaler_tl.joblib  ← scaler sklearn
 ```
 
-## Architecture réseau
+---
 
-```
-┌─────────────── mavlink-net 172.20.0.0/24 ───────────────┐
-│                                                           │
-│  ardupilot-uav       ardupilot-usv-gazebo  qgroundcontrol│
-│  172.20.0.10         172.20.0.11           172.20.0.12   │
-│  :14550 :14551       :14560 :14561                       │
-│                                                           │
-│  attacker  172.20.0.20 ──────── 172.21.0.20              │
-│                         attacker-net 172.21.0.0/24        │
-└───────────────────────────────────────────────────────────┘
-```
+## Prérequis
 
-## Étape 1 — Pré-requis : télécharger QGroundControl
+- Docker Engine 20.10+
+- 20 Go d'espace disque libre
+- 8 Go de RAM recommandés
+
+---
+
+## Build
 
 ```bash
-cd ~/uav-usv-lab
-wget "https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl-x86_64.AppImage" \
-     -O qgroundcontrol/QGroundControl-x86_64.AppImage
+cd drone_docker
+docker build -t drone-lab .
 ```
 
-## Étape 2 — Construire toutes les images
+> Durée : ~30-60 min (compilation ArduPilot + Gazebo + asv_wave_sim)  
+
+**Build sans cache (repartir de zéro) :**
+```bash
+docker build --no-cache -t drone-lab .
+```
+
+---
+
+## Lancer le conteneur
 
 ```bash
-# Base d'abord
-docker compose build base
-
-# Puis tout le reste
-docker compose build
+docker run -d --name drone-lab \
+    -p 5900:5900 \
+    -p 6080:6080 \
+    -p 14550:14550/udp \
+    -p 14551:14551/udp \
+    -p 14552:14552/udp \
+    --shm-size=512m \
+    drone-lab:latest
 ```
 
-## Étape 3 — Démarrer
+Ou avec Docker Compose :
+```bash
+docker compose up -d
+```
+
+---
+
+## Accès VNC
+
+Ouvrir dans le navigateur :
+```
+http://localhost:6080/vnc.html
+```
+Cliquer **Connect** — pas de mot de passe.
+
+VNC natif (port 5900) : `localhost:5900`
+
+---
+
+## Scénario de démonstration
+
+Ouvrir **5 terminaux** dans le bureau VNC :
+
+### Terminal 1 — Simulation Gazebo + ArduRover
 
 ```bash
-# Simulation complète (UAV + USV + GCS)
-docker compose up
-
-# Uniquement UAV + GCS
-docker compose up ardupilot-uav qgroundcontrol
-
-# Uniquement USV 2D + GCS
-docker compose up ardupilot-usv-gazebo qgroundcontrol
-
-# USV en 3D Gazebo (modifier command: rover → gazebo dans compose)
-docker compose up ardupilot-usv-gazebo
+~/scripts/start_sim.sh
 ```
 
-## Étape 4 — Attaques GPS
+Lance Gazebo Harmonic (BlueBoat + vagues FFT) et ArduRover SITL couplés via JSON.  
+Attendre ~35 secondes que tout démarre.
+
+### Terminal 2 — Configuration MAVProxy
+
+Dans la console MAVProxy qui s'ouvre avec le Terminal 1 :
+
+```
+param set FRAME_CLASS 2
+param set FRAME_TYPE 1
+param set SIM_WAVE_ENABLE 1
+param set SIM_WAVE_AMP 0.5
+param set SIM_WAVE_DIR 180
+param set SIM_WIND_SPD 5
+param set SIM_WIND_DIR 270
+param set ARMING_CHECK 0
+arm throttle
+mode GUIDED
+```
+
+### Terminal 3 — QGroundControl
 
 ```bash
-# Drift USV (0.5 m/s vers l'Est, observation 10s avant)
-docker compose run --rm attacker spoof-usv
-
-# Drift USV rapide (2 m/s, observation 5s)
-docker compose run --rm attacker spoof-usv-fast
-
-# Circle UAV — activer d'abord GPS1_TYPE=14 :
-#   docker exec -it uav-sitl /opt/lab/start.sh mavproxy
-#   > param set GPS1_TYPE 14
-docker compose run --rm attacker spoof-uav
+~/scripts/start_qgc.sh
 ```
 
-## Capture et analyse MAVLink
+QGroundControl se connecte automatiquement sur `udp:127.0.0.1:14550` et affiche la carte + télémétrie.
+
+### Terminal 4 — Attaque GPS drift
 
 ```bash
-# Capturer 
-docker compose run --rm attacker capture eth0
+# Dérive vers l'Est à 0.5 m/s (déclenchement après 10s)
+python3 ~/attacks/attaque.py --drift-rate 0.5 --direction 90
 
-# Lire une capture
-docker compose run --rm attacker read --file /opt/lab/captures/mavlink_*.pcap
+# Dérive rapide vers le Nord
+python3 ~/attacks/attaque.py --drift-rate 2.0 --direction 0
 
-# Filtrer sur des types de messages
-docker compose run --rm attacker read \
-    --file /opt/lab/captures/mavlink_*.pcap \
-    --types GPS_RAW_INT HEARTBEAT ATTITUDE
+# Dérive lente vers le Sud-Est, déclenchement après 30s
+python3 ~/attacks/attaque.py --drift-rate 0.3 --direction 135 --pre-attack 30
 ```
 
-## MAVProxy manuel
+### Terminal 5 — Détecteur IA
 
 ```bash
-# Connexion MAVProxy vers UAV
-docker compose run --rm attacker mavproxy-uav
-
-# Connexion MAVProxy vers USV
-docker compose run --rm attacker mavproxy-usv
-
-# Shell dans le container UAV
-docker exec -it uav-sitl bash
+cd ~/
+python3 detect.py \
+    --connection udp:0.0.0.0:14551 \
+    --threshold 0.72 \
+    --save ~/logs/detection.csv
 ```
 
-## QGroundControl avec interface graphique
+---
+
+## Ports utilisés
+
+| Port | Protocole | Usage |
+|---|---|---|
+| 5900 | TCP | VNC natif |
+| 6080 | TCP | noVNC (navigateur) |
+| 14550 | UDP | MAVLink → QGroundControl |
+| 14551 | UDP | MAVLink → Détecteur IA |
+| 14552 | UDP | MAVLink → Script d'attaque |
+
+---
+
+
+## Commandes utiles
 
 ```bash
-# Sur l'hôte Linux : autoriser X11
-xhost +local:docker
+# Voir les logs du conteneur
+docker logs -f drone-lab
 
-# Relancer QGC avec GUI
-QGC_MODE=gcs docker compose up qgroundcontrol
+# Ouvrir un terminal dans le conteneur
+docker exec -it drone-lab bash
+
+# Arrêter
+docker stop drone-lab
+
+# Redémarrer
+docker start drone-lab
+
+# Supprimer le conteneur
+docker rm -f drone-lab
+
+# Supprimer l'image
+docker rmi drone-lab
+
+# Tout nettoyer (conteneur + image + cache)
+docker rm -f drone-lab
+docker rmi drone-lab
+docker system prune -af --volumes
 ```
-
-Connexion dans QGC :
-- UDP entrant port **14550** → UAV
-- UDP entrant port **14560** → USV

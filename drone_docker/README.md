@@ -33,32 +33,15 @@ drone_docker/
 
 ```bash
 cd drone_docker
-docker build -t drone-lab .
+docker compose build
 ```
 
 > Durée : ~30-60 min (compilation ArduPilot + Gazebo + asv_wave_sim)  
-
-**Build sans cache (repartir de zéro) :**
-```bash
-docker build --no-cache -t drone-lab .
-```
 
 ---
 
 ## Lancer le conteneur
 
-```bash
-docker run -d --name drone-lab \
-    -p 5900:5900 \
-    -p 6080:6080 \
-    -p 14550:14550/udp \
-    -p 14551:14551/udp \
-    -p 14552:14552/udp \
-    --shm-size=512m \
-    drone-lab:latest
-```
-
-Ou avec Docker Compose :
 ```bash
 docker compose up -d
 ```
@@ -102,9 +85,9 @@ param set SIM_WAVE_AMP 0.5
 param set SIM_WAVE_DIR 180
 param set SIM_WIND_SPD 5
 param set SIM_WIND_DIR 270
-param set ARMING_CHECK 0
-arm throttle
+
 mode GUIDED
+arm throttle force
 ```
 
 ### Terminal 3 — QGroundControl
@@ -115,40 +98,26 @@ mode GUIDED
 
 QGroundControl se connecte automatiquement sur `udp:127.0.0.1:14550` et affiche la carte + télémétrie.
 
-### Terminal 4 — Attaque GPS drift
+### Terminal 4 — Détecteur IA
 
 ```bash
-# Dérive vers l'Est à 0.5 m/s (déclenchement après 10s)
-python3 ~/attacks/attaque.py --drift-rate 0.5 --direction 90
-
-# Dérive rapide vers le Nord
-python3 ~/attacks/attaque.py --drift-rate 2.0 --direction 0
-
-# Dérive lente vers le Sud-Est, déclenchement après 30s
-python3 ~/attacks/attaque.py --drift-rate 0.3 --direction 135 --pre-attack 30
-```
-
-### Terminal 5 — Détecteur IA
-
-```bash
-cd ~/
 python3 detect.py \
-    --connection udp:0.0.0.0:14551 \
-    --threshold 0.72 \
-    --save ~/logs/detection.csv
+    --connection udp:0.0.0.0:14553 \
+    --model-dir model \
 ```
 
----
+### Terminal 5 — Attaque GPS drift
 
-## Ports utilisés
-
-| Port | Protocole | Usage |
-|---|---|---|
-| 5900 | TCP | VNC natif |
-| 6080 | TCP | noVNC (navigateur) |
-| 14550 | UDP | MAVLink → QGroundControl |
-| 14551 | UDP | MAVLink → Détecteur IA |
-| 14552 | UDP | MAVLink → Script d'attaque |
+```bash
+python3 ~/attacks/attaque.py \
+    --mode-both \
+    --connection udp:0.0.0.0:14551 \
+    --forward-host 127.0.0.1 \
+    --forward-port 14553 \
+    --attack drift \
+    --drift-rate 1.5 \
+    --pre-attack-delay 20
+```
 
 ---
 
@@ -178,4 +147,8 @@ docker rmi drone-lab
 docker rm -f drone-lab
 docker rmi drone-lab
 docker system prune -af --volumes
+
+# Modification
+docker cp attacks/attaque.py drone-lab:/home/drone/attacks/attaque.py
+
 ```

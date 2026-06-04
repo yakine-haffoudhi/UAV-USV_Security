@@ -1,0 +1,28 @@
+services:
+  drone-lab:
+    build: .
+    image: drone-lab:latest
+    container_name: drone-lab
+    ports:
+      - "5900:5900"
+      - "6080:6080"
+      - "14550:14550/udp"
+      - "14551:14551/udp"
+      - "14552:14552/udp"
+    environment:
+      - DISPLAY=:1
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - MESA_GL_VERSION_OVERRIDE=3.3
+      - QT_X11_NO_MITSHM=1
+      - XDG_RUNTIME_DIR=/tmp/runtime-drone
+    shm_size: "512m"
+    volumes:
+      - drone-logs:/home/drone/logs
+      - drone-data:/home/drone/data
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+volumes:
+  drone-logs:
+  drone-data:

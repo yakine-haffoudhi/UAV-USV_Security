@@ -605,6 +605,45 @@
 
   .packet-field.highlight { background: var(--teal-dark); border-color: var(--teal); }
   .packet-field.danger { background: rgba(224,85,85,0.1); border-color: var(--red); }
+  /* MAVLink frame diagram colors matching the reference image */
+  .packet-field.pf-grey  { background: rgba(160,160,160,0.12); border-color: rgba(160,160,160,0.4); }
+  .packet-field.pf-grey  .fname { color: #aaa; }
+  .packet-field.pf-grey  .fval  { color: #ccc; }
+  .packet-field.pf-green { background: rgba(100,200,100,0.10); border-color: rgba(100,200,100,0.4); }
+  .packet-field.pf-green .fname { color: #7dcc7d; }
+  .packet-field.pf-green .fval  { color: #a8e6a8; }
+  .packet-field.pf-blue  { background: rgba(80,180,220,0.13); border-color: rgba(80,180,220,0.5); }
+  .packet-field.pf-blue  .fname { color: #6bbfda; }
+  .packet-field.pf-blue  .fval  { color: #9fd8ee; }
+  .packet-field.pf-payload { background: rgba(18,168,168,0.08); border-color: var(--border); min-width: 140px; }
+  .packet-viz-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    margin: 20px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .packet-viz-label::before { content:''; display:block; width:30px; height:1px; }
+  .packet-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 12px 0 24px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .packet-legend-item { display: flex; align-items: center; gap: 6px; }
+  .packet-legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
 
   .heartbeat-row {
     font-family: var(--mono);
@@ -1032,6 +1071,8 @@
     <button class="nav-tab" onclick="showSection('simulation')">Mise en place</button>
     <button class="nav-tab" onclick="showSection('attaques')">Scénarios d'attaque</button>
     <button class="nav-tab" onclick="showSection('usv')">Simulation USV</button>
+    <button class="nav-tab" onclick="showSection('detection_ia')">Détection IA</button>
+    <button class="nav-tab" onclick="showSection('docker_deploy')">Déploiement Docker</button>
   </div>
 </section>
 
@@ -1120,29 +1161,116 @@
     </p>
 
     <h4 class="sub2">Structure d'une trame MAVLink</h4>
-    <div class="packet-viz">
-      <div class="packet-field highlight">
-        <div class="fname">STX</div>
-        <div class="fval">0xFE / 0xFD</div>
+
+    <!-- Légende couleurs -->
+    <div class="packet-legend">
+      <div class="packet-legend-item">
+        <div class="packet-legend-dot" style="background:rgba(160,160,160,0.18);border-color:rgba(160,160,160,0.5);"></div>
+        Champs communs — encodage différent
       </div>
-      <div class="packet-field"><div class="fname">LEN</div><div class="fval">Longueur</div></div>
-      <div class="packet-field"><div class="fname">SEQ</div><div class="fval">Séquence</div></div>
-      <div class="packet-field"><div class="fname">SYS</div><div class="fval">System ID</div></div>
-      <div class="packet-field"><div class="fname">COMP</div><div class="fval">Comp ID</div></div>
-      <div class="packet-field"><div class="fname">MSG</div><div class="fval">Message ID</div></div>
-      <div class="packet-field" style="min-width:150px">
-        <div class="fname">PAYLOAD</div>
-        <div class="fval">Données (GPS, ATTITUDE…)</div>
+      <div class="packet-legend-item">
+        <div class="packet-legend-dot" style="background:rgba(100,200,100,0.15);border-color:rgba(100,200,100,0.5);"></div>
+        Champs communs — même encodage
       </div>
-      <div class="packet-field danger">
-        <div class="fname">CKA/CKB</div>
-        <div class="fval">Checksum</div>
+      <div class="packet-legend-item">
+        <div class="packet-legend-dot" style="background:rgba(80,180,220,0.18);border-color:rgba(80,180,220,0.5);"></div>
+        Champs uniques à v2
       </div>
     </div>
-    <p class="prose">
-      <strong>0xFE</strong> = MAVLink v1, <strong>0xFD</strong> = MAVLink v2. Le CRC en fin de trame
-      détecte les erreurs de transmission, mais <em>ne protège pas</em> contre les altérations malveillantes.
-    </p>
+
+    <!-- MAVLink v1 -->
+    <div class="packet-viz-label" style="color:var(--text-dim);border-color:rgba(160,160,160,0.3);">
+      <span style="border-left:3px solid rgba(160,160,160,0.5);padding-left:10px;">MAVLink v1 Frame — 8 à 263 octets</span>
+    </div>
+    <div class="packet-viz">
+      <div class="packet-field pf-grey">
+        <div class="fname">STX</div>
+        <div class="fval">0xFE</div>
+      </div>
+      <div class="packet-field pf-grey">
+        <div class="fname">LEN</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">SEQ</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">SYS ID</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">COMP ID</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-grey">
+        <div class="fname">MSG ID</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-payload" style="min-width:160px;">
+        <div class="fname">PAYLOAD</div>
+        <div class="fval">0–255 octets</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">CHECKSUM</div>
+        <div class="fval">2 octets</div>
+      </div>
+    </div>
+
+    <!-- MAVLink v2 -->
+    <div class="packet-viz-label" style="color:var(--teal-light);margin-top:8px;">
+      <span style="border-left:3px solid var(--teal);padding-left:10px;">MAVLink v2 Frame — 12 à 280 octets</span>
+    </div>
+    <div class="packet-viz">
+      <div class="packet-field pf-grey">
+        <div class="fname">STX</div>
+        <div class="fval">0xFD</div>
+      </div>
+      <div class="packet-field pf-grey">
+        <div class="fname">LEN</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-blue">
+        <div class="fname">INC FLAGS</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-blue">
+        <div class="fname">CMP FLAGS</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">SEQ</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">SYS ID</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">COMP ID</div>
+        <div class="fval">1 octet</div>
+      </div>
+      <div class="packet-field pf-grey">
+        <div class="fname">MSG ID</div>
+        <div class="fval">3 octets</div>
+      </div>
+      <div class="packet-field pf-payload" style="min-width:160px;">
+        <div class="fname">PAYLOAD</div>
+        <div class="fval">0–255 octets</div>
+      </div>
+      <div class="packet-field pf-green">
+        <div class="fname">CHECKSUM</div>
+        <div class="fval">2 octets</div>
+      </div>
+      <!-- Signature block v2 only -->
+      <div style="display:flex;gap:2px;border:1px solid rgba(80,180,220,0.5);border-radius:2px;padding:2px;background:rgba(80,180,220,0.05);flex-shrink:0;">
+  
+        <div class="packet-field pf-blue" style="border:none;">
+          <div class="fname">SIGNATURE</div>
+          <div class="fval">13 octets</div>
+        </div>
+      </div>
+    </div>
 
     <h4 class="sub2">MAVLink v1 vs MAVLink v2</h4>
     <div class="compare-grid">
@@ -1161,10 +1289,11 @@
           <li>Format étendu, payload compact</li>
           <li>Identifiant de message 24 bits</li>
           <li>Signature cryptographique optionnelle</li>
-          <li>Mais <strong>pas de chiffrement</strong> — les données restent visibles</li>
+          <li>Pas de chiffrement</strong> — les données restent visibles</li>
         </ul>
       </div>
     </div>
+
 
     <h4 class="sub2">Les messages MAVLink à connaître</h4>
     <div style="overflow-x:auto; margin: 16px 0;">
@@ -2865,6 +2994,539 @@ from pymavlink import mavutil
   </div>
 </div><!-- end usv -->
 
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION : DÉTECTION IA                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="detection_ia" class="section">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Partie 05 — Intelligence Artificielle</div>
+    <h2 class="section-title">Détection du Spoofing GPS par IA</h2>
+    <p class="section-intro">
+      Modèle entraîné sur 3 datasets publics pour classifier en temps réel les trames GPS en <em>normal</em> vs <em>spoofed</em>.
+      Déployé en écoute passive sur le flux MAVLink.
+    </p>
+  </div>
+
+  <div class="content-area">
+
+    <!-- KPIs -->
+    <div class="cards-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:0;">
+      <div class="card" style="text-align:center;padding:32px 20px;">
+        <div style="font-family:var(--display);font-size:52px;font-weight:800;color:var(--teal);line-height:1;">0.82</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-top:8px;">ACCURACY</div>
+      </div>
+      <div class="card" style="text-align:center;padding:32px 20px;">
+        <div style="font-family:var(--display);font-size:52px;font-weight:800;color:var(--accent);line-height:1;">0.75</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-top:8px;">F1-SCORE</div>
+      </div>
+      <div class="card" style="text-align:center;padding:32px 20px;">
+        <div style="font-family:var(--display);font-size:52px;font-weight:800;color:var(--red);line-height:1;">0.39</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-top:8px;">LOSS (val)</div>
+      </div>
+    </div>
+
+
+    <!-- Features -->
+    <h3 class="subsection">Les 23 features GNSS</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Catégorie</th><th>Features</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Navigation</td><td><code>lat_deg, lon_deg, alt_m, alt_ellipsoid_m</code></td><td>Position absolue (degrés / mètres)</td></tr>
+        <tr><td>Précision GPS</td><td><code>eph, epv, hdop, vdop</code></td><td>Indicateurs d'erreur horizontale / verticale</td></tr>
+        <tr><td>Qualité signal</td><td><code>s_variance_m_s, c_variance_rad, satellites_used</code></td><td>Variances EKF, nb de satellites</td></tr>
+        <tr><td>Cinématique</td><td><code>vel_m_s, vel_n/e/d_m_s, cog_rad</code></td><td>Vitesses NED + cap (rad)</td></tr>
+        <tr><td>Dérivées</td><td><code>d_lat, d_lon, d_alt, vel_from_pos</code></td><td>Variations de position inter-trames</td></tr>
+        <tr><td>Anomalies</td><td><code>vel_consistency, noise_per_sat, hdop_eph</code></td><td>Incohérences GPS révélatrices d'attaque</td></tr>
+      </tbody>
+    </table>
+    <!-- Lancement -->
+    <h3 class="subsection">Lancer le détecteur</h3>
+    <p class="prose">
+      Le détecteur s'installe en quelques lignes. Il écoute passivement le flux MAVLink — l'attaque drift forward les trames modifiées sur le port 14553.
+    </p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 1 — Simulation ArduRover SITL
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">sim_vehicle.py -v Rover \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -f rover-skid --map --console \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -L RadeBrest \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --out=udp:127.0.0.1:14550 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --out=udp:127.0.0.1:14551 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --out=udp:127.0.0.1:14552</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 2 — MAVProxy : configuration du simulateur
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set FRAME_CLASS 2</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set FRAME_TYPE 1</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set SIM_WAVE_ENABLE 1</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set SIM_WAVE_AMP 0.5</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set SIM_WAVE_DIR 180</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set SIM_WIND_SPD 5</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">param set SIM_WIND_DIR 270</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">mode GUIDED</span></div>
+        <div><span class="t-prompt">MAVProxy&gt; </span><span class="t-cmd">arm throttle force</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 3 — Installation des dépendances + lancement du détecteur
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">pip3 install joblib numpy torch pymavlink scikit-learn --break-system-packages</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;">— une seule fois —</div>
+        <div style="margin-top:8px;"><span class="t-prompt">$ </span><span class="t-cmd">cd ~/scripts &amp;&amp; python3 detect.py \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --connection udp:0.0.0.0:14553 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --model-dir models_tl_fixed \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --save resultats_clean.csv</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 4 — Déclenchement de l'attaque drift (proxy MitM)
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd ~/scripts &amp;&amp; python3 attaque.py \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --mode-both \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --connection udp:0.0.0.0:14551 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --forward-host 127.0.0.1 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --forward-port 14553 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --attack drift \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --drift-rate 1.5 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --pre-attack-delay 20</span></div>
+      </div>
+    </div>
+
+  <!-- Démo vidéo -->
+<h3 class="subsection">Démonstration — Détection IA en temps réel</h3>
+
+<p class="prose">
+  La vidéo ci-dessous montre le détecteur en action : les premières secondes affichent le buffer en cours de remplissage (<em>BUFFERING</em>),
+  puis la barre de probabilité passe au rouge lorsque l’attaque de drift est déclenchée.
+</p>
+
+<div style="
+  border: 2px dashed var(--border);
+  border-radius: 4px;
+  background: var(--card);
+  padding: 20px;
+  margin: 20px 0;
+">
+  <video
+    src="demo.mp4"
+    controls
+    autoplay
+    muted
+    playsinline
+    width="100%"
+    style="
+      border-radius: 6px;
+      display: block;
+    "
+  >
+    Votre navigateur ne supporte pas la lecture vidéo.
+  </video>
+</div>
+
+
+    <div class="alert alert-info" style="background:rgba(18,168,168,0.07);border-color:var(--teal);color:var(--text);">
+      <strong>Code source &amp; modèles</strong> Disponibles sur
+      <a href="https://github.com/yakine-haffoudhi/UAV-USV_Security" target="_blank"
+         style="color:var(--teal-light);text-decoration:underline;">
+        github.com/yakine-haffoudhi/UAV-USV_Security
+      </a>
+    </div>
+
+  </div>
+</div><!-- end detection_ia -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION : DÉPLOIEMENT DOCKER                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="docker_deploy" class="section">
+
+  <div class="section-header">
+    <div class="section-eyebrow">Partie 06 — Déploiement Docker</div>
+    <h2 class="section-title">Simulation 3D Complète</h2>
+    <p class="section-intro">
+      Gazebo Harmonic + ArduRover SITL + QGroundControl + attaque GPS drift + détecteur : tout dans un conteneur Docker
+      accessible depuis le navigateur via noVNC. Aucune installation locale requise.
+    </p>
+  </div>
+
+  <div class="content-area">
+
+    <!-- Lien GitHub -->
+    <div style="
+      border: 1px solid var(--teal);
+      border-radius: 4px;
+      background: rgba(18,168,168,0.06);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    ">
+      <div style="font-size:36px;">🐙</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-bright);margin-bottom:4px;">
+          UAV-USV_Security — GitHub
+        </div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text-dim);">
+          Source complète : Dockerfile, modèles, scripts d'attaque et de détection
+        </div>
+      </div>
+      <a href="https://github.com/yakine-haffoudhi/UAV-USV_Security" target="_blank" style="
+        display:inline-block;
+        padding:12px 28px;
+        background:var(--teal-dark);
+        border:1px solid var(--teal);
+        border-radius:2px;
+        font-family:var(--mono);
+        font-size:11px;
+        letter-spacing:1px;
+        color:var(--teal-light);
+        text-decoration:none;
+        white-space:nowrap;
+        transition:background 0.2s;
+      " onmouseover="this.style.background='var(--teal-mid)'" onmouseout="this.style.background='var(--teal-dark)'">
+        → Voir sur GitHub
+      </a>
+    </div>
+
+    <!-- Structure du projet -->
+    <h3 class="subsection">Structure du projet</h3>
+    <div class="code-block"><span class="comment">drone_docker/</span>
+├── <span class="keyword">Dockerfile</span>            ← image complète
+├── <span class="keyword">docker-compose.yml</span>    ← lancement 
+├── .dockerignore
+├── <span class="cmd">detect.py</span>             ← détecteur IA
+├── attacks/
+│   └── <span class="cmd">attaque.py</span>        ← GPS drift spoofer
+└── model/
+    ├── <span class="str">best_model.pt</span>     
+    └── <span class="str">scaler_tl.joblib</span>   </div>
+
+
+    <!-- Build et lancement -->
+    <h3 class="subsection">Build &amp; Lancement</h3>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Build de l'image (~30-60 min)
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cd drone_docker</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">docker compose build</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;">Compilation ArduPilot + Gazebo + asv_wave_sim</div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Lancer le conteneur + accès VNC
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">docker compose up -d</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;margin-bottom:8px;">Puis ouvrir dans le navigateur :</div>
+        <div><span class="t-prompt">  </span><span class="t-cmd" style="color:var(--accent);">http://localhost:6080/vnc.html</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;">Cliquer Connect — pas de mot de passe.</div>
+        <div style="margin-top:6px;"><span class="t-prompt">  </span><span class="t-cmd">VNC natif : localhost:5900</span></div>
+      </div>
+    </div>
+
+    <!-- Scénario de démo -->
+    <h3 class="subsection">Scénario de démonstration — 5 terminaux VNC</h3>
+
+    <div class="step-nav" style="grid-template-columns: repeat(auto-fill, minmax(200px,1fr));">
+      <a class="step-nav-item">
+        <div class="sn-num">T1</div>
+        <div class="sn-label">Simulation</div>
+        <div class="sn-name">~/scripts/start_sim.sh — Gazebo + ArduRover (~35 s)</div>
+      </a>
+      <a class="step-nav-item">
+        <div class="sn-num">T2</div>
+        <div class="sn-label">MAVProxy</div>
+        <div class="sn-name">Params FRAME, vagues, GUIDED + arm</div>
+      </a>
+      <a class="step-nav-item">
+        <div class="sn-num">T3</div>
+        <div class="sn-label">QGC</div>
+        <div class="sn-name">~/scripts/start_qgc.sh — carte + télémétrie</div>
+      </a>
+      <a class="step-nav-item">
+        <div class="sn-num">T4</div>
+        <div class="sn-label">Détecteur IA</div>
+        <div class="sn-name">python3 detect.py --connection udp:0.0.0.0:14553</div>
+      </a>
+      <a class="step-nav-item">
+        <div class="sn-num">T5</div>
+        <div class="sn-label">Attaque</div>
+        <div class="sn-name">attaque.py drift 1.5 m/s — délai 20 s</div>
+      </a>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 4 — Détecteur IA dans le conteneur VNC
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 detect.py \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --connection udp:0.0.0.0:14553 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --model-dir model</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Terminal 5 — Attaque GPS drift dans le conteneur VNC
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">python3 ~/attacks/attaque.py \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --mode-both \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --connection udp:0.0.0.0:14551 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --forward-host 127.0.0.1 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --forward-port 14553 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --attack drift \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --drift-rate 1.5 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --pre-attack-delay 20</span></div>
+      </div>
+    </div>
+
+    <!-- Commandes utiles -->
+    <h3 class="subsection">Commandes utiles</h3>
+    <div class="code-block"><span class="comment"># Voir les logs du conteneur</span>
+<span class="cmd">docker logs -f drone-lab</span>
+
+<span class="comment"># Ouvrir un terminal dans le conteneur</span>
+<span class="cmd">docker exec -it drone-lab bash</span>
+
+<span class="comment"># Arrêter / Redémarrer</span>
+<span class="cmd">docker stop drone-lab</span>
+<span class="cmd">docker start drone-lab</span>
+
+<span class="comment"># Supprimer le conteneur</span>
+<span class="cmd">docker rm -f drone-lab</span>
+
+<span class="comment"># Supprimer l'image</span>
+<span class="cmd">docker rmi drone-lab</span>
+
+<span class="comment"># Tout nettoyer (conteneur + image + cache)</span>
+<span class="cmd">docker rm -f drone-lab</span>
+<span class="cmd">docker rmi drone-lab</span>
+<span class="cmd">docker system prune -af --volumes</span>
+
+<span class="comment"># Modifier un fichier à chaud</span>
+<span class="cmd">docker cp attacks/attaque.py drone-lab:/home/drone/attacks/attaque.py</span></div>
+
+    <!-- Image Docker pré-construite -->
+    <h3 class="subsection">Image Docker pré-construite — Utilisation directe</h3>
+
+    <div class="alert alert-info" style="margin-bottom:28px;">
+      <strong>Image prête à l'emploi</strong>
+      Une image Docker complète est déjà disponible.
+      Téléchargez-la depuis Google Drive et lancez-la en quelques commandes.
+    </div>
+
+    <!-- Bloc téléchargement -->
+    <div style="
+      border: 1px solid var(--teal);
+      border-radius: 4px;
+      background: rgba(18,168,168,0.06);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    ">
+      <div style="font-size:38px;">📦</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-bright);margin-bottom:6px;">
+          drone-lab.tar — Image Docker (3.8 Go)
+        </div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-bottom:4px;">
+          Contient : ArduPilot SITL · Gazebo Harmonic · QGroundControl · Détecteur IA · Scripts d'attaque
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--teal-mid);">
+          Pas de compilation nécessaire
+        </div>
+      </div>
+      <a href="https://drive.google.com/file/d/1Ty449ceEVfNMsnvy6JP09FixDeeD9nuT/view?usp=drive_link"
+         target="_blank" style="
+        display:inline-block;
+        padding:12px 28px;
+        background:var(--teal-dark);
+        border:1px solid var(--teal);
+        border-radius:2px;
+        font-family:var(--mono);
+        font-size:11px;
+        letter-spacing:1px;
+        color:var(--teal-light);
+        text-decoration:none;
+        white-space:nowrap;
+        transition:background 0.2s;
+      " onmouseover="this.style.background='var(--teal-mid)'" onmouseout="this.style.background='var(--teal-dark)'">
+        ↓ Télécharger l'image
+      </a>
+    </div>
+
+    <!-- ── UBUNTU ── -->
+    <h4 class="sub2">Ubuntu / Linux</h4>
+    <p class="prose">Après avoir téléchargé <code style="color:var(--teal)">drone-lab.tar</code> depuis Google Drive :</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Étape 1 — Charger l'image
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Charger l'image depuis le fichier .tar</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">docker load -i drone-lab.tar.gz</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;margin-top:4px;">Patientez — chargement de plusieurs couches (~2-5 min selon le disque)</div>
+        <div style="margin-top:10px;"><span class="t-comment"># Vérifier que l'image est bien chargée</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">docker images | grep drone-lab</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; Étape 2 — Lancer le conteneur
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Lancer avec accès VNC sur le port 6080</span></div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">docker run -d \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --name drone-lab \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --privileged \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -p 6080:6080 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -p 5900:5900 \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -p 14550:14550/udp \</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; drone-lab</span></div>
+        <div style="margin-top:10px;"><span class="t-comment"># Accéder à l'environnement VNC dans le navigateur</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd" style="color:var(--accent);">http://localhost:6080/vnc.html</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;">Cliquer Connect — pas de mot de passe.</div>
+      </div>
+    </div>
+
+    <!-- ── WINDOWS ── -->
+    <h4 class="sub2">Windows (Docker Desktop)</h4>
+    <p class="prose">Assurez-vous que <strong>Docker Desktop</strong> est installé et en cours d'exécution. Ouvrez PowerShell ou le Terminal Windows :</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; PowerShell — Étape 1 — Charger l'image
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Charger l'image (depuis le dossier Téléchargements par exemple)</span></div>
+        <div><span class="t-prompt">PS&gt; </span><span class="t-cmd">docker load -i C:\Users\$env:USERNAME\Downloads\drone-lab.tar.gz</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;margin-top:4px;">Patientez — chargement de plusieurs couches (~2-5 min selon le disque)</div>
+        <div style="margin-top:10px;"><span class="t-comment"># Vérifier que l'image est bien chargée</span></div>
+        <div><span class="t-prompt">PS&gt; </span><span class="t-cmd">docker images | findstr drone-lab</span></div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#e05555"></span>
+        <span class="terminal-dot" style="background:#f0c040"></span>
+        <span class="terminal-dot" style="background:#4fd1d1"></span>
+        &nbsp; PowerShell — Étape 2 — Lancer le conteneur
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-comment"># Lancer avec accès VNC sur le port 6080</span></div>
+        <div><span class="t-prompt">PS&gt; </span><span class="t-cmd">docker run -d `</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --name drone-lab `</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; --privileged `</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -p 6080:6080 `</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -p 5900:5900 `</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; -p 14550:14550/udp `</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd">&nbsp; drone-lab</span></div>
+        <div style="margin-top:10px;"><span class="t-comment"># Ouvrir dans le navigateur</span></div>
+        <div><span class="t-prompt">  </span><span class="t-cmd" style="color:var(--accent);">http://localhost:6080/vnc.html</span></div>
+        <div style="color:var(--text-dim);font-size:10px;padding-left:20px;">Cliquer Connect — pas de mot de passe.</div>
+      </div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top: 8px;">
+      <strong>⚠ Windows — WSL2 requis</strong>
+      Docker Desktop sur Windows nécessite WSL2 (Windows Subsystem for Linux 2). Activez-le avec :
+      <code style="display:block;margin-top:8px;color:var(--text-bright);">wsl --install</code>
+      puis redémarrez. Docker Desktop détectera WSL2 automatiquement.
+    </div>
+
+    <!-- Commandes post-lancement communes -->
+    <h4 class="sub2">Commandes utiles (Windows &amp; Ubuntu)</h4>
+    <div class="code-block"><span class="comment"># Voir les logs du conteneur</span>
+<span class="cmd">docker logs -f drone-lab</span>
+
+<span class="comment"># Ouvrir un terminal dans le conteneur</span>
+<span class="cmd">docker exec -it drone-lab bash</span>
+
+<span class="comment"># Arrêter / Redémarrer</span>
+<span class="cmd">docker stop drone-lab</span>
+<span class="cmd">docker start drone-lab</span>
+
+<span class="comment"># Supprimer le conteneur (l'image reste)</span>
+<span class="cmd">docker rm -f drone-lab</span>
+
+<span class="comment"># Tout nettoyer (conteneur + image + cache)</span>
+<span class="cmd">docker rm -f drone-lab</span>
+<span class="cmd">docker rmi drone-lab</span>
+<span class="cmd">docker system prune -af --volumes</span>
+
+<span class="comment"># Copier un fichier modifié dans le conteneur</span>
+<span class="cmd">docker cp attacks/attaque.py drone-lab:/home/drone/attacks/attaque.py</span></div>
+
+  </div>
+</div><!-- end docker_deploy -->
+
+
 <!-- FOOTER -->
 <footer>
   <div>Sécurité des environnements UAV &amp; USV · Yakine Haffoudhi · IMT Atlantique · 2026</div>
@@ -2877,7 +3539,7 @@ from pymavlink import mavutil
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    const ids = ['theorie', 'simulation', 'attaques', 'usv'];
+    const ids = ['theorie', 'simulation', 'attaques', 'usv', 'detection_ia', 'docker_deploy'];
     const idx = ids.indexOf(id);
     if (idx >= 0) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
     window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });

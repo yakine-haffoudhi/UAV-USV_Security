@@ -6,19 +6,19 @@ import argparse
 import collections
 import csv
 import math
-import os
 import sys
 import time
 import threading
 from datetime import datetime
 from pathlib import Path
-from typing import Deque, Dict, List, Optional
+from typing import Deque, Dict, Optional
 
 import joblib
 import numpy as np
 import torch
 import torch.nn as nn
 from pymavlink import mavutil
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
@@ -46,10 +46,11 @@ FEATURES = [
     "vel_from_pos", "vel_consistency",
     "noise_per_sat", "hdop_eph",
 ]
-N_FEATURES = len(FEATURES)   # 23
+N_FEATURES = len(FEATURES)  # 23
+
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MODEL ARCHITECTURE
+# ARCHITECTURE DU MODÈLE
 # ─────────────────────────────────────────────────────────────────────────────
 
 class SpatialDropout1d(nn.Module):
@@ -161,7 +162,7 @@ def haversine_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FEATURE EXTRACTOR — v2 améliorée
+# EXTRACTEUR DE FEATURES (23 features GPS)
 # ─────────────────────────────────────────────────────────────────────────────
 
 class FeatureExtractor:
@@ -172,7 +173,7 @@ class FeatureExtractor:
         self._ekf:    Optional[object] = None
         self._prev:   Optional[Dict]   = None
         self._prev_ts_ms: Optional[float] = None
-        self._geoid_sep = geoid_sep_m 
+        self._geoid_sep = geoid_sep_m
         self._vel_history: collections.deque = collections.deque(maxlen=10)
 
     def update_gps(self, msg)  -> None:
@@ -195,20 +196,16 @@ class FeatureExtractor:
 
         ts_ms = gps.time_usec / 1000.0
 
-        # ── Position ──────────────────────────────────────────────────────
         lat_deg = gps.lat / 1e7
         lon_deg = gps.lon / 1e7
         alt_m   = gps.alt / 1000.0
-
 
         raw_ae = getattr(gps, "alt_ellipsoid", None)
         if raw_ae is not None and raw_ae != gps.alt:
             alt_ellipsoid_m = raw_ae / 1000.0
         else:
-            # Approximation : alt_ellipsoid ≈ alt_MSL + séparation géoïde
             alt_ellipsoid_m = alt_m + self._geoid_sep
 
-        # ── Précision GPS ─────────────────────────────────────────────────
         hdop = gps.eph / 100.0 if gps.eph < 65535 else 99.9
         vdop = gps.epv / 100.0 if gps.epv < 65535 else 99.9
 
@@ -217,7 +214,6 @@ class FeatureExtractor:
         eph = (h_acc_raw / 1000.0) if (h_acc_raw and h_acc_raw < 65535000) else hdop * 3.0
         epv = (v_acc_raw / 1000.0) if (v_acc_raw and v_acc_raw < 65535000) else vdop * 3.0
 
-        # ── Vitesse ───────────────────────────────────────────────────────
         vel_m_s = gps.vel / 100.0 if gps.vel < 65535 else 0.0
         cog_raw = gps.cog if gps.cog < 65535 else 0
         cog_rad = math.radians(cog_raw / 100.0)
@@ -232,18 +228,13 @@ class FeatureExtractor:
             vel_e_m_s = vel_m_s * math.sin(cog_rad)
             vel_d_m_s = 0.0
 
-        # ── EKF variances ─────────────────────────────────────────────────
         if ekf is not None:
             s_variance_m_s = float(ekf.velocity_variance)
             c_variance_rad = float(ekf.compass_variance)
         else:
-            if len(self._vel_history) >= 3:
-                s_variance_m_s = float(np.var(list(self._vel_history)))
-            else:
-                s_variance_m_s = 0.01   # valeur non-nulle neutre
+            s_variance_m_s = float(np.var(list(self._vel_history))) if len(self._vel_history) >= 3 else 0.01
             c_variance_rad = 0.0
 
-        # ── Features dérivées ─────────────────────────────────────────────
         if prev is not None and prev_ts is not None:
             dt = max((ts_ms - prev_ts) / 1000.0, 1e-3)
             d_lat = lat_deg - prev["lat_deg"]
@@ -256,44 +247,38 @@ class FeatureExtractor:
             vel_from_pos = vel_m_s
 
         vel_consistency = abs(vel_m_s - vel_from_pos)
-
-        if satellites_used > 0:
-            noise_per_sat = eph / satellites_used
-        else:
-            noise_per_sat = eph 
-            
-        hdop_eph = (hdop / eph) if eph > 1e-6 else 0.0
+        noise_per_sat   = eph / satellites_used if satellites_used > 0 else eph
+        hdop_eph        = (hdop / eph) if eph > 1e-6 else 0.0
 
         row = {
-            "lat_deg":          lat_deg,
-            "lon_deg":          lon_deg,
-            "alt_m":            alt_m,
-            "alt_ellipsoid_m":  alt_ellipsoid_m,
-            "eph":              eph,
-            "epv":              epv,
-            "hdop":             hdop,
-            "vdop":             vdop,
-            "s_variance_m_s":   s_variance_m_s,
-            "c_variance_rad":   c_variance_rad,
-            "vel_m_s":          vel_m_s,
-            "vel_n_m_s":        vel_n_m_s,
-            "vel_e_m_s":        vel_e_m_s,
-            "vel_d_m_s":        vel_d_m_s,
-            "cog_rad":          cog_rad,
-            "satellites_used":  satellites_used,
-            "d_lat":            d_lat,
-            "d_lon":            d_lon,
-            "d_alt":            d_alt,
-            "vel_from_pos":     vel_from_pos,
-            "vel_consistency":  vel_consistency,
-            "noise_per_sat":    noise_per_sat,
-            "hdop_eph":         hdop_eph,
-            # Métadonnées
-            "_ts_ms":           ts_ms,
-            "_lat_raw":         lat_deg,
-            "_lon_raw":         lon_deg,
-            "_alt_raw":         alt_m,
-            "_sats":            satellites_used,
+            "lat_deg":         lat_deg,
+            "lon_deg":         lon_deg,
+            "alt_m":           alt_m,
+            "alt_ellipsoid_m": alt_ellipsoid_m,
+            "eph":             eph,
+            "epv":             epv,
+            "hdop":            hdop,
+            "vdop":            vdop,
+            "s_variance_m_s":  s_variance_m_s,
+            "c_variance_rad":  c_variance_rad,
+            "vel_m_s":         vel_m_s,
+            "vel_n_m_s":       vel_n_m_s,
+            "vel_e_m_s":       vel_e_m_s,
+            "vel_d_m_s":       vel_d_m_s,
+            "cog_rad":         cog_rad,
+            "satellites_used": satellites_used,
+            "d_lat":           d_lat,
+            "d_lon":           d_lon,
+            "d_alt":           d_alt,
+            "vel_from_pos":    vel_from_pos,
+            "vel_consistency": vel_consistency,
+            "noise_per_sat":   noise_per_sat,
+            "hdop_eph":        hdop_eph,
+            "_ts_ms":          ts_ms,
+            "_lat_raw":        lat_deg,
+            "_lon_raw":        lon_deg,
+            "_alt_raw":        alt_m,
+            "_sats":           satellites_used,
         }
 
         with self._lock:
@@ -305,14 +290,14 @@ class FeatureExtractor:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# DETECTOR
+# DÉTECTEUR (fenêtre glissante + inférence CNN-LSTM)
 # ─────────────────────────────────────────────────────────────────────────────
 
 class Detector:
     def __init__(self, model_path: Path, scaler_path: Path,
                  seq_len: int = SEQ_LEN, step: int = 1):
         self.seq_len = seq_len
-        self.step    = step   
+        self.step    = step
         self.device  = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.scaler  = joblib.load(scaler_path)
         self.model   = GPSSpoofingDetector(
@@ -360,7 +345,7 @@ class Detector:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# DISPLAY
+# AFFICHAGE
 # ─────────────────────────────────────────────────────────────────────────────
 
 _RESET  = "\033[0m"
@@ -382,16 +367,10 @@ def _status_line(ts, lat, lon, alt, sats, prob, label, window_fill,
     else:
         tag    = f"{_RED}{_BOLD}⚠  SPOOFED{_RESET}" if label else f"{_GREEN}✓  CLEAN  {_RESET}"
         status = f"{tag}  [{_bar(prob)}] {prob*100:5.1f}%"
-
-    # Indicateurs de qualité GPS
     qual = ""
-    if hdop is not None:
-        qual += f"  HDOP:{hdop:.2f}"
-    if noise_per_sat is not None:
-        qual += f"  nps:{noise_per_sat:.3f}"
-    if vel_consistency is not None:
-        qual += f"  |ΔV|:{vel_consistency:.2f}m/s"
-
+    if hdop is not None:       qual += f"  HDOP:{hdop:.2f}"
+    if noise_per_sat is not None: qual += f"  nps:{noise_per_sat:.3f}"
+    if vel_consistency is not None: qual += f"  |ΔV|:{vel_consistency:.2f}m/s"
     return (
         f"\r[{ts}] "
         f"Lat:{lat:10.6f}  Lon:{lon:11.6f}  Alt:{alt:7.1f}m  "
@@ -400,7 +379,7 @@ def _status_line(ts, lat, lon, alt, sats, prob, label, window_fill,
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MAVLink listener
+# LISTENER MAVLink (thread)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _listen_mavlink(conn_str, extractor, stop_event):
@@ -408,13 +387,10 @@ def _listen_mavlink(conn_str, extractor, stop_event):
     mav = mavutil.mavlink_connection(conn_str, autoreconnect=True)
     mav.wait_heartbeat(timeout=30)
     print(f"  Heartbeat received — system {mav.target_system}, component {mav.target_component}")
-
     mav.mav.request_data_stream_send(
         mav.target_system, mav.target_component,
-        mavutil.mavlink.MAV_DATA_STREAM_ALL,
-        10, 1,
+        mavutil.mavlink.MAV_DATA_STREAM_ALL, 10, 1,
     )
-
     while not stop_event.is_set():
         msg = mav.recv_match(
             type=["GPS_RAW_INT", "GLOBAL_POSITION_INT", "EKF_STATUS_REPORT"],
@@ -423,21 +399,20 @@ def _listen_mavlink(conn_str, extractor, stop_event):
         if msg is None:
             continue
         t = msg.get_type()
-        if   t == "GPS_RAW_INT":          extractor.update_gps(msg)
-        elif t == "GLOBAL_POSITION_INT":   extractor.update_gpos(msg)
-        elif t == "EKF_STATUS_REPORT":     extractor.update_ekf(msg)
+        if   t == "GPS_RAW_INT":         extractor.update_gps(msg)
+        elif t == "GLOBAL_POSITION_INT":  extractor.update_gpos(msg)
+        elif t == "EKF_STATUS_REPORT":    extractor.update_ekf(msg)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CSV logger
+# CSV LOGGER
 # ─────────────────────────────────────────────────────────────────────────────
 
 class CsvLogger:
     def __init__(self, path: str):
-        self._path = path
-        self._file = open(path, "w", newline="")
-        fieldnames = FEATURES + ["timestamp_ms", "spoof_prob", "spoof_label"]
-        self._writer = csv.DictWriter(self._file, fieldnames=fieldnames)
+        self._file   = open(path, "w", newline="")
+        self._writer = csv.DictWriter(
+            self._file, fieldnames=FEATURES + ["timestamp_ms", "spoof_prob", "spoof_label"])
         self._writer.writeheader()
 
     def log(self, row: Dict, prob: Optional[float], label: int) -> None:
@@ -457,55 +432,48 @@ class CsvLogger:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Real-time GPS spoofing detector v2")
-    parser.add_argument("--connection",  default="udp:0.0.0.0:14551")
+    parser = argparse.ArgumentParser(description="GPS Spoofing Detector v2 — temps réel")
+    parser.add_argument("--connection",  default="udp:0.0.0.0:14553")
     parser.add_argument("--model-dir",   default=str(MODEL_DIR))
     parser.add_argument("--seq-len",     type=int,   default=SEQ_LEN)
-    parser.add_argument("--step",        type=int,   default=1,
-                        help="Inférence toutes les N nouvelles trames (défaut: 1 = chaque trame)")
-    parser.add_argument("--save",        default=None, help="Chemin CSV de sauvegarde")
+    parser.add_argument("--step",        type=int,   default=1)
+    parser.add_argument("--save",        default=None)
     parser.add_argument("--threshold",   type=float, default=THRESHOLD)
-    parser.add_argument("--geoid-sep",   type=float, default=_DEFAULT_GEOID_SEP_M,
-                        help="Séparation géoïde locale en mètres (défaut: 30m pour Canberra)")
+    parser.add_argument("--geoid-sep",   type=float, default=_DEFAULT_GEOID_SEP_M)
     args = parser.parse_args()
 
     model_dir   = Path(args.model_dir)
     model_path  = model_dir / "best_model.pt"
     scaler_path = model_dir / "scaler_tl.joblib"
 
-    for p in (model_path, scaler_path):
-        if not p.exists():
-            print(f"[ERROR] Fichier introuvable: {p}")
-            sys.exit(1)
+    for pth in (model_path, scaler_path):
+        if not pth.exists():
+            print(f"[ERROR] Fichier introuvable: {pth}"); sys.exit(1)
 
     print("\n" + "=" * 70)
-    print("  GPS SPOOFING DETECTOR v2 — Real-time (ArduCopter / MAVLink)")
+    print("  GPS SPOOFING DETECTOR v2 — Temps réel (MAVLink)")
     print("=" * 70)
-    print(f"  Model      : {model_path}")
+    print(f"  Modèle     : {model_path}")
     print(f"  Scaler     : {scaler_path}")
-    print(f"  Threshold  : {args.threshold}")
-    print(f"  Window     : {args.seq_len} samples  (step={args.step})")
-    print(f"  Geoid sep  : {args.geoid_sep:.1f}m")
-    if args.save:
-        print(f"  Logging    : {args.save}")
+    print(f"  Seuil      : {args.threshold}")
+    print(f"  Fenêtre    : {args.seq_len} trames  (step={args.step})")
+    print(f"  Géoïde sep : {args.geoid_sep:.1f}m")
+    if args.save: print(f"  Log CSV    : {args.save}")
     print("=" * 70)
 
-    print("\n  Loading model …", end=" ", flush=True)
-    detector  = Detector(model_path, scaler_path,
-                         seq_len=args.seq_len, step=args.step)
+    print("\n  Chargement du modèle …", end=" ", flush=True)
+    detector  = Detector(model_path, scaler_path, seq_len=args.seq_len, step=args.step)
     extractor = FeatureExtractor(geoid_sep_m=args.geoid_sep)
     stop_evt  = threading.Event()
     logger    = CsvLogger(args.save) if args.save else None
 
-    listener = threading.Thread(
+    threading.Thread(
         target=_listen_mavlink,
         args=(args.connection, extractor, stop_evt),
         daemon=True,
-    )
-    listener.start()
+    ).start()
     print("OK")
-
-    print("\n  Waiting for GPS data … (Ctrl-C to stop)\n")
+    print("\n  En attente de données GPS … (Ctrl-C pour arrêter)\n")
 
     stats = {"total": 0, "spoof": 0}
     last_ts_ms = 0.0
@@ -514,13 +482,10 @@ def main() -> None:
         while True:
             row = extractor.extract()
             if row is None:
-                time.sleep(0.05)
-                continue
-
+                time.sleep(0.05); continue
             ts_ms = row["_ts_ms"]
             if ts_ms == last_ts_ms:
-                time.sleep(0.02)
-                continue
+                time.sleep(0.02); continue
             last_ts_ms = ts_ms
 
             prob  = detector.push(row)
@@ -528,49 +493,39 @@ def main() -> None:
 
             if prob is not None:
                 stats["total"] += 1
-                if label:
-                    stats["spoof"] += 1
+                if label: stats["spoof"] += 1
 
-            if logger:
-                logger.log(row, prob, label)
+            if logger: logger.log(row, prob, label)
 
             ts_str = datetime.utcnow().strftime("%H:%M:%S.%f")[:-3]
-            line   = _status_line(
+            print(_status_line(
                 ts_str,
                 row["_lat_raw"], row["_lon_raw"], row["_alt_raw"],
-                int(row["_sats"]),
-                prob, label, len(detector._window),
+                int(row["_sats"]), prob, label, len(detector._window),
                 vel_consistency=row.get("vel_consistency"),
                 noise_per_sat=row.get("noise_per_sat"),
                 hdop=row.get("hdop"),
-            )
-            print(line, end="", flush=True)
+            ), end="", flush=True)
 
             if prob is not None and label:
                 spoof_pct = 100.0 * stats["spoof"] / max(stats["total"], 1)
                 print(
-                    f"\n  {_RED}{_BOLD}[ALERT]{_RESET} GPS SPOOFING DETECTED — "
+                    f"\n  {_RED}{_BOLD}[ALERT]{_RESET} GPS SPOOFING DÉTECTÉ — "
                     f"p={prob:.3f}  |  {stats['spoof']}/{stats['total']} ({spoof_pct:.1f}%)"
                 )
-
             time.sleep(0.05)
 
     except KeyboardInterrupt:
-        print("\n\n  Stopping …")
+        print("\n\n  Arrêt …")
     finally:
         stop_evt.set()
-        if logger:
-            logger.close()
-            print(f"  Data saved to: {args.save}")
-        total = stats["total"]
-        spoof = stats["spoof"]
+        if logger: logger.close(); print(f"  Données sauvegardées : {args.save}")
+        total = stats["total"]; spoof = stats["spoof"]
         if total:
-            print(
-                f"\n  Summary: {total} inferences | "
-                f"{spoof} spoofed ({100*spoof/total:.1f}%) | "
-                f"{total-spoof} clean ({100*(total-spoof)/total:.1f}%)"
-            )
-        print("  Done.\n")
+            print(f"\n  Résumé : {total} inférences | "
+                  f"{spoof} spoofed ({100*spoof/total:.1f}%) | "
+                  f"{total-spoof} clean ({100*(total-spoof)/total:.1f}%)")
+        print("  Terminé.\n")
 
 
 if __name__ == "__main__":
